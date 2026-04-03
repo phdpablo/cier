@@ -34,7 +34,7 @@ library(gt)
 library(patchwork)
 ```
 
-## 1. Leitura e preparação dos dados
+## Leitura e preparação dos dados
 
 O arquivo `data.csv` contém as respostas brutas do questionário (separador `;`).
 Nesta etapa, removem-se registros de abandono, selecionam-se as variáveis do
@@ -67,7 +67,7 @@ dados_importados <- dados_preparados |>
 glimpse(dados_importados)
 ```
 
-## 2. Exclusões procedimentais (Nível 1)
+## Exclusões procedimentais (Nível 1)
 
 O Nível 1 aplica três procedimentos prévios ao cálculo dos indicadores post hoc:
 remoção de abandono, exclusão por tempo de resposta inferior a 208 segundos e
@@ -139,9 +139,9 @@ tibble(
 )
 ```
 
-## 3. Cálculo dos indicadores C/IER
+## Cálculo dos indicadores C/IER
 
-### 3.1 Definição das funções auxiliares
+### Definição das funções auxiliares
 
 ```{r}
 #| label: funcoes-auxiliares
@@ -173,7 +173,7 @@ kneedle <- function(values, sign) {
 }
 ```
 
-### 3.2 Cálculo dos quatro indicadores
+### Cálculo dos quatro indicadores
 
 ```{r}
 #| label: calculo-indicadores
@@ -195,7 +195,7 @@ md_vals <- if (sum(is.na(itens)) == 0) {
 irv_vals <- irv(itens, split = FALSE)
 ```
 
-## 4. Variáveis individuais
+## Variáveis individuais
 
 Cada respondente recebe os valores dos quatro indicadores em um tibble consolidado.
 
@@ -213,7 +213,7 @@ df_indicadores <- tibble(
 df_indicadores
 ```
 
-## 5. Visualização univariada
+## Visualização univariada
 
 ::: {.panel-tabset}
 
@@ -299,7 +299,7 @@ p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
 
 :::
 
-## 6. Pontos de corte via algoritmo Kneedle
+## Pontos de corte via algoritmo Kneedle
 
 O kneedle é aplicado à curva ordenada (decrescente) de cada indicador.
 
@@ -362,7 +362,7 @@ tab_cutoffs |>
 
 
 
-## 7. Flags de C/IER
+## Flags de C/IER
 
 Para cada indicador, cria-se uma variável `_FLAG` (`1` = suspeito, `0` = não suspeito)
 com base nos pontos de corte Kneedle:
@@ -412,7 +412,7 @@ df_flags |>
   )
 ```
 
-## 8. Exportação do arquivo com flags
+## Exportação do arquivo com flags
 
 O arquivo final `data_flag.csv` preserva as colunas originais de `data.csv`,
 adiciona as variáveis procedimentais do Nível 1 e as flags dos indicadores calculadas.
@@ -451,7 +451,7 @@ data_flag <- dados_brutos |>
     by = join_by(ID)
   )
 
-readr::write_csv2(data_flag, "Data/AnalysisData/data_flag.csv")
+readr::write_csv2(data_flag, "Data/IntermediateData/whoqol_screened.csv")
 
 data_flag
 ```
