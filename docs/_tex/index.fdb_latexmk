@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1775249404.17449 "c:/Users/pablo/OneDrive/Github/cier/docs/_tex/index.tex" "index.pdf" "index" 1775249405.94172 2
+["pdflatex"] 1775250706.29478 "c:/Users/pablo/OneDrive/Github/cier/docs/_tex/index.tex" "index.pdf" "index" 1775250708.25739 2
   "c:/Users/pablo/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1772446013 2375 baa924870cfb487815765f9094cf3728 ""
   "c:/Users/pablo/AppData/Roaming/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc" 1772446013 3031 6c4d3515bf7115d8518af1c9ab97ca44 ""
   "c:/Users/pablo/AppData/Roaming/TinyTeX/texmf-dist/fonts/map/fontname/texfonts.map" 1772446864 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -138,13 +138,13 @@
   "c:/Users/pablo/AppData/Roaming/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1773953668 5619448 e62c4cf6bedcfd0e0bd02d7ae30703e8 ""
   "c:/Users/pablo/AppData/Roaming/TinyTeX/texmf-var/web2c/pdftex/pdflatex.fmt" 1772448640 3636834 85149758604e7bfe844fb4dda69b7ab5 ""
   "c:/Users/pablo/AppData/Roaming/TinyTeX/texmf.cnf" 1772462793 956 69313aa9f050df65f9acc311b4262934 ""
-  "c:/Users/pablo/OneDrive/Github/cier/docs/_tex/index.tex" 1775249393 19817 5fd2403917c01f5351e0143bae0a15f5 ""
-  "index.aux" 1775249405 8637 a9ea41f0b10252773ae5e5f3acf05805 "pdflatex"
-  "index.tex" 1775249393 19817 5fd2403917c01f5351e0143bae0a15f5 ""
-  "index_files/figure-latex/Scripts-ProcessingScripts-02_posthoc-viz-irv-output-1.png" 1775249390 17832 b3ee9aacf80d43be4f90979f52dcbd09 ""
-  "index_files/figure-latex/Scripts-ProcessingScripts-02_posthoc-viz-lazr-output-1.png" 1775249390 17101 0b39642e6061d465e5e3501cd917d544 ""
-  "index_files/figure-latex/Scripts-ProcessingScripts-02_posthoc-viz-longstr-output-1.png" 1775249390 18330 6058aa55bda47d446353cfd7ab8da9dc ""
-  "index_files/figure-latex/Scripts-ProcessingScripts-02_posthoc-viz-md-output-2.png" 1775249390 9122 c3ff97b81c372232c8bbd5128d2e82d9 ""
+  "c:/Users/pablo/OneDrive/Github/cier/docs/_tex/index.tex" 1775250694 19825 dced18678406cd51b38125ae7449f97a ""
+  "index.aux" 1775250708 8637 a9ea41f0b10252773ae5e5f3acf05805 "pdflatex"
+  "index.tex" 1775250694 19825 dced18678406cd51b38125ae7449f97a ""
+  "index_files/figure-latex/Scripts-ProcessingScripts-02_posthoc-viz-irv-output-1.png" 1775250691 17832 b3ee9aacf80d43be4f90979f52dcbd09 ""
+  "index_files/figure-latex/Scripts-ProcessingScripts-02_posthoc-viz-lazr-output-1.png" 1775250691 17101 0b39642e6061d465e5e3501cd917d544 ""
+  "index_files/figure-latex/Scripts-ProcessingScripts-02_posthoc-viz-longstr-output-1.png" 1775250691 18330 6058aa55bda47d446353cfd7ab8da9dc ""
+  "index_files/figure-latex/Scripts-ProcessingScripts-02_posthoc-viz-md-output-1.png" 1775250691 19707 7cde187b4284c471a6bfcfb0b042e1e4 ""
   (generated)
   "index.aux"
   "index.log"

@@ -1,11 +1,4 @@
----
-title: "Nível 2 — Indicadores post hoc C/IER"
-author: Pablo Rogers
-execute:
-  echo: true
----
-
-```{r}
+## -----------------------------------------------------------------------------
 #| label: setup-02
 #| include: false
 
@@ -14,9 +7,9 @@ library(careless)
 library(gt)
 library(patchwork)
 library(modi)
-```
 
-```{r}
+
+## -----------------------------------------------------------------------------
 #| label: leitura-nivel-2
 #| include: false
 
@@ -30,11 +23,9 @@ id_col <- dados_importados$ID
 itens <- dados_importados |>
   select(Q1:Q26) |>
   mutate(across(everything(), as.numeric))
-```
 
-## Definição das funções auxiliares
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: funcoes-auxiliares
 
 # --- Laz.R index (Biemann et al., 2025) ---
@@ -58,29 +49,25 @@ kneedle <- function(values, sign) {
     sign * -1 * dist2d(c(idx, values[idx]), start, end)
   }))
 }
-```
 
-## Cálculo dos quatro indicadores
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: calculo-indicadores
 
 lazr_vals <- apply(itens, 1, calc_lazr)
 
 longstr_vals <- longstring(itens)
 
-md_vals <- as.numeric(MDmiss(
+md_vals <- MDmiss(
   data = as.matrix(itens),
   center = colMeans(itens, na.rm = TRUE),
   cov = cov(itens, use = "pairwise.complete.obs")
-))
+)
 
 irv_vals <- irv(itens, split = FALSE)
-```
 
-## Variáveis individuais
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: tibble-indicadores
 
 df_indicadores <- tibble(
@@ -92,13 +79,9 @@ df_indicadores <- tibble(
 )
 
 df_indicadores
-```
 
-## Visualização univariada
 
-### Laz.R
-
-```{r}
+## -----------------------------------------------------------------------------
 #| label: viz-lazr
 
 p_hist_lazr <- ggplot(df_indicadores, aes(x = LazR)) +
@@ -114,11 +97,9 @@ p_box_lazr <- ggplot(df_indicadores, aes(y = LazR)) +
         axis.ticks.x = element_blank())
 
 p_hist_lazr + p_box_lazr + plot_layout(widths = c(3, 1))
-```
 
-### Longstring
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: viz-longstr
 
 p_hist_ls <- ggplot(df_indicadores, aes(x = Longstr)) +
@@ -134,11 +115,9 @@ p_box_ls <- ggplot(df_indicadores, aes(y = Longstr)) +
         axis.ticks.x = element_blank())
 
 p_hist_ls + p_box_ls + plot_layout(widths = c(3, 1))
-```
 
-### Mahalanobis Distance
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: viz-md
 
 p_hist_md <- ggplot(df_indicadores, aes(x = MD)) +
@@ -154,11 +133,9 @@ p_box_md <- ggplot(df_indicadores, aes(y = MD)) +
         axis.ticks.x = element_blank())
 
 p_hist_md + p_box_md + plot_layout(widths = c(3, 1))
-```
 
-### IRV
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: viz-irv
 
 p_hist_irv <- ggplot(df_indicadores, aes(x = IRV)) +
@@ -174,11 +151,9 @@ p_box_irv <- ggplot(df_indicadores, aes(y = IRV)) +
         axis.ticks.x = element_blank())
 
 p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
-```
 
-## Pontos de corte via algoritmo Kneedle
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: kneedle-cutoffs
 
 calc_kneedle <- function(x, sign_val) {
@@ -215,11 +190,9 @@ tab_cutoffs |>
     caption = "Pontos de corte — Algoritmo Kneedle (Biemann et al., 2025)",
     digits  = c(0, 2, 1)
   )
-```
 
-## Flags de C/IER
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: flags
 
 df_flags <- df_indicadores |>
@@ -232,11 +205,9 @@ df_flags <- df_indicadores |>
   )
 
 df_flags
-```
 
-### Resumo das flags
 
-```{r}
+## -----------------------------------------------------------------------------
 #| label: resumo-flags
 
 df_flags |>
@@ -253,9 +224,9 @@ df_flags |>
     caption  = "Resumo de respondentes sinalizados como C/IER",
     col.names = c("Indicador", "N suspeitos", "% suspeitos")
   )
-```
 
-```{r}
+
+## -----------------------------------------------------------------------------
 #| label: exportacao-flags
 #| include: false
 
@@ -264,5 +235,4 @@ dados_screened <- dados_importados |>
   left_join(df_flags, by = "ID")
 
 write_csv2(dados_screened, "../../Data/IntermediateData/whoqol_screened.csv")
-```
 
