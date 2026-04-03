@@ -1,0 +1,79 @@
+---
+title: "Nível 3 — Multicolinearidade VIF"
+author: Pablo Rogers
+execute:
+  echo: true
+---
+
+```{r}
+#| label: setup-03
+#| include: false
+
+library(tidyverse)
+library(car)
+library(gt)
+```
+
+```{r}
+#| label: leitura-nivel-3
+#| include: false
+
+dados_screened <- read_csv2(
+  "../../Data/IntermediateData/whoqol_screened.csv",
+  show_col_types = FALSE
+)
+
+itens <- dados_screened |>
+  select(Q1:Q26) |>
+  mutate(across(everything(), as.numeric))
+```
+
+## Cálculo do VIF por item
+
+O VIF (Variance Inflation Factor) diagnostica multicolinearidade entre itens.
+Valores acima de 10 indicam multicolinearidade problemática, antecipando
+problemas de convergência e interpretação na AFC.
+
+```{r}
+#| label: vif-calculo
+
+# VIF é propriedade dos preditores e invariante ao response
+response <- seq_len(nrow(itens))
+modelo <- lm(response ~ ., data = itens)
+vif_valores <- car::vif(modelo)
+```
+
+### Tabela de VIF
+
+```{r}
+#| label: vif-tabela
+
+vif_df <- tibble(
+  Item = names(vif_valores),
+  VIF  = round(as.numeric(vif_valores), 3),
+  Problematico = if_else(VIF > 10, "Sim", "Não")
+)
+
+vif_df |>
+  knitr::kable(
+    caption = "Variance Inflation Factor (VIF) por item — VIF > 10 indica multicolinearidade problemática",
+    digits  = 3
+  )
+```
+
+```{r}
+#| label: exportacao-base
+#| include: false
+
+# Exportar tabela de VIF
+dir.create("../../Output/Results", recursive = TRUE, showWarnings = FALSE)
+write_csv2(vif_df, "../../Output/Results/vif_table.csv")
+
+# Exportar base analítica final para AFC (apenas ID e Q1:Q26)
+dir.create("../../Data/AnalysisData", recursive = TRUE, showWarnings = FALSE)
+
+dados_analise_final <- dados_screened |>
+  select(ID, Q1:Q26)
+
+write_csv2(dados_analise_final, "../../Data/AnalysisData/whoqol_analysis.csv")
+```

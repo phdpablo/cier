@@ -16,6 +16,13 @@ execute: # https://quarto.org/docs/computations/execution-options.html
 manuscript: # https://quarto.org/docs/manuscripts/authoring/rstudio.html
   article: index.qmd # Main manuscript file.
   meca-bundle: false # Generate MECA bundle for journal submission.
+  notebooks:
+    - notebook: Scripts/ProcessingScripts/01_procedural.qmd
+      title: "Nível 1 — Exclusões procedimentais"
+    - notebook: Scripts/ProcessingScripts/02_posthoc.qmd
+      title: "Nível 2 — Indicadores post hoc C/IER"
+    - notebook: Scripts/ProcessingScripts/03_vif.qmd
+      title: "Nível 3 — Multicolinearidade VIF"
 
 bibliography: references.bib # https://quarto.org/docs/authoring/citations.html
 # File containing the bibliographic references in BibTeX format.

@@ -22,17 +22,23 @@ bibliography: references.bib
 number-sections: true
 ---
 
+## Contextualização
 
-```{r}
-#| label: setup
-#| include: false
+A detecção de Careless ou Insufficient Effort Responding (C/IER) é uma etapa
+essencial no controle de qualidade de dados obtidos por questionários de
+autorrelato. O C/IER se manifesta quando respondentes preenchem o instrumento
+sem atenção ao conteúdo dos itens, comprometendo a validade das inferências
+psicométricas e substantivas derivadas dos dados [@curran2016; @huang2026].
 
-# Pacotes necessários
-library(tidyverse)
-library(careless)
-library(gt)
-library(patchwork)
-```
+O fluxo analítico deste documento segue três níveis sequenciais de detecção:
+
+1. **Nível 1 — Questionário:** exclusões procedimentais (a priori), incluindo
+   abandono, tempo de resposta e itens de controle de qualidade.
+2. **Nível 2 — Escala WHOQOL:** indicadores post hoc diagnósticos (Laz.R,
+   Longstring, Mahalanobis Distance e IRV) com pontos de corte estimados via
+   algoritmo Kneedle [@satopaa2011].
+3. **Nível 3 — Itens:** diagnóstico de multicolinearidade via VIF para
+   antecipar problemas de convergência na AFC.
 
 ## Leitura e preparação dos dados
 
@@ -40,418 +46,78 @@ O arquivo `data.csv` contém as respostas brutas do questionário (separador `;`
 Nesta etapa, removem-se registros de abandono, selecionam-se as variáveis do
 fluxo analítico e deriva-se o tempo total de resposta (`TIME`).
 
-```{r}
-#| label: leitura-dados
-
-# Leitura do arquivo com separador ";"
-dados_brutos <- read_csv2("Data/InputData/data.csv", show_col_types = FALSE)
-
-# Identificação de abandono: ID ausente ou ausência completa de respostas em Q1-Q26
-dados_preparados <- dados_brutos |>
-  mutate(
-    abandono = is.na(ID) | rowSums(across(Q1:Q26, \(x) !is.na(x))) == 0
-  )
-
-# Seleção das colunas analíticas e derivação de TIME
-dados_importados <- dados_preparados |>
-  filter(!abandono) |>
-  select(ID, CREATED, MODIFIED, CQ1, CQ2, CQ3, Q1:Q26) |>
-  mutate(
-    across(c(CQ1, CQ2, CQ3, Q1:Q26), as.numeric),
-    CREATED_dt = as.POSIXct(CREATED, format = "%d/%m/%Y %H:%M", tz = "UTC"),
-    MODIFIED_dt = as.POSIXct(MODIFIED, format = "%d/%m/%Y %H:%M", tz = "UTC"),
-    TIME = as.numeric(difftime(MODIFIED_dt, CREATED_dt, units = "secs"))
-  ) |>
-  select(-CREATED_dt, -MODIFIED_dt)
-
-glimpse(dados_importados)
-```
+{{< embed Scripts/ProcessingScripts/01_procedural.qmd#leitura-dados >}}
 
 ## Exclusões procedimentais (Nível 1)
 
 O Nível 1 aplica três procedimentos prévios ao cálculo dos indicadores post hoc:
-remoção de abandono, exclusão por tempo de resposta inferior a 208 segundos e
-exclusão por duas ou mais falhas nos itens de controle de qualidade (`CQ1-CQ3`).
+remoção de abandono, exclusão por tempo de resposta inferior a 208 segundos
+(104 itens × 2 s/item) [@huang2026] e exclusão por duas ou mais falhas nos itens
+de controle de qualidade (`CQ1-CQ3`) [@curran2016]. Toda exclusão é registrada no
+`exclusion_log.csv` com motivo e critério.
 
-```{r}
-#| label: nivel-1
+{{< embed Scripts/ProcessingScripts/01_procedural.qmd#sumario-nivel-1 >}}
 
-# Regras procedimentais do Nível 1
-dados_nivel1 <- dados_importados |>
-  mutate(
-    cq_falhas = rowSums(across(CQ1:CQ3, \(x) x != 1), na.rm = TRUE),
-    excl_time = TIME < 208,
-    excl_cq = cq_falhas >= 2,
-    nivel1_excluido = excl_time | excl_cq
-  )
+## Cálculo dos indicadores C/IER (Nível 2)
 
-# Log de exclusões
-exclusion_log <- bind_rows(
-  dados_preparados |>
-    filter(abandono) |>
-    transmute(
-      ID,
-      criterio = "abandono",
-      valor = NA_real_,
-      detalhe = "Sem respostas válidas em Q1-Q26"
-    ),
-  dados_nivel1 |>
-    filter(excl_time) |>
-    transmute(
-      ID,
-      criterio = "time_rapido",
-      valor = TIME,
-      detalhe = paste0("TIME = ", TIME, " s")
-    ),
-  dados_nivel1 |>
-    filter(excl_cq) |>
-    transmute(
-      ID,
-      criterio = "cq_falhas",
-      valor = cq_falhas,
-      detalhe = paste0("Falhas CQ = ", cq_falhas)
-    )
-) |>
-  distinct(ID, criterio, .keep_all = TRUE)
+Cada indicador captura manifestações distintas de C/IER; a presença concomitante
+oferece evidência mais robusta do que qualquer indicador isolado [@curran2016;
+@hong2020; @huang2026].
 
-dir.create("Output/Results", recursive = TRUE, showWarnings = FALSE)
-write_csv2(exclusion_log, "Output/Results/exclusion_log.csv")
+### Variáveis individuais
 
-# Dados elegíveis para os indicadores C/IER (Nível 2)
-dados_analise <- dados_nivel1 |>
-  filter(!nivel1_excluido)
+Cada respondente recebe os valores dos quatro indicadores em um tibble
+consolidado.
 
-id_col <- dados_analise$ID
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tibble-indicadores >}}
 
-itens <- dados_analise |>
-  select(Q1:Q26) |>
-  mutate(across(everything(), as.numeric))
-
-tibble(
-  etapa = c("Dados brutos", "Abandono removido", "Excluídos por tempo", "Excluídos por CQ", "Elegíveis para Nível 2"),
-  n = c(
-    nrow(dados_brutos),
-    sum(dados_preparados$abandono, na.rm = TRUE),
-    sum(dados_nivel1$excl_time, na.rm = TRUE),
-    sum(dados_nivel1$excl_cq, na.rm = TRUE),
-    nrow(dados_analise)
-  )
-)
-```
-
-## Cálculo dos indicadores C/IER
-
-### Definição das funções auxiliares
-
-```{r}
-#| label: funcoes-auxiliares
-
-# --- Laz.R index (Biemann et al., 2025) ---
-# Calcula a previsibilidade da cadeia de Markov para cada respondente.
-# Valores altos indicam padrões de resposta previsíveis (e.g., repetição).
-calc_lazr <- function(x) {
-  tr <- table(x[-length(x)], x[-1], useNA = "ifany")
-  sum(tr^2 / rowSums(tr)) / (length(x) - 1)
-}
-
-# --- Algoritmo Kneedle (Satopaa et al., 2011) ---
-# Encontra o "cotovelo" em uma curva ordenada de valores.
-# Código adaptado de: https://rdrr.io/github/MollahLab/gen3DNet/man/kneedle.html
-dist2d <- function(a, b, c) {
-  v1 <- b - c
-  v2 <- a - b
-  m  <- cbind(v1, v2)
-  det(m) / sqrt(sum(v1 * v1))
-}
-
-kneedle <- function(values, sign) {
-  start <- c(1, values[1])
-  end   <- c(length(values), values[length(values)])
-  which.max(lapply(seq_along(values), function(idx) {
-    sign * -1 * dist2d(c(idx, values[idx]), start, end)
-  }))
-}
-```
-
-### Cálculo dos quatro indicadores
-
-```{r}
-#| label: calculo-indicadores
-
-# Laz.R — aplicado linha a linha
-lazr_vals <- apply(itens, 1, calc_lazr)
-
-# Longstring — maior sequência de respostas consecutivas idênticas
-longstr_vals <- longstring(itens)
-
-# Mahalanobis Distance (MD) — distância multivariada do centroide
-md_vals <- if (sum(is.na(itens)) == 0) {
-  mahad(itens, plot = FALSE)
-} else {
-  rep(NA_real_, nrow(itens))
-}
-
-# IRV — Intra-individual Response Variability (desvio-padrão intra-indivíduo)
-irv_vals <- irv(itens, split = FALSE)
-```
-
-## Variáveis individuais
-
-Cada respondente recebe os valores dos quatro indicadores em um tibble consolidado.
-
-```{r}
-#| label: tibble-indicadores
-
-df_indicadores <- tibble(
-  ID      = id_col,
-  LazR    = round(lazr_vals, 3),
-  Longstr = as.integer(longstr_vals),
-  MD      = round(md_vals, 3),
-  IRV     = round(irv_vals, 3)
-)
-
-df_indicadores
-```
-
-## Visualização univariada
+### Visualização univariada
 
 ::: {.panel-tabset}
 
-### Laz.R
+#### Laz.R
 
-```{r}
-#| label: viz-lazr
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#viz-lazr >}}
 
-p_hist_lazr <- ggplot(df_indicadores, aes(x = LazR)) +
-  geom_histogram(bins = 40, fill = "#3B7DD8", color = "white", alpha = 0.85) +
-  labs(title = "Laz.R", x = "Laz.R", y = "Frequência") +
-  theme_light()
+#### Longstring
 
-p_box_lazr <- ggplot(df_indicadores, aes(y = LazR)) +
-  geom_boxplot(fill = "#3B7DD8", alpha = 0.4, width = 0.3) +
-  labs(title = NULL, y = "Laz.R") +
-  theme_light() +
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#viz-longstr >}}
 
-p_hist_lazr + p_box_lazr + plot_layout(widths = c(3, 1))
-```
+#### Mahalanobis Distance
 
-### Longstring
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#viz-md >}}
 
-```{r}
-#| label: viz-longstr
+#### IRV
 
-p_hist_ls <- ggplot(df_indicadores, aes(x = Longstr)) +
-  geom_histogram(binwidth = 1, fill = "#E07B39", color = "white", alpha = 0.85) +
-  labs(title = "Longstring", x = "Longstring", y = "Frequência") +
-  theme_light()
-
-p_box_ls <- ggplot(df_indicadores, aes(y = Longstr)) +
-  geom_boxplot(fill = "#E07B39", alpha = 0.4, width = 0.3) +
-  labs(title = NULL, y = "Longstring") +
-  theme_light() +
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
-
-p_hist_ls + p_box_ls + plot_layout(widths = c(3, 1))
-```
-
-### Mahalanobis Distance
-
-```{r}
-#| label: viz-md
-
-p_hist_md <- ggplot(df_indicadores, aes(x = MD)) +
-  geom_histogram(bins = 40, fill = "#2CA02C", color = "white", alpha = 0.85) +
-  labs(title = "Mahalanobis Distance", x = "MD", y = "Frequência") +
-  theme_light()
-
-p_box_md <- ggplot(df_indicadores, aes(y = MD)) +
-  geom_boxplot(fill = "#2CA02C", alpha = 0.4, width = 0.3) +
-  labs(title = NULL, y = "MD") +
-  theme_light() +
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
-
-p_hist_md + p_box_md + plot_layout(widths = c(3, 1))
-```
-
-### IRV
-
-```{r}
-#| label: viz-irv
-
-p_hist_irv <- ggplot(df_indicadores, aes(x = IRV)) +
-  geom_histogram(bins = 40, fill = "#9467BD", color = "white", alpha = 0.85) +
-  labs(title = "IRV", x = "IRV", y = "Frequência") +
-  theme_light()
-
-p_box_irv <- ggplot(df_indicadores, aes(y = IRV)) +
-  geom_boxplot(fill = "#9467BD", alpha = 0.4, width = 0.3) +
-  labs(title = NULL, y = "IRV") +
-  theme_light() +
-  theme(axis.title.x = element_blank(), axis.text.x = element_blank(),
-        axis.ticks.x = element_blank())
-
-p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
-```
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#viz-irv >}}
 
 :::
 
-## Pontos de corte via algoritmo Kneedle
+### Pontos de corte via algoritmo Kneedle
 
-O kneedle é aplicado à curva ordenada (decrescente) de cada indicador.
+O Kneedle é aplicado à curva ordenada (decrescente) de cada indicador.
+Para **Laz.R**, **Longstring** e **MD**, o kneedle com `sign = -1` identifica
+onde os valores extremamente altos se separam da maioria (cauda direita).
+Para **IRV**, usa-se `sign = -1` para detectar IRV alto demais e
+`sign = +1` para IRV baixo demais, pois ambos extremos são suspeitos.
 
-- Para **Laz.R**, **Longstring** e **MD**: o kneedle com `sign = -1` identifica onde
-  os valores extremamente altos se separam da maioria (cauda direita).
-- Para **IRV**: usa-se `sign = -1` para detectar IRV alto demais (cauda direita)
-  e `sign = +1` para IRV baixo demais (cauda esquerda), pois ambos extremos são
-  suspeitos.
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#kneedle-cutoffs >}}
 
-```{r}
-#| label: kneedle-cutoffs
+### Flags de C/IER
 
-# Função auxiliar: aplicar kneedle a um vetor e retornar percentil + valor crítico
-calc_kneedle <- function(x, sign_val) {
-  x_sorted <- sort(x, decreasing = TRUE, na.last = NA)
-  n <- length(x_sorted)
-  if (n == 0 || sum(x_sorted, na.rm = TRUE) == 0) {
-    return(list(pct = NA_real_, crit = NA_real_, sorted = x_sorted))
-  }
-  pos <- kneedle(x_sorted, sign_val)
-  pct <- pos / n
-  crit <- quantile(x_sorted, probs = 1 - pct, na.rm = TRUE, names = FALSE)
-  list(pct = pct, crit = crit, sorted = x_sorted)
-}
+Para cada indicador, cria-se uma variável `_FLAG` (`1` = suspeito,
+`0` = não suspeito) com base nos pontos de corte Kneedle.
 
-# Laz.R — valores altos são suspeitos
-kn_lazr <- calc_kneedle(df_indicadores$LazR, -1)
+> **Nota:** Indicadores post hoc são **diagnósticos**, não geram exclusão
+> automática nesta fase. A flag composta será usada para inspeção visual e
+> decisão informada.
 
-# Longstring — valores altos são suspeitos
-kn_longstr <- calc_kneedle(df_indicadores$Longstr, -1)
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#resumo-flags >}}
 
-# Mahalanobis Distance — valores altos são suspeitos
-kn_md <- calc_kneedle(df_indicadores$MD, -1)
+## Multicolinearidade (Nível 3)
 
-# IRV — ambas as caudas são suspeitas
-kn_irv_high <- calc_kneedle(df_indicadores$IRV, -1)   # IRV alto demais
-kn_irv_low  <- calc_kneedle(df_indicadores$IRV, +1)   # IRV baixo demais
+O VIF (Variance Inflation Factor) é calculado para cada item da escala WHOQOL.
+Valores superiores a 10 indicam multicolinearidade problemática, antecipando
+problemas de convergência e interpretação na AFC [@flora2012; @kline2023].
 
-# Tabela resumo dos pontos de corte
-tab_cutoffs <- tibble(
-  Indicador                   = c("Laz.R", "Longstring", "MD",
-                                  "IRV (high end)", "IRV (low end)"),
-  `Valor crítico`             = round(c(kn_lazr$crit, kn_longstr$crit, kn_md$crit,
-                                        kn_irv_high$crit, kn_irv_low$crit), 2),
-  `% suspeitos`               = round(c(
-    kn_lazr$pct, kn_longstr$pct, kn_md$pct,
-    kn_irv_high$pct, 1 - kn_irv_low$pct
-  ) * 100, 1)
-)
-
-tab_cutoffs |>
-  gt() |>
-  tab_header(
-    title    = "Pontos de corte — Algoritmo Kneedle",
-    subtitle = "Biemann et al. (2025)"
-  ) |>
-  fmt_number(columns = `Valor crítico`, decimals = 2) |>
-  fmt_number(columns = `% suspeitos`, decimals = 1)
-```
-
-
-
-## Flags de C/IER
-
-Para cada indicador, cria-se uma variável `_FLAG` (`1` = suspeito, `0` = não suspeito)
-com base nos pontos de corte Kneedle:
-
-- **Laz.R** e **MD**: flag = 1 se valor ≥ valor crítico.
-- **Longstring**: flag = 1 se valor for estritamente maior que o valor crítico.
-- **IRV high**: flag = 1 se valor ≥ valor crítico (variação excessiva).
-- **IRV low**: flag = 1 se valor ≤ valor crítico (variação insuficiente).
-
-```{r}
-#| label: flags
-
-df_flags <- df_indicadores |>
-  mutate(
-    LazR_FLAG         = if_else(LazR    >= kn_lazr$crit,      1L, 0L),
-    Longstr_FLAG      = if_else(Longstr >  kn_longstr$crit,   1L, 0L),
-    MD_FLAG           = if_else(MD      >= kn_md$crit,        1L, 0L),
-    IRV_high_FLAG     = if_else(IRV     >= kn_irv_high$crit,  1L, 0L),
-    IRV_low_FLAG      = if_else(IRV     <= kn_irv_low$crit,   1L, 0L)
-    )
-
-df_flags
-```
-
-### Resumo das flags
-
-```{r}
-#| label: resumo-flags
-
-df_flags |>
-  summarise(
-    across(ends_with("_FLAG"), list(
-      n_suspeitos   = \(x) sum(x, na.rm = TRUE),
-      pct_suspeitos = \(x) mean(x, na.rm = TRUE) * 100
-    ))
-  ) |>
-  pivot_longer(everything(),
-               names_to = c("Indicador", ".value"),
-               names_pattern = "(.+)_(n_suspeitos|pct_suspeitos)") |>
-  gt() |>
-  tab_header(title = "Resumo de respondentes sinalizados como C/IER") |>
-  fmt_number(columns = pct_suspeitos, decimals = 1) |>
-  cols_label(
-    Indicador     = "Indicador",
-    n_suspeitos   = "N suspeitos",
-    pct_suspeitos = "% suspeitos"
-  )
-```
-
-## Exportação do arquivo com flags
-
-O arquivo final `data_flag.csv` preserva as colunas originais de `data.csv`,
-adiciona as variáveis procedimentais do Nível 1 e as flags dos indicadores calculadas.
-
-```{r}
-#| label: exportacao-flags
-
-data_flag <- dados_brutos |>
-  left_join(
-    dados_preparados |>
-      transmute(ID, abandono = as.integer(abandono)),
-    by = join_by(ID)
-  ) |>
-  left_join(
-    dados_nivel1 |>
-      transmute(
-        ID,
-        TIME,
-        cq_falhas,
-        excl_time = as.integer(excl_time),
-        excl_cq = as.integer(excl_cq),
-        nivel1_excluido = as.integer(nivel1_excluido)
-      ),
-    by = join_by(ID)
-  ) |>
-  left_join(
-    df_flags |>
-      select(
-        ID,
-        LazR_FLAG,
-        Longstr_FLAG,
-        MD_FLAG,
-        IRV_high_FLAG,
-        IRV_low_FLAG
-      ),
-    by = join_by(ID)
-  )
-
-readr::write_csv2(data_flag, "Data/IntermediateData/whoqol_screened.csv")
-
-data_flag
-```
+{{< embed Scripts/ProcessingScripts/03_vif.qmd#vif-tabela >}}

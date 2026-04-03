@@ -1,0 +1,131 @@
+---
+title: "Nível 1 — Exclusões procedimentais"
+author: Pablo Rogers
+execute:
+  echo: true
+---
+
+```{r}
+#| label: setup-01
+#| include: false
+
+library(tidyverse)
+library(gt)
+```
+
+## Leitura e preparação dos dados
+
+O arquivo `data.csv` contém as respostas brutas do questionário (separador `;`).
+Nesta etapa, removem-se registros de abandono, selecionam-se as variáveis do
+fluxo analítico e deriva-se o tempo total de resposta (`TIME`).
+
+```{r}
+#| label: leitura-dados
+
+dados_brutos <- read_csv2(
+  "../../Data/InputData/data.csv",
+  show_col_types = FALSE
+)
+
+dados_preparados <- dados_brutos |>
+  mutate(
+    abandono = is.na(ID) | rowSums(across(Q1:Q26, \(x) !is.na(x))) == 0
+  )
+
+dados_importados <- dados_preparados |>
+  filter(!abandono) |>
+  select(ID, CREATED, MODIFIED, CQ1, CQ2, CQ3, Q1:Q26) |>
+  mutate(
+    across(c(CQ1, CQ2, CQ3, Q1:Q26), as.numeric),
+    CREATED_dt = as.POSIXct(CREATED, format = "%d/%m/%Y %H:%M", tz = "UTC"),
+    MODIFIED_dt = as.POSIXct(MODIFIED, format = "%d/%m/%Y %H:%M", tz = "UTC"),
+    TIME = as.numeric(difftime(MODIFIED_dt, CREATED_dt, units = "secs"))
+  ) |>
+  select(-CREATED_dt, -MODIFIED_dt)
+
+glimpse(dados_importados)
+```
+
+## Exclusões procedimentais (Nível 1)
+
+- `CQ == 1`: o respondente acertou o item de controle de qualidade.
+- `CQ == 0`: o respondente falhou no item de controle de qualidade.
+
+```{r}
+#| label: nivel-1
+
+dados_nivel1 <- dados_importados |>
+  mutate(
+    cq_falhas = rowSums(across(CQ1:CQ3, \(x) x != 1), na.rm = TRUE),
+    excl_time = TIME < 208,
+    excl_cq   = cq_falhas >= 2,
+    nivel1_excluido = excl_time | excl_cq
+  )
+
+exclusion_log <- bind_rows(
+  dados_preparados |>
+    filter(abandono) |>
+    transmute(
+      ID,
+      criterio = "abandono",
+      valor    = NA_real_,
+      detalhe  = "Sem respostas válidas em Q1-Q26"
+    ),
+  dados_nivel1 |>
+    filter(excl_time) |>
+    transmute(
+      ID,
+      criterio = "time_rapido",
+      valor    = TIME,
+      detalhe  = paste0("TIME = ", TIME, " s")
+    ),
+  dados_nivel1 |>
+    filter(excl_cq) |>
+    transmute(
+      ID,
+      criterio = "cq_falhas",
+      valor    = cq_falhas,
+      detalhe  = paste0("Falhas CQ = ", cq_falhas)
+    )
+) |>
+  distinct(ID, criterio, .keep_all = TRUE)
+
+dir.create("../../Output/Results", recursive = TRUE, showWarnings = FALSE)
+write_csv2(exclusion_log, "../../Output/Results/exclusion_log.csv")
+
+dados_elegiveis <- dados_nivel1 |>
+  filter(!nivel1_excluido) |>
+  select(ID, CQ1, CQ2, CQ3, TIME, Q1:Q26)
+```
+
+### Sumário do Nível 1
+
+```{r}
+#| label: sumario-nivel-1
+
+tibble(
+  Etapa = c(
+    "Dados brutos",
+    "Abandono removido",
+    "Excluídos por tempo (< 208 s)",
+    "Excluídos por CQ (≥ 2 falhas)",
+    "Elegíveis para Nível 2"
+  ),
+  N = c(
+    nrow(dados_brutos),
+    sum(dados_preparados$abandono, na.rm = TRUE),
+    sum(dados_nivel1$excl_time, na.rm = TRUE),
+    sum(dados_nivel1$excl_cq, na.rm = TRUE),
+    nrow(dados_elegiveis)
+  )
+) |>
+  knitr::kable(caption = "Resumo das exclusões procedimentais — Nível 1")
+```
+
+```{r}
+#| label: exportacao-nivel-1
+#| include: false
+
+dir.create("../../Data/IntermediateData", recursive = TRUE, showWarnings = FALSE)
+write_csv2(dados_elegiveis, "../../Data/IntermediateData/whoqol_imported.csv")
+```
