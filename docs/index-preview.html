@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="generator" content="quarto-1.8.25">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+    <meta name="author" content="Pablo Rogers">
+    <meta name="dcterms.date" content="2026-04-03">
+    <meta name="keywords" content="Careless Responding, Insufficient Effort Responding, Laz.R, Longstring, Mahalanobis Distance, IRV">
+
+    <title>Detecção de Careless/Insufficient Effort Responding (C/IER)</title>
+    <style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      ul.task-list{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+        vertical-align: middle;
+      }
+      /* CSS for syntax highlighting */
+      html { -webkit-text-size-adjust: 100%; }
+      pre > code.sourceCode { white-space: pre; position: relative; }
+      pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+      pre > code.sourceCode > span:empty { height: 1.2em; }
+      .sourceCode { overflow: visible; }
+      code.sourceCode > span { color: inherit; text-decoration: inherit; }
+      div.sourceCode { margin: 1em 0; }
+      pre.sourceCode { margin: 0; }
+      @media screen {
+      div.sourceCode { overflow: auto; }
+      }
+      @media print {
+      pre > code.sourceCode { white-space: pre-wrap; }
+      pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+      }
+      pre.numberSource code
+        { counter-reset: source-line 0; }
+      pre.numberSource code > span
+        { position: relative; left: -4em; counter-increment: source-line; }
+      pre.numberSource code > span > a:first-child::before
+        { content: counter(source-line);
+          position: relative; left: -1em; text-align: right; vertical-align: baseline;
+          border: none; display: inline-block;
+          -webkit-touch-callout: none; -webkit-user-select: none;
+          -khtml-user-select: none; -moz-user-select: none;
+          -ms-user-select: none; user-select: none;
+          padding: 0 4px; width: 4em;
+        }
+      pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+      div.sourceCode
+        {   }
+      @media screen {
+      pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+      }
+    </style>
+
+    <style>
+      body.hypothesis-enabled #quarto-embed-header {
+        padding-right: 36px;
+      }
+
+      #quarto-embed-header {
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: solid 1px;
+      }
+
+      #quarto-embed-header h6 {
+        font-size: 1.1em;
+        padding-top: 0.6em;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-weight: 400;
+      }
+
+      #quarto-embed-header a.quarto-back-link,
+      #quarto-embed-header a.quarto-download-embed {
+        font-size: 0.8em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .quarto-back-container {
+        padding-left: 0.5em;
+        display: flex;
+      }
+
+      .headroom {
+          will-change: transform;
+          transition: transform 200ms linear;
+      }
+
+      .headroom--pinned {
+          transform: translateY(0%);
+      }
+
+      .headroom--unpinned {
+          transform: translateY(-100%);
+      }      
+    </style>
+
+    <script>
+    window.document.addEventListener("DOMContentLoaded", function () {
+
+      var header = window.document.querySelector("#quarto-embed-header");
+      const titleBannerEl = window.document.querySelector("body > #title-block-header");
+      if (titleBannerEl) {
+        titleBannerEl.style.paddingTop = header.clientHeight + "px";
+      }
+      const contentEl = window.document.getElementById('quarto-content');
+      for (const child of contentEl.children) {
+        child.style.paddingTop = header.clientHeight + "px";
+        child.style.marginTop = "1em";
+      }
+
+      // Use the article root if the `back` call doesn't work. This isn't perfect
+      // but should typically work
+      window.quartoBackToArticle = () => {
+        var currentUrl = window.location.href;
+        window.history.back();
+        setTimeout(() => {
+            // if location was not changed in 100 ms, then there is no history back
+            if(currentUrl === window.location.href){              
+                // redirect to site root
+                window.location.href = "index.html";
+            }
+        }, 100);
+      }
+
+      const headroom = new window.Headroom(header, {
+        tolerance: 5,
+        onPin: function () {
+        },
+        onUnpin: function () {
+        },
+      });
+      headroom.init();
+    });
+    </script>
+
+    
+<script src="site_libs/manuscript-notebook/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e261b86ae15e22bf333780d8a72f25c9.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
+     <script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>  
+      <meta name="citation_title" content="Detecção de Careless/Insufficient Effort Responding (C/IER)">
+<meta name="citation_abstract" content="This... (abstract text here)
+">
+<meta name="citation_keywords" content="Careless Responding,Insufficient Effort Responding,Laz.R,Longstring,Mahalanobis Distance,IRV">
+<meta name="citation_author" content="Pablo Rogers">
+<meta name="citation_publication_date" content="2026-04-03">
+<meta name="citation_cover_date" content="2026-04-03">
+<meta name="citation_year" content="2026">
+<meta name="citation_online_date" content="2026-04-03">
+<meta name="citation_language" content="en">
+<meta name="citation_reference" content="citation_title=The Relationship of Insufficient Effort Responding and Response Styles: An Online Experiment;,citation_abstract=While self-report data is a staple of modern psychological studies, they rely on participants accurately self-reporting. Two constructs that impede accurate results are insufficient effort responding and response styles. These constructs share conceptual underpinnings and both utilized to reduce cognitive effort when responding to self-report scales. Little research has extensively explored the relationship of the two constructs. The current study explored the relationship of the two constructs across even-point and odd-point scales, as well as before and after data cleaning procedures. We utilized IRTrees, a statistical method for modeling response styles, to examine the relationship between IER and response styles. To capture the wide range of IER metrics available, we employed several forms of IER assessment in our analyses and generated IER factors based on the type of IER being detected. Our results indicated an overall modest relationship between IER and response styles, which varied depending on the type of IER metric being considered or type of scale being evaluated. As expected, data cleaning also changed the relationships of some of the variables. We posit the difference between the constructs may be the degree of cognitive effort participants are willing to expend. Future research and applications are discussed.;,citation_author=Gene M. Alarcon;,citation_author=Michael A. Lee;,citation_publication_date=2022-01;,citation_cover_date=2022-01;,citation_year=2022;,citation_doi=10.3389/fpsyg.2021.784375;,citation_issn=1664-1078;,citation_volume=12;,citation_language=en-US;,citation_journal_title=Front. Psychol.;,citation_publisher=Frontiers;">
+<meta name="citation_reference" content="citation_title=Using Markov Chains to Detect Careless Responding in Survey Research;,citation_abstract=Careless responses by survey participants threaten data quality and lead to misleading substantive conclusions that result in theory and practice derailments. Prior research developed valuable precautionary and post-hoc approaches to detect certain types of careless responding. However, existing approaches fail to detect certain repeated response patterns, such as diagonal-lining and alternating responses. Moreover, some existing approaches risk falsely flagging careful response patterns. To address these challenges, we developed a methodological advancement based on first-order Markov chains called Lazy Respondents (Laz.R) that relies on predicting careless responses based on prior responses. We analyzed two large datasets and conducted an experimental study to compare careless responding indices to Laz.R and provide evidence that its use improves validity. To facilitate the use of Laz.R, we describe a procedure for establishing sample-specific cutoff values for careless respondents using the “kneedle algorithm” and make an R Shiny application available to produce all calculations. We expect that using Laz.R in combination with other approaches will help mitigate the threat of careless responses and improve the accuracy of substantive conclusions in future research.;,citation_author=Torsten Biemann;,citation_author=Irmela F. Koch-Bayram;,citation_author=Madleen Meier-Barthold;,citation_author=Herman Aguinis;,citation_publication_date=2025-10;,citation_cover_date=2025-10;,citation_year=2025;,citation_issue=4;,citation_doi=10.1177/10944281251334778;,citation_issn=1094-4281, 1552-7425;,citation_volume=28;,citation_language=en-US;,citation_journal_title=Organizational Research Methods;">
+<meta name="citation_reference" content="citation_title=A Two-Step Method Based on lz* for Identifying Effortful Respondents;,citation_abstract=The likelihood-based person-fit statistic, lz*, is commonly used in educational assessments to distinguish between respondents who are putting in effort and those who are not. However, lz* depends on the estimated item parameters. Item parameter estimates based on data containing non-effortful respondents are biased, thereby undermining the strength of lz*. To address this issue, we propose a two-step method that leverages data mining techniques to obtain more accurate item parameter estimates and then uses them to compute lz*. The results show that the estimates based on the effortful group identified by K-means are more accurate, which improves the performance of lz* in terms of the precision of identifying effortful respondents when non-effort severity is high.;,citation_author=Yilan Chen;,citation_author=Yue Liu;,citation_author=Hongyun Liu;,citation_publication_date=2026-02;,citation_cover_date=2026-02;,citation_year=2026;,citation_issue=2;,citation_doi=10.3390/jintelligence14020030;,citation_issn=2079-3200;,citation_pmid=41745216;,citation_volume=14;,citation_journal_title=J Intell;">
+<meta name="citation_reference" content="citation_title=Methods for the detection of carelessly invalid responses in survey data;,citation_abstract=Self-report data collections, particularly through online measures, are ubiquitous in both experimental and non-experimental psychology. Invalid data can be present in such data collections for a number of reasons. One reason is careless or insufficient effort (C/IE) responding. The past decade has seen a rise in research on techniques to detect and remove these data before normal analysis (Huang, Curran, Keeney, Poposki, &amp;amp;amp; DeShon, 2012; Johnson, 2005; Meade &amp; Craig, 2012). The rigorous use of these techniques is valuable tool for the removal of error that can impact survey results (Huang, Liu, &amp; Bowling, 2015). This research has encompassed a number of sub-fields of psychology, and this paper aims to integrate different perspectives into a review and assessment of current techniques, an introduction of new techniques, and a generation of recommendations for practical use. Concerns about C/IE responding are a factor any time self-report data are collected, and all such researchers should be well-versed on methods to detect this pattern of response.;,citation_author=Paul G. Curran;,citation_publication_date=2016-09;,citation_cover_date=2016-09;,citation_year=2016;,citation_doi=10.1016/j.jesp.2015.07.006;,citation_issn=0022-1031;,citation_volume=66;,citation_journal_title=Journal of Experimental Social Psychology;,citation_series_title=Rigorous and Replicable Methods in Social Psychology;">
+<meta name="citation_reference" content="citation_title=Methods of Detecting Insufficient Effort Responding: Comparisons and Practical Recommendations;,citation_abstract=Insufficient effort responding (IER) affects many forms of assessment in both educational and psychological contexts. Much research has examined different types of IER, IER’s impact on the psychometric properties of test scores, and preprocessing procedures used to detect IER. However, there is a gap in the literature in terms of practical advice for applied researchers and psychometricians when evaluating multiple sources of IER evidence, including the best strategy or combination of strategies when preprocessing data. In this study, we demonstrate how the use of different IER detection methods may affect psychometric properties such as predictive validity and reliability. Moreover, we evaluate how different data cleansing procedures can detect different types of IER. We provide evidence via simulation studies and applied analysis using the ACT’s Engage assessment as a motivating example. Based on the findings of the study, we provide recommendations and future research directions for those who suspect their data may contain responses reflecting careless, random, or biased responding.;,citation_author=Maxwell Hong;,citation_author=Jeffrey T. Steedle;,citation_author=Ying Cheng;,citation_publication_date=2020-04;,citation_cover_date=2020-04;,citation_year=2020;,citation_issue=2;,citation_doi=10.1177/0013164419865316;,citation_issn=0013-1644;,citation_pmid=32158024;,citation_volume=80;,citation_journal_title=Educ Psychol Meas;">
+<meta name="citation_reference" content="citation_title=Insufficient effort responding: Examining an insidious confound in survey data.;,citation_abstract=Insufficient effort responding (IER; Huang, Curran, Keeney, Poposki, &amp;amp;amp; DeShon, 2012) to surveys has largely been assumed to be a source of random measurement error that attenuates associations between substantive measures. The current article, however, illustrates how and when the presence of IER can produce a systematic bias that inflates observed correlations between substantive measures. Noting that inattentive responses as a whole generally congregate around the midpoint of a Likert scale, we propose that Mattentive, defined as the mean score of attentive respondents on a substantive measure, will be negatively related to IER’s confounding effect on substantive measures (i.e., correlations between IER and a given substantive measure will become less positive [or more negative] as Mattentive increases). Results from a personality questionnaire (Study 1) and a simulation (Study 2) consistently support the hypothesized confounding influence of IER. Using an employee sample (Study 3), we demonstrated how IER can confound bivariate relationships between substantive measures. Together, these studies indicate that IER can inflate the strength of observed relationships when scale means depart from the scale midpoints, resulting in an inflated Type I error rate. This challenges the traditional view that IER attenuates observed bivariate correlations. These findings highlight situations where IER may be a methodological nuisance, while underscoring the need for survey administrators and researchers to deter and detect IER in surveys. The current article serves as a wake-up call for researchers and practitioners to more closely examine IER in their data.;,citation_author=Jason L. Huang;,citation_author=Mengqiao Liu;,citation_author=Nathan A. Bowling;,citation_publication_date=2015;,citation_cover_date=2015;,citation_year=2015;,citation_issue=3;,citation_doi=http://dx.doi.org/10.1037/a0038510;,citation_issn=1939-1854, 0021-9010;,citation_volume=100;,citation_language=en-US;,citation_journal_title=Journal of Applied Psychology;">
+<meta name="citation_reference" content="citation_title=Insufficient Effort Responding in Management Research: A Critical Review and Future Directions;,citation_author=Jason L Huang;,citation_author=Zhonghao Wang;,citation_author=Ran Huang;,citation_author=Dongyuan Wu;,citation_author=Huijie Shi;,citation_publication_date=2026;,citation_cover_date=2026;,citation_year=2026;,citation_issue=1;,citation_doi=10.1177/01492063251330268;,citation_volume=52;,citation_language=en-US;">
+<meta name="citation_reference" content="citation_title=Comparing Person-Fit and Traditional Indices Across Careless Response Patterns in Surveys;,citation_abstract=Methods to identify carelessness in survey research can be valuable tools in reducing bias during survey development, validation, and use. Because carelessness may take multiple forms, researchers typically use multiple indices when identifying carelessness. In the current study, we extend the literature on careless response identification by examining the usefulness of three item-response theory-based person-fit indices for both random and overconsistent careless response identification: infit MSE outfit MSE, and the polytomous l z statistic. We compared these statistics with traditional careless response indices using both empirical data and simulated data. The empirical data included 2,049 high school student surveys of teaching effectiveness from the Network for Educator Effectiveness. In the simulated data, we manipulated type of carelessness (random response or overconsistency) and percent of carelessness present (0%, 5%, 10%, 20%). Results suggest that infit and outfit MSE and the l z statistic may provide complementary information to traditional indices such as LongString, Mahalanobis Distance, Validity Items, and Completion Time. Receiver operating characteristic curves suggested that the person-fit indices showed good sensitivity and specificity for classifying both over-consistent and under-consistent careless patterns, thus functioning in a bidirectional manner. Carelessness classifications based on low fit values correlated with carelessness classifications from LongString and completion time, and classifications based on high fit values correlated with classifications from Mahalanobis Distance. We consider implications for research and practice.;,citation_author=Eli A. Jones;,citation_author=Stefanie A. Wind;,citation_author=Chia-Lin Tsai;,citation_author=Yuan Ge;,citation_publication_date=2023-09;,citation_cover_date=2023-09;,citation_year=2023;,citation_issue=5-6;,citation_doi=10.1177/01466216231194358;,citation_issn=0146-6216;,citation_pmid=37810542;,citation_volume=47;,citation_journal_title=Appl Psychol Meas;">
+<meta name="citation_reference" content="citation_title=Identifying Dynamic Shifts to Careless and Insufficient Effort Behavior in Questionnaire Responses; a Novel Approach and Experimental Validation;,citation_abstract=Careless and insufficient effort responding (C/IER) is a situation where participants respond to survey instruments without considering the item content. This phenomena adds noise to data leading to erroneous inference. There are multiple approaches to identifying and accounting for C/IER in survey settings, of these approaches the best performing are model based classification techniques. Classic approaches to accounting for C/IER treat it as a person level phenomena. They first use some method to identify participants who exhibit C/IER, then use list-wise deletion to remove them prior to analysis. We argue that C/IER is actually a state that participants may exhibit for a portion of a survey instrument. In other words, participants start a survey with the intention to follow instructions, but at some point transition to a C/IER state and no longer respond in line with item contents. Accounting for C/IER at the item level, as opposed to the person level preserves data resulting in increased power. In this article we present a Bayesian Dynamic Latent Class Structural Equation Modeling (DLCSEM) approach for simultaneously accounting for C/IER at the item level and estimating a model of interest. We use a simulation study to establish the approaches performance under empirically relevant conditions and to compare it to other methods. We then conducted an experimental validation in which we induce C/IER like responses from human subjects and investigate the approaches ability to identify the point in which participants transition to a C/IER state. We also compare the model to existing approaches. In both the simulation and experimental validation the DLCSEM outperforms the alternative approaches. We conclude that the approach should be used by applied researchers for the pragmatic benefits of the method. Conclusions, limitations, and future directions are discussed.;,citation_author=Zachary J. Roman;,citation_author=Patrick Schmidt;,citation_author=Jason M. Miller;,citation_author=Holger Brandt;,citation_publication_date=2024-09;,citation_cover_date=2024-09;,citation_year=2024;,citation_issue=5;,citation_doi=10.1080/10705511.2024.2304816;,citation_issn=1070-5511;,citation_volume=31;,citation_journal_title=Structural Equation Modeling: A Multidisciplinary Journal;,citation_publisher=Routledge;">
+<meta name="citation_reference" content="citation_title=Detecting Inattentive Responding on a Psychosocial Measure of College Readiness;,citation_abstract=Contemporary definitions of college and career readiness extend well beyond the mathematics and English language arts skills needed for success in postsecondary courses or job training. Among other aspects of readiness, those definitions include psychosocial or social and emotional learning (SEL) competencies reflecting behaviors and attitudes that support learning and persistence.;,citation_author=Jeffrey Steedle;,citation_publication_date=2018;,citation_cover_date=2018;,citation_year=2018;,citation_language=en-US;,citation_technical_report_institution=ACT.org;">
+<meta name="citation_reference" content="citation_title=A Response-Time-Based Latent Response Mixture Model for Identifying and Modeling Careless and Insufficient Effort Responding in Survey Data;,citation_abstract=Careless and insufficient effort responding (C/IER) can pose a major threat to data quality and, as such, to validity of inferences drawn from questionnaire data. A rich body of methods aiming at its detection has been developed.Most of these methods can detect only specific types of C/IER patterns. However, typically different types of C/IER patterns occur within one data set and need to be accounted for. We present a model-based approach for detecting manifold manifestations of C/IER at once. This is achieved by leveraging response time (RT) information available from computer-administered questionnaires and integrating theoretical considerations on C/IER with recent psychometric modeling approaches. The approach a) takes the specifics of attentive response behavior on questionnaires into account by incorporating the distance–difficulty hypothesis, b) allows for attentiveness to vary on the screen-by-respondent level, c) allows for respondents with different trait and speed levels to differ in their attentiveness, and d) at once deals with various response patterns arising from C/IER. The approach makes use of item-level RTs. An adapted version for aggregated RTs is presented that supports screening for C/IER behavior on the respondent level. Parameter recovery is investigated in a simulation study. The approach is illustrated in an empirical example, comparing different RT measures and contrasting the proposed model-based procedure against indicator-based multiple-hurdle approaches.;,citation_author=Esther Ulitzsch;,citation_author=Steffi Pohl;,citation_author=Lale Khorramdel;,citation_author=Ulf Kroehne;,citation_author=Matthias Davier;,citation_publication_date=2022-06;,citation_cover_date=2022-06;,citation_year=2022;,citation_issue=2;,citation_doi=10.1007/s11336-021-09817-7;,citation_issn=0033-3123, 1860-0980;,citation_volume=87;,citation_language=en-US;,citation_journal_title=Psychometrika;">
+<meta name="citation_reference" content="citation_title=Accounting for careless and insufficient effort responding in large-scale survey data—development, evaluation, and application of a screen-time-based weighting procedure;,citation_abstract=Careless and insufficient effort responding (C/IER) poses a major threat to the quality of large-scale survey data. Traditional indicator-based procedures for its detection are limited in that they are only sensitive to specific types of C/IER behavior, such as straight lining or rapid responding, rely on arbitrary threshold settings, and do not allow taking the uncertainty of C/IER classification into account. Overcoming these limitations, we develop a two-step screen-time-based weighting procedure for computer-administered surveys. The procedure allows considering the uncertainty in C/IER identification, is agnostic towards the specific types of C/IE response patterns, and can feasibly be integrated with common analysis workflows for large-scale survey data. In Step 1, we draw on mixture modeling to identify subcomponents of log screen time distributions presumably stemming from C/IER. In Step 2, the analysis model of choice is applied to item response data, with respondents’ posterior class probabilities being employed to downweigh response patterns according to their probability of stemming from C/IER. We illustrate the approach on a sample of more than 400,000 respondents being administered 48 scales of the PISA 2018 background questionnaire. We gather supporting validity evidence by investigating relationships between C/IER proportions and screen characteristics that entail higher cognitive burden, such as screen position and text length, relating identified C/IER proportions to other indicators of C/IER as well as by investigating rank-order consistency in C/IER behavior across screens. Finally, in a re-analysis of the PISA 2018 background questionnaire data, we investigate the impact of the C/IER adjustments on country-level comparisons.;,citation_author=Esther Ulitzsch;,citation_author=Hyo Jeong Shin;,citation_author=Oliver Lüdtke;,citation_publication_date=2024;,citation_cover_date=2024;,citation_year=2024;,citation_issue=2;,citation_doi=10.3758/s13428-022-02053-6;,citation_issn=1554-351X;,citation_pmid=36867339;,citation_volume=56;,citation_journal_title=Behav Res Methods;">
+<meta name="citation_reference" content="citation_title=Investigating dynamics in attentive and inattentive responding together with their contextual correlates using a novel mixture IRT model for intensive longitudinal data;,citation_abstract=Abstract In ecological momentary assessment (EMA), respondents answer brief questionnaires about their current behaviours or experiences several times per day across multiple days. The frequent measurement enables a thorough grasp of the dynamics inherent in psychological constructs, but it also increases respondent burden. To lower this burden, respondents may engage in careless and insufficient effort responding (C/IER), leaving data contaminated with responses that do not reflect what researchers want to measure. We introduce a novel approach to investigating C/IER in EMA data. Our approach combines a confirmatory mixture item response theory model separating C/IER from attentive behaviour with latent Markov factor analysis. This enables gauging the occurrence of C/IER and studying transitions among states of different response behaviours including their contextual correlates. The approach can be implemented using R packages. An empirical application showcases the approach’s efficacy in pinpointing C/IER instances and gaining insights into their underlying causes. We showcase that the approach identifies various C/IER response patterns but requires heterogeneous and negatively worded items to detect straightlining. In a simulation investigating robustness against unaccounted for changes in measurement models underlying attentive responses, the approach proved robust against heterogeneity in loading patterns but not against heterogeneity in factor structures. Extensions to accommodate the latter are discussed.;,citation_author=Leonie V. D. E. Vogelsmeier;,citation_author=Irina Uglanova;,citation_author=Manuel T. Rein;,citation_author=Esther Ulitzsch;,citation_publication_date=2024-12;,citation_cover_date=2024-12;,citation_year=2024;,citation_doi=10.1111/bmsp.12373;,citation_issn=0007-1102, 2044-8317;,citation_language=en-US;,citation_journal_title=Brit J Math &amp;amp;amp; Statis;">
+<meta name="citation_reference" content="citation_title=Dealing with Careless Responding in Survey Data: Prevention, Identification, and Recommended Best Practices;,citation_abstract=Surveys administered online have several benefits, but they are particularly prone to careless responding, which occurs when respondents fail to read item content or give sufficient attention, resulting in raw data that may not accurately reflect respondents’ true levels of the constructs being measured. Careless responding can lead to various psychometric issues, potentially impacting any area of psychology that uses self-reported surveys and assessments. This review synthesizes the careless responding literature to provide a comprehensive understanding of careless responding and ways to prevent, identify, report, and clean careless responding from data sets. Further, we include recommendations for different levels of screening for careless responses. Finally, we highlight some of the most promising areas for future work on careless responding.;,citation_author=M. K. Ward;,citation_author=Adam W. Meade;,citation_publication_date=2023-01;,citation_cover_date=2023-01;,citation_year=2023;,citation_issue=Volume 74, 2023;,citation_doi=10.1146/annurev-psych-040422-045007;,citation_issn=0066-4308, 1545-2085;,citation_volume=74;,citation_language=en-US;,citation_journal_title=Annu. Rev. Psychol.;,citation_publisher=Annual Reviews;">
+<meta name="citation_reference" content="citation_title=A Beta Mixture Model for Careless Respondent Detection in Visual Analogue Scale Data;,citation_abstract=Visual Analogue scales (VASs) are increasingly popular in psychological, social, and medical research. However, VASs can also be more demanding for respondents, potentially leading to quicker disengagement and a higher risk of careless responding. Existing mixture modeling approaches for careless response detection have so far only been available for Likert-type and unbounded continuous data but have not been tailored to VAS data. This study introduces and evaluates a model-based approach specifically designed to detect and account for careless respondents in VAS data. We integrate existing measurement models for VASs with mixture item response theory models for identifying and modeling careless responding. Simulation results show that the proposed model effectively detects careless responding and recovers key parameters. We illustrate the model’s potential for identifying and accounting for careless responding using real data from both VASs and Likert scales. First, we show how the model can be used to compare careless responding across different scale types, revealing a higher proportion of careless respondents in VAS compared to Likert scale data. Second, we demonstrate that item parameters from the proposed model exhibit improved psychometric properties compared to those from a model that ignores careless responding. These findings underscore the model’s potential to enhance data quality by identifying and addressing careless responding.;,citation_author=Lijin Zhang;,citation_author=Benjamin W. Domingue;,citation_author=Leonie V. D. E. Vogelsmeier;,citation_author=Esther Ulitzsch;,citation_publication_date=2025;,citation_cover_date=2025;,citation_year=2025;,citation_issue=4;,citation_doi=10.1017/psy.2025.10041;,citation_issn=0033-3123;,citation_pmid=40985065;,citation_volume=90;,citation_journal_title=Psychometrika;">
+</head>
+
+  <body class="quarto-notebook quarto-light">
+    <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
+      
+      <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
+      <h6><i class="bi bi-journal-code"></i> Article Notebook</h6>
+
+            <a href="./index.qmd" class="btn btn-primary quarto-download-embed" download="index.qmd">Download Source</a>
+          </div>
+
+     <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Detecção de Careless/Insufficient Effort Responding (C/IER)</h1>
+          </div>
+
+    
+    <div class="quarto-title-meta-container">
+      <div class="quarto-title-meta-column-start">
+            <div class="quarto-title-meta-author">
+          <div class="quarto-title-meta-heading">Author</div>
+          <div class="quarto-title-meta-heading">Affiliation</div>
+          
+                <div class="quarto-title-meta-contents">
+            <p class="author">Pablo Rogers <a href="mailto:pablorogers@ufu.br" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0002-0093-3834" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+                <div class="quarto-title-meta-contents">
+                    <p class="affiliation">
+                        Universidade Federal de Uberlândia
+                      </p>
+                  </div>
+                    </div>
+        
+        <div class="quarto-title-meta">
+
+                      
+                <div>
+            <div class="quarto-title-meta-heading">Published</div>
+            <div class="quarto-title-meta-contents">
+              <p class="date">April 3, 2026</p>
+            </div>
+          </div>
+          
+                
+              </div>
+      </div>
+      <div class="quarto-title-meta-column-end quarto-other-formats-target">
+      </div>
+    </div>
+
+    <div>
+      <div class="abstract">
+        <div class="block-title">Abstract</div>
+        <p>This… (abstract text here)</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="keywords">
+        <div class="block-title">Keywords</div>
+        <p>Careless Responding, Insufficient Effort Responding, Laz.R, Longstring, Mahalanobis Distance, IRV</p>
+      </div>
+    </div>
+
+    <div class="quarto-other-links-text-target">
+    </div>  </div>
+</header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#leitura-e-preparação-dos-dados" id="toc-leitura-e-preparação-dos-dados" class="nav-link active" data-scroll-target="#leitura-e-preparação-dos-dados"><span class="header-section-number">1</span> 1. Leitura e preparação dos dados</a></li>
+  <li><a href="#exclusões-procedimentais-nível-1" id="toc-exclusões-procedimentais-nível-1" class="nav-link" data-scroll-target="#exclusões-procedimentais-nível-1"><span class="header-section-number">2</span> 2. Exclusões procedimentais (Nível 1)</a></li>
+  <li><a href="#cálculo-dos-indicadores-cier" id="toc-cálculo-dos-indicadores-cier" class="nav-link" data-scroll-target="#cálculo-dos-indicadores-cier"><span class="header-section-number">3</span> 3. Cálculo dos indicadores C/IER</a>
+  <ul class="collapse">
+  <li><a href="#definição-das-funções-auxiliares" id="toc-definição-das-funções-auxiliares" class="nav-link" data-scroll-target="#definição-das-funções-auxiliares"><span class="header-section-number">3.1</span> 3.1 Definição das funções auxiliares</a></li>
+  <li><a href="#cálculo-dos-quatro-indicadores" id="toc-cálculo-dos-quatro-indicadores" class="nav-link" data-scroll-target="#cálculo-dos-quatro-indicadores"><span class="header-section-number">3.2</span> 3.2 Cálculo dos quatro indicadores</a></li>
+  </ul></li>
+  <li><a href="#variáveis-individuais" id="toc-variáveis-individuais" class="nav-link" data-scroll-target="#variáveis-individuais"><span class="header-section-number">4</span> 4. Variáveis individuais</a></li>
+  <li><a href="#visualização-univariada" id="toc-visualização-univariada" class="nav-link" data-scroll-target="#visualização-univariada"><span class="header-section-number">5</span> 5. Visualização univariada</a></li>
+  <li><a href="#pontos-de-corte-via-algoritmo-kneedle" id="toc-pontos-de-corte-via-algoritmo-kneedle" class="nav-link" data-scroll-target="#pontos-de-corte-via-algoritmo-kneedle"><span class="header-section-number">6</span> 6. Pontos de corte via algoritmo Kneedle</a></li>
+  <li><a href="#flags-de-cier" id="toc-flags-de-cier" class="nav-link" data-scroll-target="#flags-de-cier"><span class="header-section-number">7</span> 7. Flags de C/IER</a>
+  <ul class="collapse">
+  <li><a href="#resumo-das-flags" id="toc-resumo-das-flags" class="nav-link" data-scroll-target="#resumo-das-flags"><span class="header-section-number">7.1</span> Resumo das flags</a></li>
+  </ul></li>
+  <li><a href="#exportação-do-arquivo-com-flags" id="toc-exportação-do-arquivo-com-flags" class="nav-link" data-scroll-target="#exportação-do-arquivo-com-flags"><span class="header-section-number">8</span> 8. Exportação do arquivo com flags</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">      
+
+       <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pacotes necessários</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'tidyverse' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'forcats' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'lubridate' was built under R version 4.5.3</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.0     ✔ readr     2.2.0
+✔ forcats   1.0.1     ✔ stringr   1.6.0
+✔ ggplot2   4.0.2     ✔ tibble    3.3.1
+✔ lubridate 1.9.5     ✔ tidyr     1.3.2
+✔ purrr     1.2.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(careless)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'careless' was built under R version 4.5.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: package 'gt' was built under R version 4.5.3</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></div>
+<section id="leitura-e-preparação-dos-dados" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="leitura-e-preparação-dos-dados"><span class="header-section-number">1</span> 1. Leitura e preparação dos dados</h2>
+<p>O arquivo <code>data.csv</code> contém as respostas brutas do questionário (separador <code>;</code>). Nesta etapa, removem-se registros de abandono, selecionam-se as variáveis do fluxo analítico e deriva-se o tempo total de resposta (<code>TIME</code>).</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Leitura do arquivo com separador ";"</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dados_brutos <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(<span class="st">"Data/InputData/data.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Identificação de abandono: ID ausente ou ausência completa de respostas em Q1-Q26</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>dados_preparados <span class="ot">&lt;-</span> dados_brutos <span class="sc">|&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">abandono =</span> <span class="fu">is.na</span>(ID) <span class="sc">|</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(Q1<span class="sc">:</span>Q26, \(x) <span class="sc">!</span><span class="fu">is.na</span>(x))) <span class="sc">==</span> <span class="dv">0</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Seleção das colunas analíticas e derivação de TIME</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>dados_importados <span class="ot">&lt;-</span> dados_preparados <span class="sc">|&gt;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>abandono) <span class="sc">|&gt;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ID, CREATED, MODIFIED, CQ1, CQ2, CQ3, Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">c</span>(CQ1, CQ2, CQ3, Q1<span class="sc">:</span>Q26), as.numeric),</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">CREATED_dt =</span> <span class="fu">as.POSIXct</span>(CREATED, <span class="at">format =</span> <span class="st">"%d/%m/%Y %H:%M"</span>, <span class="at">tz =</span> <span class="st">"UTC"</span>),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">MODIFIED_dt =</span> <span class="fu">as.POSIXct</span>(MODIFIED, <span class="at">format =</span> <span class="st">"%d/%m/%Y %H:%M"</span>, <span class="at">tz =</span> <span class="st">"UTC"</span>),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">TIME =</span> <span class="fu">as.numeric</span>(<span class="fu">difftime</span>(MODIFIED_dt, CREATED_dt, <span class="at">units =</span> <span class="st">"secs"</span>))</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>CREATED_dt, <span class="sc">-</span>MODIFIED_dt)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dados_importados)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,326
+Columns: 33
+$ ID       &lt;dbl&gt; 10441016017, 10440981694, 10440601239, 10440562981, 104403585…
+$ CREATED  &lt;chr&gt; "28/12/2018 12:00", "28/12/2018 11:25", "28/12/2018 03:23", "…
+$ MODIFIED &lt;chr&gt; "28/12/2018 12:20", "28/12/2018 11:47", "28/12/2018 03:39", "…
+$ CQ1      &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, NA, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ CQ2      &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, NA, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ CQ3      &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, NA, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …
+$ Q1       &lt;dbl&gt; 5, 3, 1, 4, 3, 4, 3, 4, 2, 5, 4, 3, 4, 2, 4, 5, 4, 5, 4, 4, 4…
+$ Q2       &lt;dbl&gt; 5, 4, 1, 4, 4, 4, 4, 4, 2, 5, 4, NA, 4, 1, 4, 5, 4, 4, 4, 4, …
+$ Q3       &lt;dbl&gt; 1, 2, 3, 2, 1, 1, 1, 1, 4, 2, 3, 2, 2, 3, 3, 1, 2, 2, 2, 3, 1…
+$ Q4       &lt;dbl&gt; 1, 2, 2, 1, 1, 1, 2, 1, 4, 1, 3, 2, 2, 2, 2, 2, 2, 1, 2, 1, 1…
+$ Q5       &lt;dbl&gt; 3, 3, 1, 3, 3, 3, 3, 3, 1, 4, 3, 4, 4, 1, 3, 4, 3, 5, 3, 4, 3…
+$ Q6       &lt;dbl&gt; 4, 4, 1, 3, 5, 4, 3, 4, 4, 4, 5, 3, 3, 4, 4, 5, 3, 5, 4, 4, 3…
+$ Q7       &lt;dbl&gt; 4, 3, 1, 3, 5, 4, 2, 3, 2, 4, 3, 2, 4, 2, 3, 4, 3, 4, 2, 3, 4…
+$ Q8       &lt;dbl&gt; 1, 2, 1, 2, 2, 4, 4, 4, 2, 3, 2, 3, 3, 3, 2, 2, 4, 3, 3, 3, 2…
+$ Q9       &lt;dbl&gt; 5, 4, 1, 2, 3, 4, 3, 4, 3, 3, 3, 3, 4, 1, 2, 3, 4, 4, 2, 3, 2…
+$ Q10      &lt;dbl&gt; 5, 3, 1, 3, 5, 4, 2, 4, 2, 4, 4, 2, 3, 2, 3, 5, 4, 5, 3, 4, 4…
+$ Q11      &lt;dbl&gt; 3, 3, 2, 3, 3, 4, 2, 3, 3, 5, 4, 2, 4, 1, 3, 5, 3, 5, 3, 4, 4…
+$ Q12      &lt;dbl&gt; 5, 3, 1, 3, 3, 3, 3, 3, 2, 5, 3, 3, 3, 3, 3, 4, 4, 4, 3, 4, 4…
+$ Q13      &lt;dbl&gt; 5, 3, 2, 4, 3, 3, 4, 4, 3, 5, 3, 3, 4, 3, 3, 5, 3, 4, 2, 4, 3…
+$ Q14      &lt;dbl&gt; 4, 3, 1, 4, 2, 3, 3, 5, 2, 4, 4, 4, 3, 4, 3, 5, 3, 3, 2, 4, 3…
+$ Q15      &lt;dbl&gt; 5, 4, 1, 5, 5, 5, 5, 5, 1, 5, 5, 3, 4, 4, 3, 5, 4, 5, 4, 4, 4…
+$ Q16      &lt;dbl&gt; 5, 3, 5, 5, 5, 4, 3, 3, 2, 5, 3, 2, 5, 2, 2, 5, 4, 3, 4, 4, 3…
+$ Q17      &lt;dbl&gt; 4, 3, 5, 5, 5, 4, 4, 5, 2, 5, 4, 2, 4, 2, 3, 5, 4, 4, 4, 4, 4…
+$ Q18      &lt;dbl&gt; 4, 3, 5, 5, 5, 4, 3, 4, 2, 5, 4, 2, 4, 2, 3, 5, 4, 5, 4, 4, 4…
+$ Q19      &lt;dbl&gt; 4, 4, 5, 5, 5, 4, 2, 3, 3, 5, 4, 2, 4, 2, 3, 5, 3, 4, 5, 5, 3…
+$ Q20      &lt;dbl&gt; 2, 3, 3, 5, 5, 4, 4, 4, 3, 4, 4, 3, 3, 3, 2, 5, 3, 4, 3, 5, 3…
+$ Q21      &lt;dbl&gt; 2, 3, 2, 5, 5, 4, 2, 3, 2, 4, 2, 4, 4, 2, 2, 5, 3, 4, 4, 4, 4…
+$ Q22      &lt;dbl&gt; 5, 3, 3, 5, 5, 4, 2, 3, 3, 4, 4, 3, 2, 3, 2, 4, 4, 4, 3, 5, 3…
+$ Q23      &lt;dbl&gt; 5, 3, 3, 5, 2, 4, 2, 4, 3, 5, 5, 3, 4, 4, 4, 4, 4, 5, 4, 5, 4…
+$ Q24      &lt;dbl&gt; 2, 2, 3, 4, 2, 4, 2, 5, 2, 4, 2, 3, 2, 4, 4, 5, 4, 3, 4, 4, 4…
+$ Q25      &lt;dbl&gt; 2, 2, 3, 4, 3, 4, 2, 5, 3, 4, 3, 3, 3, 3, 2, 5, 4, 4, 4, 4, 3…
+$ Q26      &lt;dbl&gt; 2, 2, 4, 1, 1, 2, 2, 3, 1, 2, 2, 3, 1, 2, 3, 2, 2, 2, 3, 1, 2…
+$ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 1620…</code></pre>
+</div>
+</div></div>
+</section>
+<section id="exclusões-procedimentais-nível-1" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="exclusões-procedimentais-nível-1"><span class="header-section-number">2</span> 2. Exclusões procedimentais (Nível 1)</h2>
+<p>O Nível 1 aplica três procedimentos prévios ao cálculo dos indicadores post hoc: remoção de abandono, exclusão por tempo de resposta inferior a 208 segundos e exclusão por duas ou mais falhas nos itens de controle de qualidade (<code>CQ1-CQ3</code>).</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Regras procedimentais do Nível 1</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dados_nivel1 <span class="ot">&lt;-</span> dados_importados <span class="sc">|&gt;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">cq_falhas =</span> <span class="fu">rowSums</span>(<span class="fu">across</span>(CQ1<span class="sc">:</span>CQ3, \(x) x <span class="sc">!=</span> <span class="dv">1</span>), <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">excl_time =</span> TIME <span class="sc">&lt;</span> <span class="dv">208</span>,</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">excl_cq =</span> cq_falhas <span class="sc">&gt;=</span> <span class="dv">2</span>,</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">nivel1_excluido =</span> excl_time <span class="sc">|</span> excl_cq</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Log de exclusões</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>exclusion_log <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  dados_preparados <span class="sc">|&gt;</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(abandono) <span class="sc">|&gt;</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>      ID,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>      <span class="at">criterio =</span> <span class="st">"abandono"</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>      <span class="at">valor =</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">detalhe =</span> <span class="st">"Sem respostas válidas em Q1-Q26"</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>  dados_nivel1 <span class="sc">|&gt;</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(excl_time) <span class="sc">|&gt;</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(</span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>      ID,</span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>      <span class="at">criterio =</span> <span class="st">"time_rapido"</span>,</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>      <span class="at">valor =</span> TIME,</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">detalhe =</span> <span class="fu">paste0</span>(<span class="st">"TIME = "</span>, TIME, <span class="st">" s"</span>)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>  dados_nivel1 <span class="sc">|&gt;</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(excl_cq) <span class="sc">|&gt;</span></span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">transmute</span>(</span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>      ID,</span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>      <span class="at">criterio =</span> <span class="st">"cq_falhas"</span>,</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>      <span class="at">valor =</span> cq_falhas,</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>      <span class="at">detalhe =</span> <span class="fu">paste0</span>(<span class="st">"Falhas CQ = "</span>, cq_falhas)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(ID, criterio, <span class="at">.keep_all =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-39"><a href="#cb15-39" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"Output/Results"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-40"><a href="#cb15-40" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(exclusion_log, <span class="st">"Output/Results/exclusion_log.csv"</span>)</span>
+<span id="cb15-41"><a href="#cb15-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-42"><a href="#cb15-42" aria-hidden="true" tabindex="-1"></a><span class="co"># Dados elegíveis para os indicadores C/IER (Nível 2)</span></span>
+<span id="cb15-43"><a href="#cb15-43" aria-hidden="true" tabindex="-1"></a>dados_analise <span class="ot">&lt;-</span> dados_nivel1 <span class="sc">|&gt;</span></span>
+<span id="cb15-44"><a href="#cb15-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span>nivel1_excluido)</span>
+<span id="cb15-45"><a href="#cb15-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-46"><a href="#cb15-46" aria-hidden="true" tabindex="-1"></a>id_col <span class="ot">&lt;-</span> dados_analise<span class="sc">$</span>ID</span>
+<span id="cb15-47"><a href="#cb15-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" aria-hidden="true" tabindex="-1"></a>itens <span class="ot">&lt;-</span> dados_analise <span class="sc">|&gt;</span></span>
+<span id="cb15-49"><a href="#cb15-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
+<span id="cb15-50"><a href="#cb15-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric))</span>
+<span id="cb15-51"><a href="#cb15-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-52"><a href="#cb15-52" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(</span>
+<span id="cb15-53"><a href="#cb15-53" aria-hidden="true" tabindex="-1"></a>  <span class="at">etapa =</span> <span class="fu">c</span>(<span class="st">"Dados brutos"</span>, <span class="st">"Abandono removido"</span>, <span class="st">"Excluídos por tempo"</span>, <span class="st">"Excluídos por CQ"</span>, <span class="st">"Elegíveis para Nível 2"</span>),</span>
+<span id="cb15-54"><a href="#cb15-54" aria-hidden="true" tabindex="-1"></a>  <span class="at">n =</span> <span class="fu">c</span>(</span>
+<span id="cb15-55"><a href="#cb15-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nrow</span>(dados_brutos),</span>
+<span id="cb15-56"><a href="#cb15-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(dados_preparados<span class="sc">$</span>abandono, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-57"><a href="#cb15-57" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(dados_nivel1<span class="sc">$</span>excl_time, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-58"><a href="#cb15-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(dados_nivel1<span class="sc">$</span>excl_cq, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb15-59"><a href="#cb15-59" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nrow</span>(dados_analise)</span>
+<span id="cb15-60"><a href="#cb15-60" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-61"><a href="#cb15-61" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  etapa                      n
+  &lt;chr&gt;                  &lt;int&gt;
+1 Dados brutos            1546
+2 Abandono removido        220
+3 Excluídos por tempo        0
+4 Excluídos por CQ          28
+5 Elegíveis para Nível 2  1298</code></pre>
+</div>
+</div></div>
+</section>
+<section id="cálculo-dos-indicadores-cier" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="cálculo-dos-indicadores-cier"><span class="header-section-number">3</span> 3. Cálculo dos indicadores C/IER</h2>
+<section id="definição-das-funções-auxiliares" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="definição-das-funções-auxiliares"><span class="header-section-number">3.1</span> 3.1 Definição das funções auxiliares</h3>
+<div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Laz.R index (Biemann et al., 2025) ---</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Calcula a previsibilidade da cadeia de Markov para cada respondente.</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Valores altos indicam padrões de resposta previsíveis (e.g., repetição).</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>calc_lazr <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  tr <span class="ot">&lt;-</span> <span class="fu">table</span>(x[<span class="sc">-</span><span class="fu">length</span>(x)], x[<span class="sc">-</span><span class="dv">1</span>], <span class="at">useNA =</span> <span class="st">"ifany"</span>)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(tr<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">rowSums</span>(tr)) <span class="sc">/</span> (<span class="fu">length</span>(x) <span class="sc">-</span> <span class="dv">1</span>)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Algoritmo Kneedle (Satopaa et al., 2011) ---</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Encontra o "cotovelo" em uma curva ordenada de valores.</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Código adaptado de: https://rdrr.io/github/MollahLab/gen3DNet/man/kneedle.html</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>dist2d <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b, c) {</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  v1 <span class="ot">&lt;-</span> b <span class="sc">-</span> c</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  v2 <span class="ot">&lt;-</span> a <span class="sc">-</span> b</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  m  <span class="ot">&lt;-</span> <span class="fu">cbind</span>(v1, v2)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">det</span>(m) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">sum</span>(v1 <span class="sc">*</span> v1))</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>kneedle <span class="ot">&lt;-</span> <span class="cf">function</span>(values, sign) {</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>  start <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>, values[<span class="dv">1</span>])</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  end   <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">length</span>(values), values[<span class="fu">length</span>(values)])</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">which.max</span>(<span class="fu">lapply</span>(<span class="fu">seq_along</span>(values), <span class="cf">function</span>(idx) {</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>    sign <span class="sc">*</span> <span class="sc">-</span><span class="dv">1</span> <span class="sc">*</span> <span class="fu">dist2d</span>(<span class="fu">c</span>(idx, values[idx]), start, end)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  }))</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></div>
+</section>
+<section id="cálculo-dos-quatro-indicadores" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="cálculo-dos-quatro-indicadores"><span class="header-section-number">3.2</span> 3.2 Cálculo dos quatro indicadores</h3>
+<div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Laz.R — aplicado linha a linha</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>lazr_vals <span class="ot">&lt;-</span> <span class="fu">apply</span>(itens, <span class="dv">1</span>, calc_lazr)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Longstring — maior sequência de respostas consecutivas idênticas</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>longstr_vals <span class="ot">&lt;-</span> <span class="fu">longstring</span>(itens)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Mahalanobis Distance (MD) — distância multivariada do centroide</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>md_vals <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">sum</span>(<span class="fu">is.na</span>(itens)) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mahad</span>(itens, <span class="at">plot =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rep</span>(<span class="cn">NA_real_</span>, <span class="fu">nrow</span>(itens))</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># IRV — Intra-individual Response Variability (desvio-padrão intra-indivíduo)</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>irv_vals <span class="ot">&lt;-</span> <span class="fu">irv</span>(itens, <span class="at">split =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></div>
+</section>
+</section>
+<section id="variáveis-individuais" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="variáveis-individuais"><span class="header-section-number">4</span> 4. Variáveis individuais</h2>
+<p>Cada respondente recebe os valores dos quatro indicadores em um tibble consolidado.</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_indicadores <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">ID      =</span> id_col,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">LazR    =</span> <span class="fu">round</span>(lazr_vals, <span class="dv">3</span>),</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Longstr =</span> <span class="fu">as.integer</span>(longstr_vals),</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">MD      =</span> <span class="fu">round</span>(md_vals, <span class="dv">3</span>),</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">IRV     =</span> <span class="fu">round</span>(irv_vals, <span class="dv">3</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>df_indicadores</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,546 × 5
+            ID  LazR Longstr    MD   IRV
+         &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 10441016017 0.384       7    NA  5.85
+ 2 10440981694 0.559      11    NA  5.62
+ 3 10440601239 0.446      15    NA  3.65
+ 4 10440562981 0.539      17    NA  4.61
+ 5 10440358563 0.585      35    NA  4.54
+ 6 10440199369 0.618      38    NA  4.88
+ 7 10439125905 0.755      22    NA  4.58
+ 8 10439033965 0.794       8    NA 10.0 
+ 9 10438952564 0.363       8    NA  2.36
+10 10438951127 0.384      14    NA  4.54
+# ℹ 1,536 more rows</code></pre>
+</div>
+</div></div>
+</section>
+<section id="visualização-univariada" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="visualização-univariada"><span class="header-section-number">5</span> 5. Visualização univariada</h2>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Laz.R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Longstring</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Mahalanobis Distance</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">IRV</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p_hist_lazr <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">x =</span> LazR)) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">fill =</span> <span class="st">"#3B7DD8"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Laz.R"</span>, <span class="at">x =</span> <span class="st">"Laz.R"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>p_box_lazr <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">y =</span> LazR)) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#3B7DD8"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Laz.R"</span>) <span class="sc">+</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>p_hist_lazr <span class="sc">+</span> p_box_lazr <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><a href="index_files/figure-html/viz-lazr-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1"><img src="index_files/figure-html/viz-lazr-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div></div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p_hist_ls <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">x =</span> Longstr)) <span class="sc">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"#E07B39"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Longstring"</span>, <span class="at">x =</span> <span class="st">"Longstring"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>p_box_ls <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">y =</span> Longstr)) <span class="sc">+</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#E07B39"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Longstring"</span>) <span class="sc">+</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>p_hist_ls <span class="sc">+</span> p_box_ls <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><a href="index_files/figure-html/viz-longstr-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-2"><img src="index_files/figure-html/viz-longstr-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div></div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p_hist_md <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">x =</span> MD)) <span class="sc">+</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">fill =</span> <span class="st">"#2CA02C"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mahalanobis Distance"</span>, <span class="at">x =</span> <span class="st">"MD"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>p_box_md <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">y =</span> MD)) <span class="sc">+</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#2CA02C"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"MD"</span>) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>p_hist_md <span class="sc">+</span> p_box_md <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1546 rows containing non-finite outside the scale range
+(`stat_bin()`).</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1546 rows containing non-finite outside the scale range
+(`stat_boxplot()`).</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><a href="index_files/figure-html/viz-md-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/viz-md-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div></div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p_hist_irv <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">x =</span> IRV)) <span class="sc">+</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">fill =</span> <span class="st">"#9467BD"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"IRV"</span>, <span class="at">x =</span> <span class="st">"IRV"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>()</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>p_box_irv <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">y =</span> IRV)) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#9467BD"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"IRV"</span>) <span class="sc">+</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_light</span>() <span class="sc">+</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(), <span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>p_hist_irv <span class="sc">+</span> p_box_irv <span class="sc">+</span> <span class="fu">plot_layout</span>(<span class="at">widths =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="">
+<figure class="figure">
+<p class=""><a href="index_files/figure-html/viz-irv-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="index_files/figure-html/viz-irv-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pontos-de-corte-via-algoritmo-kneedle" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="pontos-de-corte-via-algoritmo-kneedle"><span class="header-section-number">6</span> 6. Pontos de corte via algoritmo Kneedle</h2>
+<p>O kneedle é aplicado à curva ordenada (decrescente) de cada indicador.</p>
+<ul>
+<li>Para <strong>Laz.R</strong>, <strong>Longstring</strong> e <strong>MD</strong>: o kneedle com <code>sign = -1</code> identifica onde os valores extremamente altos se separam da maioria (cauda direita).</li>
+<li>Para <strong>IRV</strong>: usa-se <code>sign = -1</code> para detectar IRV alto demais (cauda direita) e <code>sign = +1</code> para IRV baixo demais (cauda esquerda), pois ambos extremos são suspeitos.</li>
+</ul>
+<div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Função auxiliar: aplicar kneedle a um vetor e retornar percentil + valor crítico</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>calc_kneedle <span class="ot">&lt;-</span> <span class="cf">function</span>(x, sign_val) {</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  x_sorted <span class="ot">&lt;-</span> <span class="fu">sort</span>(x, <span class="at">decreasing =</span> <span class="cn">TRUE</span>, <span class="at">na.last =</span> <span class="cn">NA</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(x_sorted)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (n <span class="sc">==</span> <span class="dv">0</span> <span class="sc">||</span> <span class="fu">sum</span>(x_sorted, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="fu">list</span>(<span class="at">pct =</span> <span class="cn">NA_real_</span>, <span class="at">crit =</span> <span class="cn">NA_real_</span>, <span class="at">sorted =</span> x_sorted))</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  pos <span class="ot">&lt;-</span> <span class="fu">kneedle</span>(x_sorted, sign_val)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  pct <span class="ot">&lt;-</span> pos <span class="sc">/</span> n</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>  crit <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x_sorted, <span class="at">probs =</span> <span class="dv">1</span> <span class="sc">-</span> pct, <span class="at">na.rm =</span> <span class="cn">TRUE</span>, <span class="at">names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">pct =</span> pct, <span class="at">crit =</span> crit, <span class="at">sorted =</span> x_sorted)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Laz.R — valores altos são suspeitos</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>kn_lazr <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>LazR, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Longstring — valores altos são suspeitos</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>kn_longstr <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>Longstr, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Mahalanobis Distance — valores altos são suspeitos</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>kn_md <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>MD, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co"># IRV — ambas as caudas são suspeitas</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>kn_irv_high <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>IRV, <span class="sc">-</span><span class="dv">1</span>)   <span class="co"># IRV alto demais</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>kn_irv_low  <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>IRV, <span class="sc">+</span><span class="dv">1</span>)   <span class="co"># IRV baixo demais</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Tabela resumo dos pontos de corte</span></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>tab_cutoffs <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">Indicador                   =</span> <span class="fu">c</span>(<span class="st">"Laz.R"</span>, <span class="st">"Longstring"</span>, <span class="st">"MD"</span>,</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>                                  <span class="st">"IRV (high end)"</span>, <span class="st">"IRV (low end)"</span>),</span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Valor crítico</span><span class="st">`</span>             <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(kn_lazr<span class="sc">$</span>crit, kn_longstr<span class="sc">$</span>crit, kn_md<span class="sc">$</span>crit,</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>                                        kn_irv_high<span class="sc">$</span>crit, kn_irv_low<span class="sc">$</span>crit), <span class="dv">2</span>),</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">% suspeitos</span><span class="st">`</span>               <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>    kn_lazr<span class="sc">$</span>pct, kn_longstr<span class="sc">$</span>pct, kn_md<span class="sc">$</span>pct,</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>    kn_irv_high<span class="sc">$</span>pct, <span class="dv">1</span> <span class="sc">-</span> kn_irv_low<span class="sc">$</span>pct</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>tab_cutoffs <span class="sc">|&gt;</span></span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">title    =</span> <span class="st">"Pontos de corte — Algoritmo Kneedle"</span>,</span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Satopaa et al. (2011); Biemann et al. (2025)"</span></span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="st">`</span><span class="at">Valor crítico</span><span class="st">`</span>, <span class="at">decimals =</span> <span class="dv">2</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> <span class="st">`</span><span class="at">% suspeitos</span><span class="st">`</span>, <span class="at">decimals =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="ojmdetoszb" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ojmdetoszb table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#ojmdetoszb thead, #ojmdetoszb tbody, #ojmdetoszb tfoot, #ojmdetoszb tr, #ojmdetoszb td, #ojmdetoszb th {
+  border-style: none;
+}
+
+#ojmdetoszb p {
+  margin: 0;
+  padding: 0;
+}
+
+#ojmdetoszb .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#ojmdetoszb .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#ojmdetoszb .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#ojmdetoszb .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#ojmdetoszb .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#ojmdetoszb .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#ojmdetoszb .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#ojmdetoszb .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#ojmdetoszb .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#ojmdetoszb .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#ojmdetoszb .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#ojmdetoszb .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#ojmdetoszb .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#ojmdetoszb .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#ojmdetoszb .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ojmdetoszb .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#ojmdetoszb .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#ojmdetoszb .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#ojmdetoszb .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ojmdetoszb .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#ojmdetoszb .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ojmdetoszb .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#ojmdetoszb .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ojmdetoszb .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#ojmdetoszb .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#ojmdetoszb .gt_left {
+  text-align: left;
+}
+
+#ojmdetoszb .gt_center {
+  text-align: center;
+}
+
+#ojmdetoszb .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#ojmdetoszb .gt_font_normal {
+  font-weight: normal;
+}
+
+#ojmdetoszb .gt_font_bold {
+  font-weight: bold;
+}
+
+#ojmdetoszb .gt_font_italic {
+  font-style: italic;
+}
+
+#ojmdetoszb .gt_super {
+  font-size: 65%;
+}
+
+#ojmdetoszb .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#ojmdetoszb .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#ojmdetoszb .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#ojmdetoszb .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#ojmdetoszb .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#ojmdetoszb .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#ojmdetoszb .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#ojmdetoszb .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#ojmdetoszb div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="3" class="gt_heading gt_title gt_font_normal">Pontos de corte — Algoritmo Kneedle</td>
+</tr>
+<tr class="gt_heading even">
+<td colspan="3" class="gt_heading gt_subtitle gt_font_normal gt_bottom_border">Satopaa et al. (2011); Biemann et al. (2025)</td>
+</tr>
+<tr class="gt_col_headings header">
+<th id="Indicador" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Indicador</th>
+<th id="Valor-crítico" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">Valor crítico</th>
+<th id="a%-suspeitos" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">% suspeitos</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Indicador">Laz.R</td>
+<td class="gt_row gt_right" headers="Valor crítico">0.60</td>
+<td class="gt_row gt_right" headers="% suspeitos">16.8</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Indicador">Longstring</td>
+<td class="gt_row gt_right" headers="Valor crítico">20.00</td>
+<td class="gt_row gt_right" headers="% suspeitos">19.3</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Indicador">MD</td>
+<td class="gt_row gt_right" headers="Valor crítico">NA</td>
+<td class="gt_row gt_right" headers="% suspeitos">NA</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Indicador">IRV (high end)</td>
+<td class="gt_row gt_right" headers="Valor crítico">152.58</td>
+<td class="gt_row gt_right" headers="% suspeitos">4.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Indicador">IRV (low end)</td>
+<td class="gt_row gt_right" headers="Valor crítico">3.65</td>
+<td class="gt_row gt_right" headers="% suspeitos">0.1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div></div>
+</section>
+<section id="flags-de-cier" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="flags-de-cier"><span class="header-section-number">7</span> 7. Flags de C/IER</h2>
+<p>Para cada indicador, cria-se uma variável <code>_FLAG</code> (<code>1</code> = suspeito, <code>0</code> = não suspeito) com base nos pontos de corte Kneedle:</p>
+<ul>
+<li><strong>Laz.R</strong> e <strong>MD</strong>: flag = 1 se valor ≥ valor crítico.</li>
+<li><strong>Longstring</strong>: flag = 1 se valor for estritamente maior que o valor crítico.</li>
+<li><strong>IRV high</strong>: flag = 1 se valor ≥ valor crítico (variação excessiva).</li>
+<li><strong>IRV low</strong>: flag = 1 se valor ≤ valor crítico (variação insuficiente).</li>
+</ul>
+<div class="cell-container"><div class="cell-decorator"><pre>In [12]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df_flags <span class="ot">&lt;-</span> df_indicadores <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">LazR_FLAG         =</span> <span class="fu">if_else</span>(LazR    <span class="sc">&gt;=</span> kn_lazr<span class="sc">$</span>crit,      <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">Longstr_FLAG      =</span> <span class="fu">if_else</span>(Longstr <span class="sc">&gt;</span>  kn_longstr<span class="sc">$</span>crit,   <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">MD_FLAG           =</span> <span class="fu">if_else</span>(MD      <span class="sc">&gt;=</span> kn_md<span class="sc">$</span>crit,        <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">IRV_high_FLAG     =</span> <span class="fu">if_else</span>(IRV     <span class="sc">&gt;=</span> kn_irv_high<span class="sc">$</span>crit,  <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">IRV_low_FLAG      =</span> <span class="fu">if_else</span>(IRV     <span class="sc">&lt;=</span> kn_irv_low<span class="sc">$</span>crit,   <span class="dv">1</span>L, <span class="dv">0</span>L)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>df_flags</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,546 × 10
+            ID  LazR Longstr    MD   IRV LazR_FLAG Longstr_FLAG MD_FLAG
+         &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;int&gt;        &lt;int&gt;   &lt;int&gt;
+ 1 10441016017 0.384       7    NA  5.85         0            0      NA
+ 2 10440981694 0.559      11    NA  5.62         0            0      NA
+ 3 10440601239 0.446      15    NA  3.65         0            0      NA
+ 4 10440562981 0.539      17    NA  4.61         0            0      NA
+ 5 10440358563 0.585      35    NA  4.54         0            1      NA
+ 6 10440199369 0.618      38    NA  4.88         1            1      NA
+ 7 10439125905 0.755      22    NA  4.58         1            1      NA
+ 8 10439033965 0.794       8    NA 10.0          1            0      NA
+ 9 10438952564 0.363       8    NA  2.36         0            0      NA
+10 10438951127 0.384      14    NA  4.54         0            0      NA
+# ℹ 1,536 more rows
+# ℹ 2 more variables: IRV_high_FLAG &lt;int&gt;, IRV_low_FLAG &lt;int&gt;</code></pre>
+</div>
+</div></div>
+<section id="resumo-das-flags" class="level3" data-number="7.1">
+<h3 data-number="7.1" class="anchored" data-anchor-id="resumo-das-flags"><span class="header-section-number">7.1</span> Resumo das flags</h3>
+<div class="cell-container"><div class="cell-decorator"><pre>In [13]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>df_flags <span class="sc">|&gt;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">ends_with</span>(<span class="st">"_FLAG"</span>), <span class="fu">list</span>(</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">n_suspeitos   =</span> \(x) <span class="fu">sum</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">pct_suspeitos =</span> \(x) <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(),</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"Indicador"</span>, <span class="st">".value"</span>),</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_pattern =</span> <span class="st">"(.+)_(n_suspeitos|pct_suspeitos)"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tab_header</span>(<span class="at">title =</span> <span class="st">"Resumo de respondentes sinalizados como C/IER"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fmt_number</span>(<span class="at">columns =</span> pct_suspeitos, <span class="at">decimals =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">Indicador     =</span> <span class="st">"Indicador"</span>,</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_suspeitos   =</span> <span class="st">"N suspeitos"</span>,</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_suspeitos =</span> <span class="st">"% suspeitos"</span></span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div id="tasojlvmrr" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#tasojlvmrr table {
+  font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#tasojlvmrr thead, #tasojlvmrr tbody, #tasojlvmrr tfoot, #tasojlvmrr tr, #tasojlvmrr td, #tasojlvmrr th {
+  border-style: none;
+}
+
+#tasojlvmrr p {
+  margin: 0;
+  padding: 0;
+}
+
+#tasojlvmrr .gt_table {
+  display: table;
+  border-collapse: collapse;
+  line-height: normal;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_caption {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+#tasojlvmrr .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#tasojlvmrr .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 3px;
+  padding-bottom: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#tasojlvmrr .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#tasojlvmrr .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#tasojlvmrr .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#tasojlvmrr .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#tasojlvmrr .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#tasojlvmrr .gt_spanner_row {
+  border-bottom-style: hidden;
+}
+
+#tasojlvmrr .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  text-align: left;
+}
+
+#tasojlvmrr .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#tasojlvmrr .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#tasojlvmrr .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#tasojlvmrr .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#tasojlvmrr .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tasojlvmrr .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#tasojlvmrr .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#tasojlvmrr .gt_row_group_first th {
+  border-top-width: 2px;
+}
+
+#tasojlvmrr .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tasojlvmrr .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#tasojlvmrr .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tasojlvmrr .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_last_grand_summary_row_top {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: double;
+  border-bottom-width: 6px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#tasojlvmrr .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tasojlvmrr .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#tasojlvmrr .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#tasojlvmrr .gt_left {
+  text-align: left;
+}
+
+#tasojlvmrr .gt_center {
+  text-align: center;
+}
+
+#tasojlvmrr .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#tasojlvmrr .gt_font_normal {
+  font-weight: normal;
+}
+
+#tasojlvmrr .gt_font_bold {
+  font-weight: bold;
+}
+
+#tasojlvmrr .gt_font_italic {
+  font-style: italic;
+}
+
+#tasojlvmrr .gt_super {
+  font-size: 65%;
+}
+
+#tasojlvmrr .gt_footnote_marks {
+  font-size: 75%;
+  vertical-align: 0.4em;
+  position: initial;
+}
+
+#tasojlvmrr .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#tasojlvmrr .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#tasojlvmrr .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#tasojlvmrr .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#tasojlvmrr .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#tasojlvmrr .gt_indent_5 {
+  text-indent: 25px;
+}
+
+#tasojlvmrr .katex-display {
+  display: inline-flex !important;
+  margin-bottom: 0.75em !important;
+}
+
+#tasojlvmrr div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+  height: 0px !important;
+}
+</style>
+
+<table class="gt_table caption-top table table-sm table-striped small" data-quarto-bootstrap="false">
+<thead>
+<tr class="gt_heading header">
+<td colspan="3" class="gt_heading gt_title gt_font_normal gt_bottom_border">Resumo de respondentes sinalizados como C/IER</td>
+</tr>
+<tr class="gt_col_headings even">
+<th id="Indicador" class="gt_col_heading gt_columns_bottom_border gt_left" data-quarto-table-cell-role="th" scope="col">Indicador</th>
+<th id="n_suspeitos" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">N suspeitos</th>
+<th id="pct_suspeitos" class="gt_col_heading gt_columns_bottom_border gt_right" data-quarto-table-cell-role="th" scope="col">% suspeitos</th>
+</tr>
+</thead>
+<tbody class="gt_table_body">
+<tr class="odd">
+<td class="gt_row gt_left" headers="Indicador">LazR_FLAG</td>
+<td class="gt_row gt_right" headers="n_suspeitos">262</td>
+<td class="gt_row gt_right" headers="pct_suspeitos">16.9</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Indicador">Longstr_FLAG</td>
+<td class="gt_row gt_right" headers="n_suspeitos">298</td>
+<td class="gt_row gt_right" headers="pct_suspeitos">19.3</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Indicador">MD_FLAG</td>
+<td class="gt_row gt_right" headers="n_suspeitos">0</td>
+<td class="gt_row gt_right" headers="pct_suspeitos">NaN</td>
+</tr>
+<tr class="even">
+<td class="gt_row gt_left" headers="Indicador">IRV_high_FLAG</td>
+<td class="gt_row gt_right" headers="n_suspeitos">70</td>
+<td class="gt_row gt_right" headers="pct_suspeitos">4.5</td>
+</tr>
+<tr class="odd">
+<td class="gt_row gt_left" headers="Indicador">IRV_low_FLAG</td>
+<td class="gt_row gt_right" headers="n_suspeitos">1</td>
+<td class="gt_row gt_right" headers="pct_suspeitos">0.1</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div></div>
+</section>
+</section>
+<section id="exportação-do-arquivo-com-flags" class="level2" data-number="8">
+<h2 data-number="8" class="anchored" data-anchor-id="exportação-do-arquivo-com-flags"><span class="header-section-number">8</span> 8. Exportação do arquivo com flags</h2>
+<p>O arquivo final <code>data_flag.csv</code> preserva as colunas originais de <code>data.csv</code>, adiciona as variáveis procedimentais do Nível 1 e as flags dos indicadores calculadas.</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [14]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>data_flag <span class="ot">&lt;-</span> dados_brutos <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    dados_preparados <span class="sc">|&gt;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>      <span class="fu">transmute</span>(ID, <span class="at">abandono =</span> <span class="fu">as.integer</span>(abandono)),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(ID)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    dados_nivel1 <span class="sc">|&gt;</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">transmute</span>(</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>        ID,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>        TIME,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        cq_falhas,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">excl_time =</span> <span class="fu">as.integer</span>(excl_time),</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">excl_cq =</span> <span class="fu">as.integer</span>(excl_cq),</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">nivel1_excluido =</span> <span class="fu">as.integer</span>(nivel1_excluido)</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(ID)</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    df_flags <span class="sc">|&gt;</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">select</span>(</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>        ID,</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>        LazR_FLAG,</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>        Longstr_FLAG,</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>        MD_FLAG,</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>        IRV_high_FLAG,</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>        IRV_low_FLAG</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(ID)</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-32"><a href="#cb31-32" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv2</span>(data_flag, <span class="st">"Data/AnalysisData/data_flag.csv"</span>)</span>
+<span id="cb31-33"><a href="#cb31-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-34"><a href="#cb31-34" aria-hidden="true" tabindex="-1"></a>data_flag</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1,546 × 119
+            ID     N CREATED   MODIFIED  SEXO IDADE ESTCIVIL ESTADO ESCOLARIDADE
+         &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;
+ 1 10441016017     1 28/12/20… 28/12/2…     1    58        0 DF                3
+ 2 10440981694     2 28/12/20… 28/12/2…     0    56        1 SP                2
+ 3 10440601239     3 28/12/20… 28/12/2…     0    32        1 PR                1
+ 4 10440562981     4 28/12/20… 28/12/2…     1    45        0 RJ                2
+ 5 10440358563     5 27/12/20… 27/12/2…     1    44        1 &lt;NA&gt;              2
+ 6 10440199369     6 27/12/20… 27/12/2…     0    48        1 MG                3
+ 7 10439125905     7 27/12/20… 27/12/2…     0    39        0 DF                2
+ 8 10439033965     8 26/12/20… 26/12/2…     1    57        2 SP                2
+ 9 10438952564     9 26/12/20… 26/12/2…     0    20        0 PA                2
+10 10438951127    10 26/12/20… 26/12/2…     0    43        1 SP                2
+# ℹ 1,536 more rows
+# ℹ 110 more variables: DEPENDENTE &lt;dbl&gt;, RENDA &lt;dbl&gt;, BEF1 &lt;dbl&gt;, BEF2 &lt;dbl&gt;,
+#   BEF3 &lt;dbl&gt;, BEF4 &lt;dbl&gt;, BEF5 &lt;dbl&gt;, BEF6 &lt;dbl&gt;, BEF7 &lt;dbl&gt;, BEF8 &lt;dbl&gt;,
+#   BEF9 &lt;dbl&gt;, BEF10 &lt;dbl&gt;, POUPANCA &lt;dbl&gt;, ACOES &lt;dbl&gt;, TITULOS &lt;dbl&gt;,
+#   CDB &lt;dbl&gt;, LETRAS &lt;dbl&gt;, DEBENTURES &lt;dbl&gt;, RENDAFIXA &lt;dbl&gt;,
+#   MULTIMERCADOS &lt;dbl&gt;, FUNDACOES &lt;dbl&gt;, FUNDIMOB &lt;dbl&gt;, COE &lt;dbl&gt;,
+#   OPCOES &lt;dbl&gt;, `1` &lt;dbl&gt;, CAMBIO &lt;dbl&gt;, OUTROS &lt;dbl&gt;, NENHUM &lt;dbl&gt;, …</code></pre>
+</div>
+</div></div>
+</section>
+     </main>
+<!-- /main column -->  <script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","descPosition":"bottom","loop":false,"openEffect":"zoom","selector":".lightbox"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script> 
+  
+</body></html>

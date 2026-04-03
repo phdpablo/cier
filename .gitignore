@@ -1,0 +1,28 @@
+# R/RStudio
+.Rproj.user/
+.Rhistory
+.RData
+.Ruserdata
+
+# Quarto and builds
+.quarto/
+_book/
+_site/
+_temp/
+_freeze/
+_manuscript/
+*_cache/
+/index_files/
+/site_libs/
+*.tex
+
+# Management
+adm/
+/.quarto/
+**/*.quarto_ipynb
+
+# Agent artifacts
+.agents/
+PLAN.md
+SKILL.md
+**/SKILL.md
