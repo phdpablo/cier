@@ -171,7 +171,8 @@ div.csl-indent {
   <li><a href="#variáveis-individuais" id="toc-variáveis-individuais" class="nav-link" data-scroll-target="#variáveis-individuais"><span class="header-section-number">4.1</span> Variáveis individuais</a></li>
   <li><a href="#visualização-univariada" id="toc-visualização-univariada" class="nav-link" data-scroll-target="#visualização-univariada"><span class="header-section-number">4.2</span> Visualização univariada</a></li>
   <li><a href="#pontos-de-corte-via-algoritmo-kneedle" id="toc-pontos-de-corte-via-algoritmo-kneedle" class="nav-link" data-scroll-target="#pontos-de-corte-via-algoritmo-kneedle"><span class="header-section-number">4.3</span> Pontos de corte via algoritmo Kneedle</a></li>
-  <li><a href="#flags-de-cier" id="toc-flags-de-cier" class="nav-link" data-scroll-target="#flags-de-cier"><span class="header-section-number">4.4</span> Flags de C/IER</a></li>
+  <li><a href="#gráficos-com-pontos-de-corte" id="toc-gráficos-com-pontos-de-corte" class="nav-link" data-scroll-target="#gráficos-com-pontos-de-corte"><span class="header-section-number">4.4</span> Gráficos com pontos de corte</a></li>
+  <li><a href="#flags-de-cier" id="toc-flags-de-cier" class="nav-link" data-scroll-target="#flags-de-cier"><span class="header-section-number">4.5</span> Flags de C/IER</a></li>
   </ul></li>
   <li><a href="#multicolinearidade-nível-3" id="toc-multicolinearidade-nível-3" class="nav-link" data-scroll-target="#multicolinearidade-nível-3"><span class="header-section-number">5</span> Multicolinearidade (Nível 3)</a></li>
   </ul>
@@ -273,8 +274,16 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 <td style="text-align: right;">28</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Excluídos por missings (&gt; 5 em Q1-Q26)</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">Elegíveis para Nível 2</td>
-<td style="text-align: right;">1298</td>
+<td style="text-align: right;">1295</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">NAs restantes na escala Q1-Q26</td>
+<td style="text-align: right;">90</td>
 </tr>
 </tbody>
 </table>
@@ -416,8 +425,68 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 </div>
 </div>
 </section>
-<section id="flags-de-cier" class="level3" data-number="4.4">
-<h3 data-number="4.4" class="anchored" data-anchor-id="flags-de-cier"><span class="header-section-number">4.4</span> Flags de C/IER</h3>
+<section id="gráficos-com-pontos-de-corte" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="gráficos-com-pontos-de-corte"><span class="header-section-number">4.4</span> Gráficos com pontos de corte</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Laz.R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Longstring</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Mahalanobis Distance</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">IRV</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="quarto-embed-nb-cell">
+<div id="cell-cum-lazr" class="cell">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/Scripts-ProcessingScripts-02_posthoc-cum-lazr-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-5"><img src="index_files/figure-html/Scripts-ProcessingScripts-02_posthoc-cum-lazr-output-1.png" id="cum-lazr" width="672" height="480" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="quarto-embed-nb-cell">
+<div id="cell-cum-longstr" class="cell">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/Scripts-ProcessingScripts-02_posthoc-cum-longstr-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-6"><img src="index_files/figure-html/Scripts-ProcessingScripts-02_posthoc-cum-longstr-output-1.png" id="cum-longstr" width="672" height="480" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="quarto-embed-nb-cell">
+<div id="cell-cum-md" class="cell">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/Scripts-ProcessingScripts-02_posthoc-cum-md-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-7"><img src="index_files/figure-html/Scripts-ProcessingScripts-02_posthoc-cum-md-output-1.png" id="cum-md" width="672" height="480" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="quarto-embed-nb-cell">
+<div id="cell-cum-irv" class="cell">
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/Scripts-ProcessingScripts-02_posthoc-cum-irv-output-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-8"><img src="index_files/figure-html/Scripts-ProcessingScripts-02_posthoc-cum-irv-output-1.png" id="cum-irv" width="672" height="480" class="figure-img"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="flags-de-cier" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="flags-de-cier"><span class="header-section-number">4.5</span> Flags de C/IER</h3>
 <p>Para cada indicador, cria-se uma variável <code>_FLAG</code> (<code>1</code> = suspeito, <code>0</code> = não suspeito) com base nos pontos de corte Kneedle.</p>
 <blockquote class="blockquote">
 <p><strong>Nota:</strong> Indicadores post hoc são <strong>diagnósticos</strong>, não geram exclusão automática nesta fase. A flag composta será usada para inspeção visual e decisão informada.</p>

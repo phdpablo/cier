@@ -103,6 +103,28 @@ Para **IRV**, usa-se `sign = -1` para detectar IRV alto demais e
 
 {{< embed Scripts/ProcessingScripts/02_posthoc.qmd#kneedle-cutoffs >}}
 
+### Gráficos com pontos de corte
+
+::: {.panel-tabset}
+
+#### Laz.R
+
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#cum-lazr >}}
+
+#### Longstring
+
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#cum-longstr >}}
+
+#### Mahalanobis Distance
+
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#cum-md >}}
+
+#### IRV
+
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#cum-irv >}}
+
+:::
+
 ### Flags de C/IER
 
 Para cada indicador, cria-se uma variável `_FLAG` (`1` = suspeito,

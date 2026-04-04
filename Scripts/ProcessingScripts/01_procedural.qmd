@@ -57,9 +57,11 @@ glimpse(dados_importados)
 dados_nivel1 <- dados_importados |>
   mutate(
     cq_falhas = rowSums(across(CQ1:CQ3, \(x) x != 1), na.rm = TRUE),
+    na_count  = rowSums(across(Q1:Q26, is.na)),
     excl_time = TIME < 208,
     excl_cq   = cq_falhas >= 2,
-    nivel1_excluido = excl_time | excl_cq
+    excl_na   = na_count > 5,
+    nivel1_excluido = excl_time | excl_cq | excl_na
   )
 
 exclusion_log <- bind_rows(
@@ -86,6 +88,14 @@ exclusion_log <- bind_rows(
       criterio = "cq_falhas",
       valor    = cq_falhas,
       detalhe  = paste0("Falhas CQ = ", cq_falhas)
+    ),
+  dados_nivel1 |>
+    filter(excl_na) |>
+    transmute(
+      ID,
+      criterio = "missings_excessivos",
+      valor    = as.numeric(na_count),
+      detalhe  = paste0("Missings em Q1-Q26 = ", na_count)
     )
 ) |>
   distinct(ID, criterio, .keep_all = TRUE)
@@ -95,7 +105,9 @@ write_csv2(exclusion_log, "../../Output/Results/exclusion_log.csv")
 
 dados_elegiveis <- dados_nivel1 |>
   filter(!nivel1_excluido) |>
-  select(ID, CQ1, CQ2, CQ3, TIME, Q1:Q26)
+  select(ID, CQ1, CQ2, CQ3, TIME, Q1:Q26) |>
+  # Inversão dos itens reversos (6 - valor)
+  mutate(across(c(Q3, Q4, Q26), ~ 6 - .x))
 ```
 
 ### Sumário do Nível 1
@@ -109,14 +121,18 @@ tibble(
     "Abandono removido",
     "Excluídos por tempo (< 208 s)",
     "Excluídos por CQ (≥ 2 falhas)",
-    "Elegíveis para Nível 2"
+    "Excluídos por missings (> 5 em Q1-Q26)",
+    "Elegíveis para Nível 2",
+    "NAs restantes na escala Q1-Q26"
   ),
   N = c(
     nrow(dados_brutos),
     sum(dados_preparados$abandono, na.rm = TRUE),
     sum(dados_nivel1$excl_time, na.rm = TRUE),
     sum(dados_nivel1$excl_cq, na.rm = TRUE),
-    nrow(dados_elegiveis)
+    sum(dados_nivel1$excl_na, na.rm = TRUE),
+    nrow(dados_elegiveis),
+    sum(is.na(dados_elegiveis |> select(Q1:Q26)))
   )
 ) |>
   knitr::kable(caption = "Resumo das exclusões procedimentais — Nível 1")

@@ -247,3 +247,6 @@ ID;criterio;valor;detalhe
 10396067386;cq_falhas;2;Falhas CQ = 2
 10376702812;cq_falhas;2;Falhas CQ = 2
 10372568914;cq_falhas;3;Falhas CQ = 3
+10431811967;missings_excessivos;6;Missings em Q1-Q26 = 6
+10421337228;missings_excessivos;12;Missings em Q1-Q26 = 12
+10420954641;missings_excessivos;7;Missings em Q1-Q26 = 7
