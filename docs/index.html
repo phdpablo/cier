@@ -174,9 +174,8 @@ div.csl-indent {
   <li><a href="#plots-with-cut-off-points" id="toc-plots-with-cut-off-points" class="nav-link" data-scroll-target="#plots-with-cut-off-points"><span class="header-section-number">4.3</span> Plots with cut-off points</a></li>
   <li><a href="#cier-flags" id="toc-cier-flags" class="nav-link" data-scroll-target="#cier-flags"><span class="header-section-number">4.4</span> C/IER Flags</a></li>
   </ul></li>
-  <li><a href="#multicollinearity" id="toc-multicollinearity" class="nav-link" data-scroll-target="#multicollinearity"><span class="header-section-number">5</span> Multicollinearity</a></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="Scripts\ProcessingScripts\03_vif-preview.html"><i class="bi bi-journal-code"></i>Multicollinearity</a></li><li><a href="Scripts\ProcessingScripts\02_posthoc-preview.html"><i class="bi bi-journal-code"></i>Post-hoc C/IER Indicators</a></li><li><a href="Scripts\ProcessingScripts\01_procedural-preview.html"><i class="bi bi-journal-code"></i>Procedural Exclusions</a></li></ul></div></nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="Scripts\ProcessingScripts\02_posthoc-preview.html"><i class="bi bi-journal-code"></i>Post-hoc C/IER Indicators</a></li><li><a href="Scripts\ProcessingScripts\01_procedural-preview.html"><i class="bi bi-journal-code"></i>Procedural Exclusions</a></li></ul></div></nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
@@ -190,11 +189,10 @@ div.csl-indent {
 <section id="contextualization" class="level2" data-number="1">
 <h2 data-number="1" class="anchored" data-anchor-id="contextualization"><span class="header-section-number">1</span> Contextualization</h2>
 <p>The detection of Careless or Insufficient Effort Responding (C/IER) is an essential step in the quality control of data obtained through self-report questionnaires. C/IER occurs when respondents complete the instrument without attention to the item content, compromising the validity of the psychometric and substantive inferences derived from the data <span class="citation" data-cites="curran2016 huang2026">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>; <a href="#ref-huang2026" role="doc-biblioref">Huang et al., 2026</a>)</span>.</p>
-<p>The analytical flow of this document follows three sequential levels of detection:</p>
+<p>The analytical flow of this document follows two sequential levels of detection:</p>
 <ol type="1">
 <li><strong>Questionnaire:</strong> procedural exclusions (a priori), including dropout, response time, and quality control items.</li>
 <li><strong>WHOQOL Scale:</strong> diagnostic post-hoc indicators (Laz.R, Longstring, Mahalanobis Distance, and IRV) with cut-off points estimated via the Kneedle algorithm <span class="citation" data-cites="biemann2025">(<a href="#ref-biemann2025" role="doc-biblioref">Biemann et al., 2025</a>)</span>.</li>
-<li><strong>Items:</strong> VIF-based multicollinearity diagnosis to anticipate convergence problems in CFA.</li>
 </ol>
 </section>
 <section id="data-reading-and-preparation" class="level2" data-number="2">
@@ -511,160 +509,8 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="multicollinearity" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="multicollinearity"><span class="header-section-number">5</span> Multicollinearity</h2>
-<p>The VIF (Variance Inflation Factor) is calculated for each item in the WHOQOL scale. Values greater than 5 indicate problematic multicollinearity, anticipating convergence and interpretation problems in CFA <span class="citation" data-cites="flora2012 kline2023">(<a href="#ref-flora2012" role="doc-biblioref">Flora et al., 2012</a>; <a href="#ref-kline2023" role="doc-biblioref">Kline, 2023</a>)</span>.</p>
-<div class="quarto-embed-nb-cell">
-<div id="cell-vif-table" class="cell">
-<div id="vif-table" class="cell-output cell-output-display cell-output-markdown">
-<table class="caption-top table table-sm table-striped small">
-<caption>Variance Inflation Factor (VIF) per item — VIF &gt; 5 indicates problematic multicollinearity</caption>
-<thead>
-<tr class="header">
-<th style="text-align: left;">Item</th>
-<th style="text-align: right;">VIF</th>
-<th style="text-align: left;">Problematic</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">Q1</td>
-<td style="text-align: right;">2.137</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q2</td>
-<td style="text-align: right;">1.979</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q3</td>
-<td style="text-align: right;">1.699</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q4</td>
-<td style="text-align: right;">1.553</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q5</td>
-<td style="text-align: right;">2.252</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q6</td>
-<td style="text-align: right;">1.808</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q7</td>
-<td style="text-align: right;">1.726</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q8</td>
-<td style="text-align: right;">1.323</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q9</td>
-<td style="text-align: right;">1.492</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q10</td>
-<td style="text-align: right;">2.302</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q11</td>
-<td style="text-align: right;">1.627</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q12</td>
-<td style="text-align: right;">1.838</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q13</td>
-<td style="text-align: right;">1.575</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q14</td>
-<td style="text-align: right;">1.973</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q15</td>
-<td style="text-align: right;">1.581</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q16</td>
-<td style="text-align: right;">1.417</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q17</td>
-<td style="text-align: right;">3.580</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q18</td>
-<td style="text-align: right;">3.145</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q19</td>
-<td style="text-align: right;">2.608</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q20</td>
-<td style="text-align: right;">1.888</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q21</td>
-<td style="text-align: right;">1.366</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q22</td>
-<td style="text-align: right;">1.739</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q23</td>
-<td style="text-align: right;">1.434</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q24</td>
-<td style="text-align: right;">1.391</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">Q25</td>
-<td style="text-align: right;">1.417</td>
-<td style="text-align: left;">No</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">Q26</td>
-<td style="text-align: right;">1.566</td>
-<td style="text-align: left;">No</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
 
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
@@ -674,17 +520,11 @@ Biemann, T., Koch-Bayram, I. F., Meier-Barthold, M., &amp; Aguinis, H. (2025). U
 <div id="ref-curran2016" class="csl-entry" role="listitem">
 Curran, P. G. (2016). Methods for the detection of carelessly invalid responses in survey data. <em>Journal of Experimental Social Psychology</em>, <em>66</em>, 4–19. <a href="https://doi.org/10.1016/j.jesp.2015.07.006">https://doi.org/10.1016/j.jesp.2015.07.006</a>
 </div>
-<div id="ref-flora2012" class="csl-entry" role="listitem">
-Flora, D. B., LaBrish, C., &amp; Chalmers, R. P. (2012). Old and <span>New Ideas</span> for <span>Data Screening</span> and <span>Assumption Testing</span> for <span>Exploratory</span> and <span>Confirmatory Factor Analysis</span>. <em>Frontiers in Psychology</em>, <em>3</em>(MAR), 55. <a href="https://doi.org/10.3389/fpsyg.2012.00055">https://doi.org/10.3389/fpsyg.2012.00055</a>
-</div>
 <div id="ref-hong2020" class="csl-entry" role="listitem">
 Hong, M., Steedle, J. T., &amp; Cheng, Y. (2020). Methods of <span>Detecting Insufficient Effort Responding</span>: <span>Comparisons</span> and <span>Practical Recommendations</span>. <em>Educ Psychol Meas</em>, <em>80</em>(2), 312–345. <a href="https://doi.org/10.1177/0013164419865316">https://doi.org/10.1177/0013164419865316</a>
 </div>
 <div id="ref-huang2026" class="csl-entry" role="listitem">
 Huang, J. L., Wang, Z., Huang, R., Wu, D., &amp; Shi, H. (2026). <em>Insufficient <span>Effort Responding</span> in <span>Management Research</span>: <span>A Critical Review</span> and <span>Future Directions</span></em>. <em>52</em>(1). <a href="https://doi.org/10.1177/01492063251330268">https://doi.org/10.1177/01492063251330268</a>
-</div>
-<div id="ref-kline2023" class="csl-entry" role="listitem">
-Kline, R. B. (2023). <em>Principles and <span>Pratice</span> of <span>Structural Equation Modeling</span></em> (Fifth Edition). The Guilford Press.
 </div>
 </div></section></div></main>
 <!-- /main column -->

@@ -30,15 +30,13 @@ questionnaires. C/IER occurs when respondents complete the instrument without
 attention to the item content, compromising the validity of the psychometric
 and substantive inferences derived from the data [@curran2016; @huang2026].
 
-The analytical flow of this document follows three sequential levels of detection:
+The analytical flow of this document follows two sequential levels of detection:
 
 1. **Questionnaire:** procedural exclusions (a priori), including dropout,
    response time, and quality control items.
 2. **WHOQOL Scale:** diagnostic post-hoc indicators (Laz.R, Longstring,
    Mahalanobis Distance, and IRV) with cut-off points estimated via the 
    Kneedle algorithm [@biemann2025].
-3. **Items:** VIF-based multicollinearity diagnosis to anticipate
-   convergence problems in CFA.
 
 ## Data reading and preparation
 
@@ -131,11 +129,3 @@ For each indicator, a `_FLAG` variable is created (`1` = flagged,
 > evaluation through the `whoqol_screened.csv` file.
 
 {{< embed Scripts/ProcessingScripts/02_posthoc.qmd#flags-overview >}}
-
-## Multicollinearity
-
-The VIF (Variance Inflation Factor) is calculated for each item in the WHOQOL scale.
-Values greater than 5 indicate problematic multicollinearity, anticipating
-convergence and interpretation problems in CFA [@flora2012; @kline2023].
-
-{{< embed Scripts/ProcessingScripts/03_vif.qmd#vif-table >}}

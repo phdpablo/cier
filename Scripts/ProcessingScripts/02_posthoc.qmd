@@ -414,5 +414,13 @@ screened_data <- imported_data |>
     left_join(df_flags, by = "ID")
 
 write_csv2(screened_data, "../../Data/IntermediateData/whoqol_screened.csv")
+
+# Extract only ID and items for the Confirmatory Factor Analysis (CFA)
+final_analysis_data <- screened_data |>
+  select(ID, Q1:Q26)
+
+# Export final analytical dataset
+dir.create("../../Data/AnalysisData", recursive = TRUE, showWarnings = FALSE)
+write_csv2(final_analysis_data, "../../Data/AnalysisData/whoqol_analysis.csv")
 ```
 
