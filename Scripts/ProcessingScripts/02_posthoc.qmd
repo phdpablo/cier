@@ -9,6 +9,7 @@ execute:
 #| label: setup-02
 #| include: false
 
+# Load necessary packages for analysis and plotting
 library(tidyverse)
 library(careless)
 library(gt)
@@ -20,11 +21,13 @@ library(modi)
 #| label: level-2-reading
 #| include: false
 
+# Read eligible data from Level 1
 imported_data <- read_csv2(
     "../../Data/IntermediateData/whoqol_imported.csv",
     show_col_types = FALSE
 )
 
+# Extract respondent IDs and select scale items for calculation
 id_col <- imported_data$ID
 
 items <- imported_data |>
@@ -37,13 +40,13 @@ items <- imported_data |>
 ```{r}
 #| label: funcoes-auxiliares
 
-# --- Laz.R index (Biemann et al., 2025) ---
+# Laz.R index (Biemann et al., 2025)
 calc_lazr <- function(x) {
     tr <- table(x[-length(x)], x[-1], useNA = "ifany")
     sum(tr^2 / rowSums(tr)) / (length(x) - 1)
 }
 
-# --- Kneedle Algorithm (Biemann et al., 2025) ---
+# Kneedle Algorithm (Biemann et al., 2025)
 dist2d <- function(a, b, c) {
     v1 <- b - c
     v2 <- a - b
@@ -67,16 +70,20 @@ The IRV and longstring are calculated using the `careless` package. The Laz.R is
 ```{r}
 #| label: indicator-calculation
 
+# Calculate Laz.R
 lazr_vals <- apply(items, 1, calc_lazr)
 
+# Calculate Longstring index
 longstr_vals <- longstring(items)
 
+# Calculate Mahalanobis Distance adjusting for missing values
 md_vals <- as.numeric(MDmiss(
     data = as.matrix(items),
     center = colMeans(items, na.rm = TRUE),
     cov = cov(items, use = "pairwise.complete.obs")
 ))
 
+# Calculate Intra-Individual Response Variability (IRV)
 irv_vals <- irv(items, split = FALSE)
 ```
 
@@ -85,6 +92,7 @@ irv_vals <- irv(items, split = FALSE)
 ```{r}
 #| label: indicators-tibble
 
+# Consolidate all calculated indicators into a single dataset
 df_indicators <- tibble(
     ID      = id_col,
     LazR    = round(lazr_vals, 3),
@@ -103,6 +111,7 @@ df_indicators
 ```{r}
 #| label: viz-lazr
 
+# Plot histogram and boxplot for Laz.R distribution
 p_hist_lazr <- ggplot(df_indicators, aes(x = LazR)) +
     geom_histogram(bins = 40, fill = "#3B7DD8", color = "white", alpha = 0.85) +
     labs(title = "Laz.R", x = "Laz.R", y = "Frequency") +
@@ -125,6 +134,7 @@ p_hist_lazr + p_box_lazr + plot_layout(widths = c(3, 1))
 ```{r}
 #| label: viz-longstr
 
+# Plot histogram and boxplot for Longstring distribution
 p_hist_ls <- ggplot(df_indicators, aes(x = Longstr)) +
     geom_histogram(binwidth = 1, fill = "#E07B39", color = "white", alpha = 0.85) +
     labs(title = "Longstring", x = "Longstring", y = "Frequency") +
@@ -147,6 +157,7 @@ p_hist_ls + p_box_ls + plot_layout(widths = c(3, 1))
 ```{r}
 #| label: viz-md
 
+# Plot histogram and boxplot for Mahalanobis Distance distribution
 p_hist_md <- ggplot(df_indicators, aes(x = MD)) +
     geom_histogram(bins = 40, fill = "#2CA02C", color = "white", alpha = 0.85) +
     labs(title = "Mahalanobis Distance", x = "MD", y = "Frequency") +
@@ -169,6 +180,7 @@ p_hist_md + p_box_md + plot_layout(widths = c(3, 1))
 ```{r}
 #| label: viz-irv
 
+# Plot histogram and boxplot for IRV distribution
 p_hist_irv <- ggplot(df_indicators, aes(x = IRV)) +
     geom_histogram(bins = 40, fill = "#9467BD", color = "white", alpha = 0.85) +
     labs(title = "IRV", x = "IRV", y = "Frequency") +
@@ -191,6 +203,7 @@ p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
 ```{r}
 #| label: kneedle-cutoffs
 
+# Define function to calculate Kneedle point based on sorted values
 calc_kneedle <- function(x, sign_val) {
     x_sorted <- sort(x, decreasing = TRUE, na.last = NA)
     n <- length(x_sorted)
@@ -203,12 +216,14 @@ calc_kneedle <- function(x, sign_val) {
     list(pct = pct, crit = crit, sorted = x_sorted)
 }
 
+# Calculate cut-off points for each indicator
 kn_lazr <- calc_kneedle(df_indicators$LazR, -1)
 kn_longstr <- calc_kneedle(df_indicators$Longstr, -1)
 kn_md <- calc_kneedle(df_indicators$MD, -1)
 kn_irv_high <- calc_kneedle(df_indicators$IRV, -1)
 kn_irv_low <- calc_kneedle(df_indicators$IRV, +1)
 
+# Tabulate the critical cut-off values and percentage of flagged responses
 cutoff_tab <- tibble(
     Indicator = c(
         "Laz.R", "Longstring", "MD",
@@ -244,6 +259,7 @@ make_cum_df <- function(sorted_vals) {
     tibble(Index_value = sorted_vals, percent = seq_len(n) / n)
 }
 
+# Create cumulative frequency plot for Laz.R with cut-off line
 cum_lazr <- make_cum_df(kn_lazr$sorted)
 
 ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
@@ -267,6 +283,7 @@ ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
 ```{r}
 #| label: cum-longstr
 
+# Create cumulative frequency plot for Longstring with cut-off line
 cum_ls <- make_cum_df(kn_longstr$sorted)
 
 ggplot(cum_ls, aes(x = percent, y = Index_value)) +
@@ -290,6 +307,7 @@ ggplot(cum_ls, aes(x = percent, y = Index_value)) +
 ```{r}
 #| label: cum-md
 
+# Create cumulative frequency plot for Mahalanobis Distance with cut-off line
 cum_md <- make_cum_df(kn_md$sorted)
 
 ggplot(cum_md, aes(x = percent, y = Index_value)) +
@@ -313,6 +331,7 @@ ggplot(cum_md, aes(x = percent, y = Index_value)) +
 ```{r}
 #| label: cum-irv
 
+# Create cumulative frequency plot for IRV with high and low cut-off lines
 cum_irv <- make_cum_df(kn_irv_high$sorted)
 
 ggplot(cum_irv, aes(x = percent, y = Index_value)) +
@@ -349,6 +368,7 @@ ggplot(cum_irv, aes(x = percent, y = Index_value)) +
 ```{r}
 #| label: flags
 
+# Generate binary identifiers for respondents exceeding indicator thresholds
 df_flags <- df_indicators |>
     mutate(
         LazR_FLAG     = if_else(LazR >= kn_lazr$crit, 1L, 0L),
@@ -366,6 +386,7 @@ df_flags
 ```{r}
 #| label: flags-overview
 
+# Summarize the count and percentage of flagged respondents globally
 df_flags |>
     summarise(
         across(ends_with("_FLAG"), list(
@@ -387,6 +408,7 @@ df_flags |>
 #| label: flags-export
 #| include: false
 
+# Merge indicators with original data and export for final evaluation
 screened_data <- imported_data |>
     select(ID, Q1:Q26) |>
     left_join(df_flags, by = "ID")

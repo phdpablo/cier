@@ -9,6 +9,7 @@ execute:
 #| label: setup-03
 #| include: false
 
+# Load required packages for data processing, regression modeling, and table formatting
 library(tidyverse)
 library(car)
 library(gt)
@@ -18,11 +19,13 @@ library(gt)
 #| label: level-3-reading
 #| include: false
 
+# Read screened dataset avoiding column type messages
 screened_data <- read_csv2(
   "../../Data/IntermediateData/whoqol_screened.csv",
   show_col_types = FALSE
 )
 
+# Extract only the questionnaire items and ensure numeric format for modeling
 items <- screened_data |>
   select(Q1:Q26) |>
   mutate(across(everything(), as.numeric))
@@ -37,6 +40,7 @@ convergence and interpretation issues in CFA.
 ```{r}
 #| label: vif-calculation
 
+# Estimate a dummy regression model to calculate Variance Inflation Factor (VIF)
 response <- seq_len(nrow(items))
 model <- lm(response ~ ., data = items)
 vif_values <- car::vif(model)
@@ -47,6 +51,7 @@ vif_values <- car::vif(model)
 ```{r}
 #| label: vif-table
 
+# Tabulate calculated VIF values and flag items exceeding the threshold
 vif_df <- tibble(
   Item = names(vif_values),
   VIF  = round(as.numeric(vif_values), 3),
@@ -67,8 +72,10 @@ vif_df |>
 # Export VIF table
 write_csv2(vif_df, "../../Output/DataAppendixOutput/vif_table.csv")
 
+# Extract only ID and items for the Confirmatory Factor Analysis (CFA)
 final_analysis_data <- screened_data |>
   select(ID, Q1:Q26)
 
+# Export final analytical dataset
 write_csv2(final_analysis_data, "../../Data/AnalysisData/whoqol_analysis.csv")
 ```

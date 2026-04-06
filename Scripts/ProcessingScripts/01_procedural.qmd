@@ -9,6 +9,7 @@ execute:
 #| label: setup-01
 #| include: false
 
+# Load required packages for data manipulation and table formatting
 library(tidyverse)
 library(gt)
 ```
@@ -22,16 +23,19 @@ flow are selected, and the total response time (`TIME`) is derived.
 ```{r}
 #| label: data-reading
 
+# Read raw dataset
 raw_data <- read_csv2(
     "../../Data/InputData/data.csv",
     show_col_types = FALSE
 )
 
+# Identify respondents who dropped out (no basic ID or zero valid answers)
 prepared_data <- raw_data |>
     mutate(
         dropout = is.na(ID) | rowSums(across(Q1:Q26, \(x) !is.na(x))) == 0
     )
 
+# Filter dropouts, convert scale items to numeric, and calculate total response time in seconds
 imported_data <- prepared_data |>
     filter(!dropout) |>
     select(ID, CREATED, MODIFIED, CQ1, CQ2, CQ3, Q1:Q26) |>
@@ -54,6 +58,7 @@ glimpse(imported_data)
 ```{r}
 #| label: level-1
 
+# Evaluate procedural exclusion criteria (time, quality control fails, and missing values)
 level1_data <- imported_data |>
     mutate(
         qc_fails = rowSums(across(CQ1:CQ3, \(x) x != 1), na.rm = TRUE),
@@ -64,6 +69,7 @@ level1_data <- imported_data |>
         level1_excluded = excl_time | excl_qc | excl_na
     )
 
+# Build a log of all excluded respondents and their specific exclusion criterion
 exclusion_log <- bind_rows(
     prepared_data |>
         filter(dropout) |>
@@ -100,8 +106,10 @@ exclusion_log <- bind_rows(
 ) |>
     distinct(ID, criterion, .keep_all = TRUE)
 
+# Export the exclusion log
 write_csv2(exclusion_log, "../../Output/DataAppendixOutput/exclusion_log.csv")
 
+# Filter eligible respondents and invert reverse-scored scale items
 eligible_data <- level1_data |>
     filter(!level1_excluded) |>
     select(ID, CQ1, CQ2, CQ3, TIME, Q1:Q26) |>
@@ -114,6 +122,7 @@ eligible_data <- level1_data |>
 ```{r}
 #| label: level-1-summary
 
+# Generate a summary table of procedural exclusions during Level 1
 tibble(
     Step = c(
         "Raw data",
@@ -141,6 +150,7 @@ tibble(
 #| label: level-1-export
 #| include: false
 
+# Save eligible respondents data for Level 2 post-hoc indicators analysis
 dir.create("../../Data/IntermediateData", recursive = TRUE, showWarnings = FALSE)
 write_csv2(eligible_data, "../../Data/IntermediateData/whoqol_imported.csv")
 ```
