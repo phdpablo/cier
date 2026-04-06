@@ -7,7 +7,7 @@
 
     <meta name="author" content="Pablo Rogers">
 
-    <title>Nível 2 — Indicadores post hoc C/IER</title>
+    <title>Indicadores post hoc C/IER</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -175,7 +175,7 @@
     <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
       
       <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
-      <h6><i class="bi bi-journal-code"></i> Nível 2 — Indicadores post hoc C/IER</h6>
+      <h6><i class="bi bi-journal-code"></i> Indicadores post hoc C/IER</h6>
 
             <a href="../../Scripts/ProcessingScripts/02_posthoc.out.ipynb" class="btn btn-primary quarto-download-embed" download="02_posthoc.qmd">Download Source</a>
           </div>
@@ -183,7 +183,7 @@
      <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Nível 2 — Indicadores post hoc C/IER</h1>
+      <h1 class="title">Indicadores post hoc C/IER</h1>
           </div>
 
     
@@ -283,7 +283,7 @@
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(tr<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">rowSums</span>(tr)) <span class="sc">/</span> (<span class="fu">length</span>(x) <span class="sc">-</span> <span class="dv">1</span>)</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Algoritmo Kneedle (Satopaa et al., 2011) ---</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Algoritmo Kneedle (Biemann et al., 2025) ---</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>dist2d <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b, c) {</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    v1 <span class="ot">&lt;-</span> b <span class="sc">-</span> c</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    v2 <span class="ot">&lt;-</span> a <span class="sc">-</span> b</span>
@@ -302,6 +302,7 @@
 </section>
 <section id="cálculo-dos-quatro-indicadores" class="level2">
 <h2 class="anchored" data-anchor-id="cálculo-dos-quatro-indicadores">Cálculo dos quatro indicadores</h2>
+<p>O IRV e o longstring são calculados através do pacote <code>careless</code>. O Laz.R é calculado através da função <code>calc_lazr</code> e o MD é calculado através do pacote <code>modi</code> e da função <code>MDmiss</code> para dar conta dos valores omissos.</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>lazr_vals <span class="ot">&lt;-</span> <span class="fu">apply</span>(itens, <span class="dv">1</span>, calc_lazr)</span>

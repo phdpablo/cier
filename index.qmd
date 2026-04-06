@@ -32,12 +32,12 @@ psicométricas e substantivas derivadas dos dados [@curran2016; @huang2026].
 
 O fluxo analítico deste documento segue três níveis sequenciais de detecção:
 
-1. **Nível 1 — Questionário:** exclusões procedimentais (a priori), incluindo
+1. **Questionário:** exclusões procedimentais (a priori), incluindo
    abandono, tempo de resposta e itens de controle de qualidade.
-2. **Nível 2 — Escala WHOQOL:** indicadores post hoc diagnósticos (Laz.R,
+2. **Escala WHOQOL:** indicadores post hoc diagnósticos (Laz.R,
    Longstring, Mahalanobis Distance e IRV) com pontos de corte estimados via
-   algoritmo Kneedle [@satopaa2011].
-3. **Nível 3 — Itens:** diagnóstico de multicolinearidade via VIF para
+   algoritmo Kneedle [@biemann2025].
+3. **Itens:** diagnóstico de multicolinearidade via VIF para
    antecipar problemas de convergência na AFC.
 
 ## Leitura e preparação dos dados
@@ -48,7 +48,7 @@ fluxo analítico e deriva-se o tempo total de resposta (`TIME`).
 
 {{< embed Scripts/ProcessingScripts/01_procedural.qmd#leitura-dados >}}
 
-## Exclusões procedimentais (Nível 1)
+## Exclusões procedimentais
 
 O Nível 1 aplica três procedimentos prévios ao cálculo dos indicadores post hoc:
 remoção de abandono, exclusão por tempo de resposta inferior a 208 segundos
@@ -58,20 +58,16 @@ de controle de qualidade (`CQ1-CQ3`) [@curran2016]. Toda exclusão é registrada
 
 {{< embed Scripts/ProcessingScripts/01_procedural.qmd#sumario-nivel-1 >}}
 
-## Cálculo dos indicadores C/IER (Nível 2)
+## Cálculo dos indicadores C/IER
 
 Cada indicador captura manifestações distintas de C/IER; a presença concomitante
 oferece evidência mais robusta do que qualquer indicador isolado [@curran2016;
 @hong2020; @huang2026].
 
-### Variáveis individuais
+### Visualização univariada
 
 Cada respondente recebe os valores dos quatro indicadores em um tibble
-consolidado.
-
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tibble-indicadores >}}
-
-### Visualização univariada
+consolidado, e os gráficos abaixo mostram a distribuição univariada de cada um.
 
 ::: {.panel-tabset}
 
@@ -99,7 +95,7 @@ O Kneedle é aplicado à curva ordenada (decrescente) de cada indicador.
 Para **Laz.R**, **Longstring** e **MD**, o kneedle com `sign = -1` identifica
 onde os valores extremamente altos se separam da maioria (cauda direita).
 Para **IRV**, usa-se `sign = -1` para detectar IRV alto demais e
-`sign = +1` para IRV baixo demais, pois ambos extremos são suspeitos.
+`sign = +1` para IRV baixo demais, pois ambos extremos podem ser considerados como suspeitos.
 
 {{< embed Scripts/ProcessingScripts/02_posthoc.qmd#kneedle-cutoffs >}}
 
@@ -131,15 +127,15 @@ Para cada indicador, cria-se uma variável `_FLAG` (`1` = suspeito,
 `0` = não suspeito) com base nos pontos de corte Kneedle.
 
 > **Nota:** Indicadores post hoc são **diagnósticos**, não geram exclusão
-> automática nesta fase. A flag composta será usada para inspeção visual e
-> decisão informada.
+> automática nesta fase. A flag composta será usada para inspeção e avaliação
+> através do arquivo `whoqol_screened.csv`.
 
 {{< embed Scripts/ProcessingScripts/02_posthoc.qmd#resumo-flags >}}
 
-## Multicolinearidade (Nível 3)
+## Multicolinearidade
 
 O VIF (Variance Inflation Factor) é calculado para cada item da escala WHOQOL.
-Valores superiores a 10 indicam multicolinearidade problemática, antecipando
+Valores superiores a 5 indicam multicolinearidade problemática, antecipando
 problemas de convergência e interpretação na AFC [@flora2012; @kline2023].
 
 {{< embed Scripts/ProcessingScripts/03_vif.qmd#vif-tabela >}}

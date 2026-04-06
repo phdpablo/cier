@@ -1,5 +1,5 @@
 ---
-title: "Nível 3 — Multicolinearidade VIF"
+title: "Multicolinearidade"
 author: Pablo Rogers
 execute:
   echo: true
@@ -31,13 +31,12 @@ itens <- dados_screened |>
 ## Cálculo do VIF por item
 
 O VIF (Variance Inflation Factor) diagnostica multicolinearidade entre itens.
-Valores acima de 10 indicam multicolinearidade problemática, antecipando
+Valores acima de 5 indicam multicolinearidade problemática, antecipando
 problemas de convergência e interpretação na AFC.
 
 ```{r}
 #| label: vif-calculo
 
-# VIF é propriedade dos preditores e invariante ao response
 response <- seq_len(nrow(itens))
 modelo <- lm(response ~ ., data = itens)
 vif_valores <- car::vif(modelo)
@@ -51,12 +50,12 @@ vif_valores <- car::vif(modelo)
 vif_df <- tibble(
   Item = names(vif_valores),
   VIF  = round(as.numeric(vif_valores), 3),
-  Problematico = if_else(VIF > 10, "Sim", "Não")
+  Problematico = if_else(VIF > 5, "Sim", "Não")
 )
 
 vif_df |>
   knitr::kable(
-    caption = "Variance Inflation Factor (VIF) por item — VIF > 10 indica multicolinearidade problemática",
+    caption = "Variance Inflation Factor (VIF) por item — VIF > 5 indica multicolinearidade problemática",
     digits  = 3
   )
 ```

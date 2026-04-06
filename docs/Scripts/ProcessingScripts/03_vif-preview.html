@@ -7,7 +7,7 @@
 
     <meta name="author" content="Pablo Rogers">
 
-    <title>Nível 3 — Multicolinearidade VIF</title>
+    <title>Multicolinearidade</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -172,7 +172,7 @@
     <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
       
       <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
-      <h6><i class="bi bi-journal-code"></i> Nível 3 — Multicolinearidade VIF</h6>
+      <h6><i class="bi bi-journal-code"></i> Multicolinearidade</h6>
 
             <a href="../../Scripts/ProcessingScripts/03_vif.out.ipynb" class="btn btn-primary quarto-download-embed" download="03_vif.qmd">Download Source</a>
           </div>
@@ -180,7 +180,7 @@
      <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Nível 3 — Multicolinearidade VIF</h1>
+      <h1 class="title">Multicolinearidade</h1>
           </div>
 
     
@@ -289,13 +289,12 @@ The following object is masked from 'package:purrr':
 </div></div>
 <section id="cálculo-do-vif-por-item" class="level2">
 <h2 class="anchored" data-anchor-id="cálculo-do-vif-por-item">Cálculo do VIF por item</h2>
-<p>O VIF (Variance Inflation Factor) diagnostica multicolinearidade entre itens. Valores acima de 10 indicam multicolinearidade problemática, antecipando problemas de convergência e interpretação na AFC.</p>
+<p>O VIF (Variance Inflation Factor) diagnostica multicolinearidade entre itens. Valores acima de 5 indicam multicolinearidade problemática, antecipando problemas de convergência e interpretação na AFC.</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># VIF é propriedade dos preditores e invariante ao response</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(itens))</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(response <span class="sc">~</span> ., <span class="at">data =</span> itens)</span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>vif_valores <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">vif</span>(modelo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(itens))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(response <span class="sc">~</span> ., <span class="at">data =</span> itens)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>vif_valores <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">vif</span>(modelo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 <section id="tabela-de-vif" class="level3">
 <h3 class="anchored" data-anchor-id="tabela-de-vif">Tabela de VIF</h3>
@@ -304,17 +303,17 @@ The following object is masked from 'package:purrr':
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>vif_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Item =</span> <span class="fu">names</span>(vif_valores),</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">VIF  =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(vif_valores), <span class="dv">3</span>),</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Problematico =</span> <span class="fu">if_else</span>(VIF <span class="sc">&gt;</span> <span class="dv">10</span>, <span class="st">"Sim"</span>, <span class="st">"Não"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Problematico =</span> <span class="fu">if_else</span>(VIF <span class="sc">&gt;</span> <span class="dv">5</span>, <span class="st">"Sim"</span>, <span class="st">"Não"</span>)</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>vif_df <span class="sc">|&gt;</span></span>
 <span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Variance Inflation Factor (VIF) por item — VIF &gt; 10 indica multicolinearidade problemática"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Variance Inflation Factor (VIF) por item — VIF &gt; 5 indica multicolinearidade problemática"</span>,</span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">digits  =</span> <span class="dv">3</span></span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
-<caption>Variance Inflation Factor (VIF) por item — VIF &gt; 10 indica multicolinearidade problemática</caption>
+<caption>Variance Inflation Factor (VIF) por item — VIF &gt; 5 indica multicolinearidade problemática</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Item</th>

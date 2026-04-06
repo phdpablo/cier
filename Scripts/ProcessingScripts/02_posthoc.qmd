@@ -1,5 +1,5 @@
 ---
-title: "Nível 2 — Indicadores post hoc C/IER"
+title: "Indicadores post hoc C/IER"
 author: Pablo Rogers
 execute:
   echo: true
@@ -43,7 +43,7 @@ calc_lazr <- function(x) {
     sum(tr^2 / rowSums(tr)) / (length(x) - 1)
 }
 
-# --- Algoritmo Kneedle (Satopaa et al., 2011) ---
+# --- Algoritmo Kneedle (Biemann et al., 2025) ---
 dist2d <- function(a, b, c) {
     v1 <- b - c
     v2 <- a - b
@@ -61,6 +61,8 @@ kneedle <- function(values, sign) {
 ```
 
 ## Cálculo dos quatro indicadores
+
+O IRV e o longstring são calculados através do pacote `careless`. O Laz.R é calculado através da função `calc_lazr` e o MD é calculado através do pacote `modi` e da função `MDmiss` para dar conta dos valores omissos.
 
 ```{r}
 #| label: calculo-indicadores
