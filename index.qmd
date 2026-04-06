@@ -16,7 +16,7 @@ keywords:
   - Mahalanobis Distance
   - IRV
 abstract: |
-  This notebook presents a tutorial on the detection of careless or insufficient effort responding (C/IER) in self-report questionnaires. We use real database from WHOQOL-Bref scale as an example, and we apply the 'careless' package and Laz.R [@biemann2025] to detect C/IER (post hoc indicators). We also discuss the importance of procedural C/IER detection in the quality control of data obtained through self-report questionnaires.
+  This notebook presents a tutorial on the detection of careless or insufficient effort responding (C/IER) in self-report questionnaires. We use real database from WHOQOL-Bref scale as an example (n = 1,546), and we apply the 'careless' package and Laz.R [@biemann2025] to detect C/IER (post hoc indicators). We also discuss the importance of procedural C/IER detection in the quality control of data obtained through self-report questionnaires.
 date: 04/03/2026
 bibliography: references.bib
 number-sections: true

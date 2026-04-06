@@ -107,7 +107,7 @@ exclusion_log <- bind_rows(
     distinct(ID, criterion, .keep_all = TRUE)
 
 # Export the exclusion log
-write_csv2(exclusion_log, "../../Output/DataAppendixOutput/exclusion_log.csv")
+write_csv2(exclusion_log, "../../Output/DataAppendixOutput/Tables/exclusion_log.csv")
 
 # Filter eligible respondents and invert reverse-scored scale items
 eligible_data <- level1_data |>
@@ -123,7 +123,7 @@ eligible_data <- level1_data |>
 #| label: level-1-summary
 
 # Generate a summary table of procedural exclusions during Level 1
-tibble(
+table_level1 <- tibble(
     Step = c(
         "Raw data",
         "Dropouts removed",
@@ -142,7 +142,13 @@ tibble(
         nrow(eligible_data),
         sum(is.na(eligible_data |> select(Q1:Q26)))
     )
-) |>
+)
+
+# Save table
+write_csv2(table_level1, "../../Output/DataAppendixOutput/Tables/level-1-summary.csv")
+
+# Print table
+table_level1 |>
     knitr::kable(caption = "Procedural exclusions summary")
 ```
 
@@ -151,6 +157,5 @@ tibble(
 #| include: false
 
 # Save eligible respondents data for Level 2 post-hoc indicators analysis
-dir.create("../../Data/IntermediateData", recursive = TRUE, showWarnings = FALSE)
 write_csv2(eligible_data, "../../Data/IntermediateData/whoqol_imported.csv")
 ```

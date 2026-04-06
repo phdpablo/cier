@@ -38,7 +38,7 @@ items <- imported_data |>
 ## Helper functions definition
 
 ```{r}
-#| label: funcoes-auxiliares
+#| label: auxiliary-functions
 
 # Laz.R index (Biemann et al., 2025)
 calc_lazr <- function(x) {
@@ -126,7 +126,10 @@ p_box_lazr <- ggplot(df_indicators, aes(y = LazR)) +
         axis.ticks.x = element_blank()
     )
 
-p_hist_lazr + p_box_lazr + plot_layout(widths = c(3, 1))
+# Save plot
+p_combined_lazr <- p_hist_lazr + p_box_lazr + plot_layout(widths = c(3, 1))
+ggsave("../../Output/DataAppendixOutput/Figures/viz-lazr.png", p_combined_lazr, width = 8, height = 4)
+p_combined_lazr
 ```
 
 ### Longstring
@@ -149,7 +152,10 @@ p_box_ls <- ggplot(df_indicators, aes(y = Longstr)) +
         axis.ticks.x = element_blank()
     )
 
-p_hist_ls + p_box_ls + plot_layout(widths = c(3, 1))
+# Save plot
+p_combined_ls <- p_hist_ls + p_box_ls + plot_layout(widths = c(3, 1))
+ggsave("../../Output/DataAppendixOutput/Figures/viz-longstr.png", p_combined_ls, width = 8, height = 4)
+p_combined_ls
 ```
 
 ### Mahalanobis Distance
@@ -172,7 +178,10 @@ p_box_md <- ggplot(df_indicators, aes(y = MD)) +
         axis.ticks.x = element_blank()
     )
 
-p_hist_md + p_box_md + plot_layout(widths = c(3, 1))
+# Save plot
+p_combined_md <- p_hist_md + p_box_md + plot_layout(widths = c(3, 1))
+ggsave("../../Output/DataAppendixOutput/Figures/viz-md.png", p_combined_md, width = 8, height = 4)
+p_combined_md
 ```
 
 ### IRV
@@ -195,7 +204,10 @@ p_box_irv <- ggplot(df_indicators, aes(y = IRV)) +
         axis.ticks.x = element_blank()
     )
 
-p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
+# Save plot
+p_combined_irv <- p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
+ggsave("../../Output/DataAppendixOutput/Figures/viz-irv.png", p_combined_irv, width = 8, height = 4)
+p_combined_irv
 ```
 
 ## Cut-off points via Kneedle algorithm
@@ -239,6 +251,10 @@ cutoff_tab <- tibble(
     ) * 100, 1)
 )
 
+# Save table
+write_csv2(cutoff_tab, "../../Output/DataAppendixOutput/Tables/kneedle-cutoffs.csv")
+
+# Print table
 cutoff_tab |>
     knitr::kable(
         caption = "Cut-off points — Kneedle algorithm (Biemann et al., 2025)",
@@ -262,7 +278,7 @@ make_cum_df <- function(sorted_vals) {
 # Create cumulative frequency plot for Laz.R with cut-off line
 cum_lazr <- make_cum_df(kn_lazr$sorted)
 
-ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
+p_cum_lazr <- ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
     geom_point(size = 0.8, color = "#3B7DD8") +
     geom_vline(xintercept = kn_lazr$pct, linetype = "dashed", linewidth = 0.8) +
     annotate("text",
@@ -276,6 +292,10 @@ ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
         x = "Percentile (descending order)", y = "Laz.R"
     ) +
     theme_light()
+
+# Save plot
+ggsave("../../Output/DataAppendixOutput/Figures/cum-lazr.png", p_cum_lazr, width = 6, height = 4)
+p_cum_lazr
 ```
 
 ### Longstring
@@ -286,7 +306,7 @@ ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
 # Create cumulative frequency plot for Longstring with cut-off line
 cum_ls <- make_cum_df(kn_longstr$sorted)
 
-ggplot(cum_ls, aes(x = percent, y = Index_value)) +
+p_cum_ls <- ggplot(cum_ls, aes(x = percent, y = Index_value)) +
     geom_point(size = 0.8, color = "#E07B39") +
     geom_vline(xintercept = kn_longstr$pct, linetype = "dashed", linewidth = 0.8) +
     annotate("text",
@@ -300,6 +320,10 @@ ggplot(cum_ls, aes(x = percent, y = Index_value)) +
         x = "Percentile (descending order)", y = "Longstring"
     ) +
     theme_light()
+
+# Save plot
+ggsave("../../Output/DataAppendixOutput/Figures/cum-longstr.png", p_cum_ls, width = 6, height = 4)
+p_cum_ls
 ```
 
 ### Mahalanobis Distance
@@ -310,7 +334,7 @@ ggplot(cum_ls, aes(x = percent, y = Index_value)) +
 # Create cumulative frequency plot for Mahalanobis Distance with cut-off line
 cum_md <- make_cum_df(kn_md$sorted)
 
-ggplot(cum_md, aes(x = percent, y = Index_value)) +
+p_cum_md <- ggplot(cum_md, aes(x = percent, y = Index_value)) +
     geom_point(size = 0.8, color = "#2CA02C") +
     geom_vline(xintercept = kn_md$pct, linetype = "dashed", linewidth = 0.8) +
     annotate("text",
@@ -324,6 +348,10 @@ ggplot(cum_md, aes(x = percent, y = Index_value)) +
         x = "Percentile (descending order)", y = "MD"
     ) +
     theme_light()
+
+# Save plot
+ggsave("../../Output/DataAppendixOutput/Figures/cum-md.png", p_cum_md, width = 6, height = 4)
+p_cum_md
 ```
 
 ### IRV
@@ -334,7 +362,7 @@ ggplot(cum_md, aes(x = percent, y = Index_value)) +
 # Create cumulative frequency plot for IRV with high and low cut-off lines
 cum_irv <- make_cum_df(kn_irv_high$sorted)
 
-ggplot(cum_irv, aes(x = percent, y = Index_value)) +
+p_cum_irv <- ggplot(cum_irv, aes(x = percent, y = Index_value)) +
     geom_point(size = 0.8, color = "#9467BD") +
     geom_vline(
         xintercept = kn_irv_high$pct, linetype = "dashed", linewidth = 0.8,
@@ -359,6 +387,10 @@ ggplot(cum_irv, aes(x = percent, y = Index_value)) +
         x = "Percentile (descending order)", y = "IRV"
     ) +
     theme_light()
+
+# Save plot
+ggsave("../../Output/DataAppendixOutput/Figures/cum-irv.png", p_cum_irv, width = 6, height = 4)
+p_cum_irv
 ```
 
 
@@ -387,7 +419,7 @@ df_flags
 #| label: flags-overview
 
 # Summarize the count and percentage of flagged respondents globally
-df_flags |>
+table_flags <- df_flags |>
     summarise(
         across(ends_with("_FLAG"), list(
             n_flagged   = \(x) sum(x, na.rm = TRUE),
@@ -397,7 +429,13 @@ df_flags |>
     pivot_longer(everything(),
         names_to = c("Indicator", ".value"),
         names_pattern = "(.+)_(n_flagged|pct_flagged)"
-    ) |>
+    )
+
+# Save table
+write_csv2(table_flags, "../../Output/DataAppendixOutput/Tables/flags-overview.csv")
+
+# Print table
+table_flags |>
     knitr::kable(
         caption = "Summary of flagged C/IER respondents",
         col.names = c("Indicator", "N flagged", "% flagged")
@@ -420,7 +458,6 @@ final_analysis_data <- screened_data |>
   select(ID, Q1:Q26)
 
 # Export final analytical dataset
-dir.create("../../Data/AnalysisData", recursive = TRUE, showWarnings = FALSE)
 write_csv2(final_analysis_data, "../../Data/AnalysisData/whoqol_analysis.csv")
 ```
 

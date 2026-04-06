@@ -1,0 +1,8 @@
+Step;N
+Raw data;1546
+Dropouts removed;220
+Excluded by time (< 208 s);0
+Excluded by QC (≥ 2 fails);28
+Excluded by missings (> 5 in Q1-Q26);3
+Eligible for Level 2;1295
+Remaining NAs in Q1-Q26;90
