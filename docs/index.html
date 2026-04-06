@@ -10,7 +10,7 @@
 <meta name="dcterms.date" content="2026-04-03">
 <meta name="keywords" content="Careless Responding, Insufficient Effort Responding, Laz.R, Longstring, Mahalanobis Distance, IRV">
 
-<title>Detecção de Careless/Insufficient Effort Responding (C/IER)</title>
+<title>Careless/Insufficient Effort Responding (C/IER) Detection</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -69,8 +69,8 @@ div.csl-indent {
 </script>
 
 
-<meta name="citation_title" content="Detecção de Careless/Insufficient Effort Responding (C/IER)">
-<meta name="citation_abstract" content="This... (abstract text here)
+<meta name="citation_title" content="Careless/Insufficient Effort Responding (C/IER) Detection">
+<meta name="citation_abstract" content="This notebook presents a tutorial on the detection of careless or insufficient effort responding (C/IER) in self-report questionnaires. We use real database from WHOQOL-Bref scale as an example, and we apply the &amp;amp;#039;careless' package and Laz.R [@biemann2025] to detect C/IER (post hoc indicators). We also discuss the importance of procedural C/IER detection in the quality control of data obtained through self-report questionnaires.
 ">
 <meta name="citation_keywords" content="Careless Responding,Insufficient Effort Responding,Laz.R,Longstring,Mahalanobis Distance,IRV">
 <meta name="citation_author" content="Pablo Rogers">
@@ -105,7 +105,7 @@ div.csl-indent {
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Detecção de Careless/Insufficient Effort Responding (C/IER)</h1>
+      <h1 class="title">Careless/Insufficient Effort Responding (C/IER) Detection</h1>
           </div>
 
     
@@ -145,7 +145,7 @@ div.csl-indent {
     <div>
       <div class="abstract">
         <div class="block-title">Abstract</div>
-        <p>This… (abstract text here)</p>
+        <p>This notebook presents a tutorial on the detection of careless or insufficient effort responding (C/IER) in self-report questionnaires. We use real database from WHOQOL-Bref scale as an example, and we apply the ‘careless’ package and Laz.R <span class="citation" data-cites="biemann2025">(<a href="#ref-biemann2025" role="doc-biblioref">Biemann et al., 2025</a>)</span> to detect C/IER (post hoc indicators). We also discuss the importance of procedural C/IER detection in the quality control of data obtained through self-report questionnaires.</p>
       </div>
     </div>
 
@@ -164,19 +164,19 @@ div.csl-indent {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#contextualização" id="toc-contextualização" class="nav-link active" data-scroll-target="#contextualização"><span class="header-section-number">1</span> Contextualização</a></li>
-  <li><a href="#leitura-e-preparação-dos-dados" id="toc-leitura-e-preparação-dos-dados" class="nav-link" data-scroll-target="#leitura-e-preparação-dos-dados"><span class="header-section-number">2</span> Leitura e preparação dos dados</a></li>
-  <li><a href="#exclusões-procedimentais" id="toc-exclusões-procedimentais" class="nav-link" data-scroll-target="#exclusões-procedimentais"><span class="header-section-number">3</span> Exclusões procedimentais</a></li>
-  <li><a href="#cálculo-dos-indicadores-cier" id="toc-cálculo-dos-indicadores-cier" class="nav-link" data-scroll-target="#cálculo-dos-indicadores-cier"><span class="header-section-number">4</span> Cálculo dos indicadores C/IER</a>
+  <li><a href="#contextualization" id="toc-contextualization" class="nav-link active" data-scroll-target="#contextualization"><span class="header-section-number">1</span> Contextualization</a></li>
+  <li><a href="#data-reading-and-preparation" id="toc-data-reading-and-preparation" class="nav-link" data-scroll-target="#data-reading-and-preparation"><span class="header-section-number">2</span> Data reading and preparation</a></li>
+  <li><a href="#procedural-exclusions" id="toc-procedural-exclusions" class="nav-link" data-scroll-target="#procedural-exclusions"><span class="header-section-number">3</span> Procedural exclusions</a></li>
+  <li><a href="#calculation-of-cier-indicators" id="toc-calculation-of-cier-indicators" class="nav-link" data-scroll-target="#calculation-of-cier-indicators"><span class="header-section-number">4</span> Calculation of C/IER indicators</a>
   <ul class="collapse">
-  <li><a href="#visualização-univariada" id="toc-visualização-univariada" class="nav-link" data-scroll-target="#visualização-univariada"><span class="header-section-number">4.1</span> Visualização univariada</a></li>
-  <li><a href="#pontos-de-corte-via-algoritmo-kneedle" id="toc-pontos-de-corte-via-algoritmo-kneedle" class="nav-link" data-scroll-target="#pontos-de-corte-via-algoritmo-kneedle"><span class="header-section-number">4.2</span> Pontos de corte via algoritmo Kneedle</a></li>
-  <li><a href="#gráficos-com-pontos-de-corte" id="toc-gráficos-com-pontos-de-corte" class="nav-link" data-scroll-target="#gráficos-com-pontos-de-corte"><span class="header-section-number">4.3</span> Gráficos com pontos de corte</a></li>
-  <li><a href="#flags-de-cier" id="toc-flags-de-cier" class="nav-link" data-scroll-target="#flags-de-cier"><span class="header-section-number">4.4</span> Flags de C/IER</a></li>
+  <li><a href="#univariate-visualization" id="toc-univariate-visualization" class="nav-link" data-scroll-target="#univariate-visualization"><span class="header-section-number">4.1</span> Univariate visualization</a></li>
+  <li><a href="#cut-off-points-via-kneedle-algorithm" id="toc-cut-off-points-via-kneedle-algorithm" class="nav-link" data-scroll-target="#cut-off-points-via-kneedle-algorithm"><span class="header-section-number">4.2</span> Cut-off points via Kneedle algorithm</a></li>
+  <li><a href="#plots-with-cut-off-points" id="toc-plots-with-cut-off-points" class="nav-link" data-scroll-target="#plots-with-cut-off-points"><span class="header-section-number">4.3</span> Plots with cut-off points</a></li>
+  <li><a href="#cier-flags" id="toc-cier-flags" class="nav-link" data-scroll-target="#cier-flags"><span class="header-section-number">4.4</span> C/IER Flags</a></li>
   </ul></li>
-  <li><a href="#multicolinearidade" id="toc-multicolinearidade" class="nav-link" data-scroll-target="#multicolinearidade"><span class="header-section-number">5</span> Multicolinearidade</a></li>
+  <li><a href="#multicollinearity" id="toc-multicollinearity" class="nav-link" data-scroll-target="#multicollinearity"><span class="header-section-number">5</span> Multicollinearity</a></li>
   </ul>
-<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="Scripts\ProcessingScripts\01_procedural-preview.html"><i class="bi bi-journal-code"></i>Exclusões procedimentais</a></li><li><a href="Scripts\ProcessingScripts\02_posthoc-preview.html"><i class="bi bi-journal-code"></i>Indicadores post hoc C/IER</a></li><li><a href="Scripts\ProcessingScripts\03_vif-preview.html"><i class="bi bi-journal-code"></i>Multicolinearidade VIF</a></li></ul></div></nav>
+<div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="Scripts\ProcessingScripts\03_vif-preview.html"><i class="bi bi-journal-code"></i>Multicollinearity</a></li><li><a href="Scripts\ProcessingScripts\02_posthoc-preview.html"><i class="bi bi-journal-code"></i>Post-hoc C/IER Indicators</a></li><li><a href="Scripts\ProcessingScripts\01_procedural-preview.html"><i class="bi bi-journal-code"></i>Procedural Exclusions</a></li></ul></div></nav>
 </div>
 <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
 </div>
@@ -187,21 +187,21 @@ div.csl-indent {
   
 
 
-<section id="contextualização" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="contextualização"><span class="header-section-number">1</span> Contextualização</h2>
-<p>A detecção de Careless ou Insufficient Effort Responding (C/IER) é uma etapa essencial no controle de qualidade de dados obtidos por questionários de autorrelato. O C/IER se manifesta quando respondentes preenchem o instrumento sem atenção ao conteúdo dos itens, comprometendo a validade das inferências psicométricas e substantivas derivadas dos dados <span class="citation" data-cites="curran2016 huang2026">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>; <a href="#ref-huang2026" role="doc-biblioref">Huang et al., 2026</a>)</span>.</p>
-<p>O fluxo analítico deste documento segue três níveis sequenciais de detecção:</p>
+<section id="contextualization" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="contextualization"><span class="header-section-number">1</span> Contextualization</h2>
+<p>The detection of Careless or Insufficient Effort Responding (C/IER) is an essential step in the quality control of data obtained through self-report questionnaires. C/IER occurs when respondents complete the instrument without attention to the item content, compromising the validity of the psychometric and substantive inferences derived from the data <span class="citation" data-cites="curran2016 huang2026">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>; <a href="#ref-huang2026" role="doc-biblioref">Huang et al., 2026</a>)</span>.</p>
+<p>The analytical flow of this document follows three sequential levels of detection:</p>
 <ol type="1">
-<li><strong>Questionário:</strong> exclusões procedimentais (a priori), incluindo abandono, tempo de resposta e itens de controle de qualidade.</li>
-<li><strong>Escala WHOQOL:</strong> indicadores post hoc diagnósticos (Laz.R, Longstring, Mahalanobis Distance e IRV) com pontos de corte estimados via algoritmo Kneedle <span class="citation" data-cites="biemann2025">(<a href="#ref-biemann2025" role="doc-biblioref">Biemann et al., 2025</a>)</span>.</li>
-<li><strong>Itens:</strong> diagnóstico de multicolinearidade via VIF para antecipar problemas de convergência na AFC.</li>
+<li><strong>Questionnaire:</strong> procedural exclusions (a priori), including dropout, response time, and quality control items.</li>
+<li><strong>WHOQOL Scale:</strong> diagnostic post-hoc indicators (Laz.R, Longstring, Mahalanobis Distance, and IRV) with cut-off points estimated via the Kneedle algorithm <span class="citation" data-cites="biemann2025">(<a href="#ref-biemann2025" role="doc-biblioref">Biemann et al., 2025</a>)</span>.</li>
+<li><strong>Items:</strong> VIF-based multicollinearity diagnosis to anticipate convergence problems in CFA.</li>
 </ol>
 </section>
-<section id="leitura-e-preparação-dos-dados" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="leitura-e-preparação-dos-dados"><span class="header-section-number">2</span> Leitura e preparação dos dados</h2>
-<p>O arquivo <code>data.csv</code> contém as respostas brutas do questionário (separador <code>;</code>). Nesta etapa, removem-se registros de abandono, selecionam-se as variáveis do fluxo analítico e deriva-se o tempo total de resposta (<code>TIME</code>).</p>
+<section id="data-reading-and-preparation" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="data-reading-and-preparation"><span class="header-section-number">2</span> Data reading and preparation</h2>
+<p>The <code>data.csv</code> file contains the raw survey responses (separator <code>;</code>). In this step, dropout records are removed, variables for the analytical flow are selected, and the total response time (<code>TIME</code>) is derived.</p>
 <div class="quarto-embed-nb-cell">
-<div id="leitura-dados" class="cell">
+<div id="data-reading" class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 1,326
 Columns: 33
@@ -242,47 +242,47 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 </div>
 </div>
 </section>
-<section id="exclusões-procedimentais" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="exclusões-procedimentais"><span class="header-section-number">3</span> Exclusões procedimentais</h2>
-<p>O Nível 1 aplica três procedimentos prévios ao cálculo dos indicadores post hoc: remoção de abandono, exclusão por tempo de resposta inferior a 208 segundos (104 itens × 2 s/item) <span class="citation" data-cites="huang2026">(<a href="#ref-huang2026" role="doc-biblioref">Huang et al., 2026</a>)</span> e exclusão por duas ou mais falhas nos itens de controle de qualidade (<code>CQ1-CQ3</code>) <span class="citation" data-cites="curran2016">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>)</span>. Toda exclusão é registrada no <code>exclusion_log.csv</code> com motivo e critério.</p>
+<section id="procedural-exclusions" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="procedural-exclusions"><span class="header-section-number">3</span> Procedural exclusions</h2>
+<p>Level 1 applies three procedures prior to calculating post-hoc indicators: dropout removal, exclusion for response time below 208 seconds (104 items × 2 s/item) <span class="citation" data-cites="huang2026">(<a href="#ref-huang2026" role="doc-biblioref">Huang et al., 2026</a>)</span>, and exclusion for two or more failures on quality control items (<code>CQ1-CQ3</code>) <span class="citation" data-cites="curran2016">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>)</span>. Every exclusion is recorded in <code>exclusion_log.csv</code> with its reason and criterion.</p>
 <div class="quarto-embed-nb-cell">
-<div id="cell-sumario-nivel-1" class="cell">
-<div id="sumario-nivel-1" class="cell-output cell-output-display cell-output-markdown">
+<div id="cell-level-1-summary" class="cell">
+<div id="level-1-summary" class="cell-output cell-output-display cell-output-markdown">
 <table class="caption-top table table-sm table-striped small">
-<caption>Resumo das exclusões procedimentais</caption>
+<caption>Procedural exclusions summary</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Etapa</th>
+<th style="text-align: left;">Step</th>
 <th style="text-align: right;">N</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">Dados brutos</td>
+<td style="text-align: left;">Raw data</td>
 <td style="text-align: right;">1546</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Abandono removido</td>
+<td style="text-align: left;">Dropouts removed</td>
 <td style="text-align: right;">220</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Excluídos por tempo (&lt; 208 s)</td>
+<td style="text-align: left;">Excluded by time (&lt; 208 s)</td>
 <td style="text-align: right;">0</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Excluídos por CQ (≥ 2 falhas)</td>
+<td style="text-align: left;">Excluded by QC (≥ 2 fails)</td>
 <td style="text-align: right;">28</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">Excluídos por missings (&gt; 5 em Q1-Q26)</td>
+<td style="text-align: left;">Excluded by missings (&gt; 5 in Q1-Q26)</td>
 <td style="text-align: right;">3</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Elegíveis para Nível 2</td>
+<td style="text-align: left;">Eligible for Level 2</td>
 <td style="text-align: right;">1295</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">NAs restantes na escala Q1-Q26</td>
+<td style="text-align: left;">Remaining NAs in Q1-Q26</td>
 <td style="text-align: right;">90</td>
 </tr>
 </tbody>
@@ -291,12 +291,12 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 </div>
 </div>
 </section>
-<section id="cálculo-dos-indicadores-cier" class="level2" data-number="4">
-<h2 data-number="4" class="anchored" data-anchor-id="cálculo-dos-indicadores-cier"><span class="header-section-number">4</span> Cálculo dos indicadores C/IER</h2>
-<p>Cada indicador captura manifestações distintas de C/IER; a presença concomitante oferece evidência mais robusta do que qualquer indicador isolado <span class="citation" data-cites="curran2016 hong2020 huang2026">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>; <a href="#ref-hong2020" role="doc-biblioref">Hong et al., 2020</a>; <a href="#ref-huang2026" role="doc-biblioref">Huang et al., 2026</a>)</span>.</p>
-<section id="visualização-univariada" class="level3" data-number="4.1">
-<h3 data-number="4.1" class="anchored" data-anchor-id="visualização-univariada"><span class="header-section-number">4.1</span> Visualização univariada</h3>
-<p>Cada respondente recebe os valores dos quatro indicadores em um tibble consolidado, e os gráficos abaixo mostram a distribuição univariada de cada um.</p>
+<section id="calculation-of-cier-indicators" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="calculation-of-cier-indicators"><span class="header-section-number">4</span> Calculation of C/IER indicators</h2>
+<p>Each indicator captures distinct manifestations of C/IER; their concurrent presence offers stronger evidence than any single indicator alone <span class="citation" data-cites="curran2016 hong2020 huang2026">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>; <a href="#ref-hong2020" role="doc-biblioref">Hong et al., 2020</a>; <a href="#ref-huang2026" role="doc-biblioref">Huang et al., 2026</a>)</span>.</p>
+<section id="univariate-visualization" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="univariate-visualization"><span class="header-section-number">4.1</span> Univariate visualization</h3>
+<p>Each respondent receives the values of the four indicators in a consolidated tibble, and the plots below show the univariate distribution of each one.</p>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Laz.R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Longstring</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Mahalanobis Distance</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">IRV</a></li></ul>
 <div class="tab-content">
@@ -355,46 +355,46 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 </div>
 </div>
 </section>
-<section id="pontos-de-corte-via-algoritmo-kneedle" class="level3" data-number="4.2">
-<h3 data-number="4.2" class="anchored" data-anchor-id="pontos-de-corte-via-algoritmo-kneedle"><span class="header-section-number">4.2</span> Pontos de corte via algoritmo Kneedle</h3>
-<p>O Kneedle é aplicado à curva ordenada (decrescente) de cada indicador. Para <strong>Laz.R</strong>, <strong>Longstring</strong> e <strong>MD</strong>, o kneedle com <code>sign = -1</code> identifica onde os valores extremamente altos se separam da maioria (cauda direita). Para <strong>IRV</strong>, usa-se <code>sign = -1</code> para detectar IRV alto demais e <code>sign = +1</code> para IRV baixo demais, pois ambos extremos podem ser considerados como suspeitos.</p>
+<section id="cut-off-points-via-kneedle-algorithm" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="cut-off-points-via-kneedle-algorithm"><span class="header-section-number">4.2</span> Cut-off points via Kneedle algorithm</h3>
+<p>The Kneedle algorithm is applied to the sorted (descending) curve of each indicator. For <strong>Laz.R</strong>, <strong>Longstring</strong>, and <strong>MD</strong>, kneedle with <code>sign = -1</code> identifies where extremely high values separate from the majority (right tail). For <strong>IRV</strong>, <code>sign = -1</code> is used to detect excessively high IRV and <code>sign = +1</code> for excessively low IRV, since both extremes can be considered suspicious.</p>
 <div class="quarto-embed-nb-cell">
 <div id="cell-kneedle-cutoffs" class="cell">
 <div id="kneedle-cutoffs" class="cell-output cell-output-display cell-output-markdown">
 <table class="caption-top table table-sm table-striped small">
-<caption>Pontos de corte — Algoritmo Kneedle (Biemann et al., 2025)</caption>
+<caption>Cut-off points — Kneedle algorithm (Biemann et al., 2025)</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Indicador</th>
-<th style="text-align: right;">Valor crítico</th>
-<th style="text-align: right;">% suspeitos</th>
+<th style="text-align: left;">Indicator</th>
+<th style="text-align: right;">Critical value</th>
+<th style="text-align: right;">% flagged</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Laz.R</td>
 <td style="text-align: right;">0.60</td>
-<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">11.6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Longstring</td>
 <td style="text-align: right;">7.00</td>
-<td style="text-align: right;">14.8</td>
+<td style="text-align: right;">15.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">MD</td>
-<td style="text-align: right;">40.17</td>
+<td style="text-align: right;">40.12</td>
 <td style="text-align: right;">15.4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">IRV (high end)</td>
-<td style="text-align: right;">1.34</td>
-<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">8.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">IRV (low end)</td>
-<td style="text-align: right;">0.69</td>
-<td style="text-align: right;">3.8</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">5.0</td>
 </tr>
 </tbody>
 </table>
@@ -402,8 +402,8 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 </div>
 </div>
 </section>
-<section id="gráficos-com-pontos-de-corte" class="level3" data-number="4.3">
-<h3 data-number="4.3" class="anchored" data-anchor-id="gráficos-com-pontos-de-corte"><span class="header-section-number">4.3</span> Gráficos com pontos de corte</h3>
+<section id="plots-with-cut-off-points" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="plots-with-cut-off-points"><span class="header-section-number">4.3</span> Plots with cut-off points</h3>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Laz.R</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Longstring</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Mahalanobis Distance</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">IRV</a></li></ul>
 <div class="tab-content">
@@ -462,49 +462,49 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 </div>
 </div>
 </section>
-<section id="flags-de-cier" class="level3" data-number="4.4">
-<h3 data-number="4.4" class="anchored" data-anchor-id="flags-de-cier"><span class="header-section-number">4.4</span> Flags de C/IER</h3>
-<p>Para cada indicador, cria-se uma variável <code>_FLAG</code> (<code>1</code> = suspeito, <code>0</code> = não suspeito) com base nos pontos de corte Kneedle.</p>
+<section id="cier-flags" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="cier-flags"><span class="header-section-number">4.4</span> C/IER Flags</h3>
+<p>For each indicator, a <code>_FLAG</code> variable is created (<code>1</code> = flagged, <code>0</code> = not flagged) based on the Kneedle cut-off points.</p>
 <blockquote class="blockquote">
-<p><strong>Nota:</strong> Indicadores post hoc são <strong>diagnósticos</strong>, não geram exclusão automática nesta fase. A flag composta será usada para inspeção e avaliação através do arquivo <code>whoqol_screened.csv</code>.</p>
+<p><strong>Note:</strong> Post-hoc indicators are <strong>diagnostic</strong>, they do not trigger automatic exclusion in this phase. The composite flag array will be used for inspection and evaluation through the <code>whoqol_screened.csv</code> file.</p>
 </blockquote>
 <div class="quarto-embed-nb-cell">
-<div id="cell-resumo-flags" class="cell">
-<div id="resumo-flags" class="cell-output cell-output-display cell-output-markdown">
+<div id="cell-flags-overview" class="cell">
+<div id="flags-overview" class="cell-output cell-output-display cell-output-markdown">
 <table class="caption-top table table-sm table-striped small">
-<caption>Resumo de respondentes sinalizados como C/IER</caption>
+<caption>Summary of flagged C/IER respondents</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Indicador</th>
-<th style="text-align: right;">N suspeitos</th>
-<th style="text-align: right;">% suspeitos</th>
+<th style="text-align: left;">Indicator</th>
+<th style="text-align: right;">N flagged</th>
+<th style="text-align: right;">% flagged</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">LazR_FLAG</td>
-<td style="text-align: right;">91</td>
-<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">152</td>
+<td style="text-align: right;">11.7</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Longstr_FLAG</td>
-<td style="text-align: right;">191</td>
-<td style="text-align: right;">14.7</td>
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">15.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">MD_FLAG</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">15.4</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">15.5</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">IRV_high_FLAG</td>
-<td style="text-align: right;">66</td>
-<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">8.3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">IRV_low_FLAG</td>
-<td style="text-align: right;">49</td>
-<td style="text-align: right;">3.8</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">5.0</td>
 </tr>
 </tbody>
 </table>
@@ -513,151 +513,151 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 </div>
 </section>
 </section>
-<section id="multicolinearidade" class="level2" data-number="5">
-<h2 data-number="5" class="anchored" data-anchor-id="multicolinearidade"><span class="header-section-number">5</span> Multicolinearidade</h2>
-<p>O VIF (Variance Inflation Factor) é calculado para cada item da escala WHOQOL. Valores superiores a 5 indicam multicolinearidade problemática, antecipando problemas de convergência e interpretação na AFC <span class="citation" data-cites="flora2012 kline2023">(<a href="#ref-flora2012" role="doc-biblioref">Flora et al., 2012</a>; <a href="#ref-kline2023" role="doc-biblioref">Kline, 2023</a>)</span>.</p>
+<section id="multicollinearity" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="multicollinearity"><span class="header-section-number">5</span> Multicollinearity</h2>
+<p>The VIF (Variance Inflation Factor) is calculated for each item in the WHOQOL scale. Values greater than 5 indicate problematic multicollinearity, anticipating convergence and interpretation problems in CFA <span class="citation" data-cites="flora2012 kline2023">(<a href="#ref-flora2012" role="doc-biblioref">Flora et al., 2012</a>; <a href="#ref-kline2023" role="doc-biblioref">Kline, 2023</a>)</span>.</p>
 <div class="quarto-embed-nb-cell">
-<div id="cell-vif-tabela" class="cell">
-<div id="vif-tabela" class="cell-output cell-output-display cell-output-markdown">
+<div id="cell-vif-table" class="cell">
+<div id="vif-table" class="cell-output cell-output-display cell-output-markdown">
 <table class="caption-top table table-sm table-striped small">
-<caption>Variance Inflation Factor (VIF) por item — VIF &gt; 5 indica multicolinearidade problemática</caption>
+<caption>Variance Inflation Factor (VIF) per item — VIF &gt; 5 indicates problematic multicollinearity</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Item</th>
 <th style="text-align: right;">VIF</th>
-<th style="text-align: left;">Problematico</th>
+<th style="text-align: left;">Problematic</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Q1</td>
 <td style="text-align: right;">2.137</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q2</td>
 <td style="text-align: right;">1.979</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q3</td>
 <td style="text-align: right;">1.699</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q4</td>
 <td style="text-align: right;">1.553</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q5</td>
 <td style="text-align: right;">2.252</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q6</td>
 <td style="text-align: right;">1.808</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q7</td>
 <td style="text-align: right;">1.726</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q8</td>
 <td style="text-align: right;">1.323</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q9</td>
 <td style="text-align: right;">1.492</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q10</td>
 <td style="text-align: right;">2.302</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q11</td>
 <td style="text-align: right;">1.627</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q12</td>
 <td style="text-align: right;">1.838</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q13</td>
 <td style="text-align: right;">1.575</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q14</td>
 <td style="text-align: right;">1.973</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q15</td>
 <td style="text-align: right;">1.581</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q16</td>
 <td style="text-align: right;">1.417</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q17</td>
 <td style="text-align: right;">3.580</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q18</td>
 <td style="text-align: right;">3.145</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q19</td>
 <td style="text-align: right;">2.608</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q20</td>
 <td style="text-align: right;">1.888</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q21</td>
 <td style="text-align: right;">1.366</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q22</td>
 <td style="text-align: right;">1.739</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q23</td>
 <td style="text-align: right;">1.434</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q24</td>
 <td style="text-align: right;">1.391</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q25</td>
 <td style="text-align: right;">1.417</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q26</td>
 <td style="text-align: right;">1.566</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 </tbody>
 </table>

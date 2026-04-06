@@ -1,6 +1,6 @@
 ---
-title: Detecção de Careless/Insufficient Effort Responding (C/IER)
-#subtitle: Indicadores Laz.R, Longstring, Mahalanobis Distance e IRV
+title: Careless/Insufficient Effort Responding (C/IER) Detection
+#subtitle: Laz.R, Longstring, Mahalanobis Distance, and IRV Indicators
 author:
   - name: Pablo Rogers
     orcid: 0000-0002-0093-3834
@@ -16,58 +16,58 @@ keywords:
   - Mahalanobis Distance
   - IRV
 abstract: |
-  This... (abstract text here)
+  This notebook presents a tutorial on the detection of careless or insufficient effort responding (C/IER) in self-report questionnaires. We use real database from WHOQOL-Bref scale as an example, and we apply the 'careless' package and Laz.R [@biemann2025] to detect C/IER (post hoc indicators). We also discuss the importance of procedural C/IER detection in the quality control of data obtained through self-report questionnaires.
 date: 04/03/2026
 bibliography: references.bib
 number-sections: true
 ---
 
-## Contextualização
+## Contextualization
 
-A detecção de Careless ou Insufficient Effort Responding (C/IER) é uma etapa
-essencial no controle de qualidade de dados obtidos por questionários de
-autorrelato. O C/IER se manifesta quando respondentes preenchem o instrumento
-sem atenção ao conteúdo dos itens, comprometendo a validade das inferências
-psicométricas e substantivas derivadas dos dados [@curran2016; @huang2026].
+The detection of Careless or Insufficient Effort Responding (C/IER) is an
+essential step in the quality control of data obtained through self-report
+questionnaires. C/IER occurs when respondents complete the instrument without
+attention to the item content, compromising the validity of the psychometric
+and substantive inferences derived from the data [@curran2016; @huang2026].
 
-O fluxo analítico deste documento segue três níveis sequenciais de detecção:
+The analytical flow of this document follows three sequential levels of detection:
 
-1. **Questionário:** exclusões procedimentais (a priori), incluindo
-   abandono, tempo de resposta e itens de controle de qualidade.
-2. **Escala WHOQOL:** indicadores post hoc diagnósticos (Laz.R,
-   Longstring, Mahalanobis Distance e IRV) com pontos de corte estimados via
-   algoritmo Kneedle [@biemann2025].
-3. **Itens:** diagnóstico de multicolinearidade via VIF para
-   antecipar problemas de convergência na AFC.
+1. **Questionnaire:** procedural exclusions (a priori), including dropout,
+   response time, and quality control items.
+2. **WHOQOL Scale:** diagnostic post-hoc indicators (Laz.R, Longstring,
+   Mahalanobis Distance, and IRV) with cut-off points estimated via the 
+   Kneedle algorithm [@biemann2025].
+3. **Items:** VIF-based multicollinearity diagnosis to anticipate
+   convergence problems in CFA.
 
-## Leitura e preparação dos dados
+## Data reading and preparation
 
-O arquivo `data.csv` contém as respostas brutas do questionário (separador `;`).
-Nesta etapa, removem-se registros de abandono, selecionam-se as variáveis do
-fluxo analítico e deriva-se o tempo total de resposta (`TIME`).
+The `data.csv` file contains the raw survey responses (separator `;`).
+In this step, dropout records are removed, variables for the analytical flow
+are selected, and the total response time (`TIME`) is derived.
 
-{{< embed Scripts/ProcessingScripts/01_procedural.qmd#leitura-dados >}}
+{{< embed Scripts/ProcessingScripts/01_procedural.qmd#data-reading >}}
 
-## Exclusões procedimentais
+## Procedural exclusions
 
-O Nível 1 aplica três procedimentos prévios ao cálculo dos indicadores post hoc:
-remoção de abandono, exclusão por tempo de resposta inferior a 208 segundos
-(104 itens × 2 s/item) [@huang2026] e exclusão por duas ou mais falhas nos itens
-de controle de qualidade (`CQ1-CQ3`) [@curran2016]. Toda exclusão é registrada no
-`exclusion_log.csv` com motivo e critério.
+Level 1 applies three procedures prior to calculating post-hoc indicators:
+dropout removal, exclusion for response time below 208 seconds
+(104 items × 2 s/item) [@huang2026], and exclusion for two or more failures
+on quality control items (`CQ1-CQ3`) [@curran2016]. Every exclusion is
+recorded in `exclusion_log.csv` with its reason and criterion.
 
-{{< embed Scripts/ProcessingScripts/01_procedural.qmd#sumario-nivel-1 >}}
+{{< embed Scripts/ProcessingScripts/01_procedural.qmd#level-1-summary >}}
 
-## Cálculo dos indicadores C/IER
+## Calculation of C/IER indicators
 
-Cada indicador captura manifestações distintas de C/IER; a presença concomitante
-oferece evidência mais robusta do que qualquer indicador isolado [@curran2016;
+Each indicator captures distinct manifestations of C/IER; their concurrent
+presence offers stronger evidence than any single indicator alone [@curran2016;
 @hong2020; @huang2026].
 
-### Visualização univariada
+### Univariate visualization
 
-Cada respondente recebe os valores dos quatro indicadores em um tibble
-consolidado, e os gráficos abaixo mostram a distribuição univariada de cada um.
+Each respondent receives the values of the four indicators in a consolidated
+tibble, and the plots below show the univariate distribution of each one.
 
 ::: {.panel-tabset}
 
@@ -89,17 +89,17 @@ consolidado, e os gráficos abaixo mostram a distribuição univariada de cada u
 
 :::
 
-### Pontos de corte via algoritmo Kneedle
+### Cut-off points via Kneedle algorithm
 
-O Kneedle é aplicado à curva ordenada (decrescente) de cada indicador.
-Para **Laz.R**, **Longstring** e **MD**, o kneedle com `sign = -1` identifica
-onde os valores extremamente altos se separam da maioria (cauda direita).
-Para **IRV**, usa-se `sign = -1` para detectar IRV alto demais e
-`sign = +1` para IRV baixo demais, pois ambos extremos podem ser considerados como suspeitos.
+The Kneedle algorithm is applied to the sorted (descending) curve of each indicator.
+For **Laz.R**, **Longstring**, and **MD**, kneedle with `sign = -1` identifies
+where extremely high values separate from the majority (right tail).
+For **IRV**, `sign = -1` is used to detect excessively high IRV and
+`sign = +1` for excessively low IRV, since both extremes can be considered suspicious.
 
 {{< embed Scripts/ProcessingScripts/02_posthoc.qmd#kneedle-cutoffs >}}
 
-### Gráficos com pontos de corte
+### Plots with cut-off points
 
 ::: {.panel-tabset}
 
@@ -121,21 +121,21 @@ Para **IRV**, usa-se `sign = -1` para detectar IRV alto demais e
 
 :::
 
-### Flags de C/IER
+### C/IER Flags
 
-Para cada indicador, cria-se uma variável `_FLAG` (`1` = suspeito,
-`0` = não suspeito) com base nos pontos de corte Kneedle.
+For each indicator, a `_FLAG` variable is created (`1` = flagged,
+`0` = not flagged) based on the Kneedle cut-off points.
 
-> **Nota:** Indicadores post hoc são **diagnósticos**, não geram exclusão
-> automática nesta fase. A flag composta será usada para inspeção e avaliação
-> através do arquivo `whoqol_screened.csv`.
+> **Note:** Post-hoc indicators are **diagnostic**, they do not trigger automatic
+> exclusion in this phase. The composite flag array will be used for inspection and
+> evaluation through the `whoqol_screened.csv` file.
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#resumo-flags >}}
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#flags-overview >}}
 
-## Multicolinearidade
+## Multicollinearity
 
-O VIF (Variance Inflation Factor) é calculado para cada item da escala WHOQOL.
-Valores superiores a 5 indicam multicolinearidade problemática, antecipando
-problemas de convergência e interpretação na AFC [@flora2012; @kline2023].
+The VIF (Variance Inflation Factor) is calculated for each item in the WHOQOL scale.
+Values greater than 5 indicate problematic multicollinearity, anticipating
+convergence and interpretation problems in CFA [@flora2012; @kline2023].
 
-{{< embed Scripts/ProcessingScripts/03_vif.qmd#vif-tabela >}}
+{{< embed Scripts/ProcessingScripts/03_vif.qmd#vif-table >}}

@@ -18,11 +18,11 @@ manuscript: # https://quarto.org/docs/manuscripts/authoring/rstudio.html
   meca-bundle: false # Generate MECA bundle for journal submission.
   notebooks:
     - notebook: Scripts/ProcessingScripts/01_procedural.qmd
-      title: "Exclusões procedimentais"
+      title: "Procedural Exclusions"
     - notebook: Scripts/ProcessingScripts/02_posthoc.qmd
-      title: "Indicadores post hoc C/IER"
+      title: "Post-hoc C/IER Indicators"
     - notebook: Scripts/ProcessingScripts/03_vif.qmd
-      title: "Multicolinearidade VIF"
+      title: "Multicollinearity"
 
 bibliography: references.bib # https://quarto.org/docs/authoring/citations.html
 # File containing the bibliographic references in BibTeX format.

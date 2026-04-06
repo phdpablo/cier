@@ -1,5 +1,5 @@
 ---
-title: "Indicadores post hoc C/IER"
+title: "Post-hoc C/IER Indicators"
 author: Pablo Rogers
 execute:
   echo: true
@@ -17,22 +17,22 @@ library(modi)
 ```
 
 ```{r}
-#| label: leitura-nivel-2
+#| label: level-2-reading
 #| include: false
 
-dados_importados <- read_csv2(
+imported_data <- read_csv2(
     "../../Data/IntermediateData/whoqol_imported.csv",
     show_col_types = FALSE
 )
 
-id_col <- dados_importados$ID
+id_col <- imported_data$ID
 
-itens <- dados_importados |>
+items <- imported_data |>
     select(Q1:Q26) |>
     mutate(across(everything(), as.numeric))
 ```
 
-## Definição das funções auxiliares
+## Helper functions definition
 
 ```{r}
 #| label: funcoes-auxiliares
@@ -43,7 +43,7 @@ calc_lazr <- function(x) {
     sum(tr^2 / rowSums(tr)) / (length(x) - 1)
 }
 
-# --- Algoritmo Kneedle (Biemann et al., 2025) ---
+# --- Kneedle Algorithm (Biemann et al., 2025) ---
 dist2d <- function(a, b, c) {
     v1 <- b - c
     v2 <- a - b
@@ -60,32 +60,32 @@ kneedle <- function(values, sign) {
 }
 ```
 
-## Cálculo dos quatro indicadores
+## Calculation of the four indicators
 
-O IRV e o longstring são calculados através do pacote `careless`. O Laz.R é calculado através da função `calc_lazr` e o MD é calculado através do pacote `modi` e da função `MDmiss` para dar conta dos valores omissos.
+The IRV and longstring are calculated using the `careless` package. The Laz.R is calculated through the `calc_lazr` function, and MD is calculated via the `modi` package using the `MDmiss` function to handle missing values.
 
 ```{r}
-#| label: calculo-indicadores
+#| label: indicator-calculation
 
-lazr_vals <- apply(itens, 1, calc_lazr)
+lazr_vals <- apply(items, 1, calc_lazr)
 
-longstr_vals <- longstring(itens)
+longstr_vals <- longstring(items)
 
 md_vals <- as.numeric(MDmiss(
-    data = as.matrix(itens),
-    center = colMeans(itens, na.rm = TRUE),
-    cov = cov(itens, use = "pairwise.complete.obs")
+    data = as.matrix(items),
+    center = colMeans(items, na.rm = TRUE),
+    cov = cov(items, use = "pairwise.complete.obs")
 ))
 
-irv_vals <- irv(itens, split = FALSE)
+irv_vals <- irv(items, split = FALSE)
 ```
 
-## Variáveis individuais
+## Individual variables
 
 ```{r}
-#| label: tibble-indicadores
+#| label: indicators-tibble
 
-df_indicadores <- tibble(
+df_indicators <- tibble(
     ID      = id_col,
     LazR    = round(lazr_vals, 3),
     Longstr = as.integer(longstr_vals),
@@ -93,22 +93,22 @@ df_indicadores <- tibble(
     IRV     = round(irv_vals, 3)
 )
 
-df_indicadores
+df_indicators
 ```
 
-## Visualização univariada
+## Univariate visualization
 
 ### Laz.R
 
 ```{r}
 #| label: viz-lazr
 
-p_hist_lazr <- ggplot(df_indicadores, aes(x = LazR)) +
+p_hist_lazr <- ggplot(df_indicators, aes(x = LazR)) +
     geom_histogram(bins = 40, fill = "#3B7DD8", color = "white", alpha = 0.85) +
-    labs(title = "Laz.R", x = "Laz.R", y = "Frequência") +
+    labs(title = "Laz.R", x = "Laz.R", y = "Frequency") +
     theme_light()
 
-p_box_lazr <- ggplot(df_indicadores, aes(y = LazR)) +
+p_box_lazr <- ggplot(df_indicators, aes(y = LazR)) +
     geom_boxplot(fill = "#3B7DD8", alpha = 0.4, width = 0.3) +
     labs(title = NULL, y = "Laz.R") +
     theme_light() +
@@ -125,12 +125,12 @@ p_hist_lazr + p_box_lazr + plot_layout(widths = c(3, 1))
 ```{r}
 #| label: viz-longstr
 
-p_hist_ls <- ggplot(df_indicadores, aes(x = Longstr)) +
+p_hist_ls <- ggplot(df_indicators, aes(x = Longstr)) +
     geom_histogram(binwidth = 1, fill = "#E07B39", color = "white", alpha = 0.85) +
-    labs(title = "Longstring", x = "Longstring", y = "Frequência") +
+    labs(title = "Longstring", x = "Longstring", y = "Frequency") +
     theme_light()
 
-p_box_ls <- ggplot(df_indicadores, aes(y = Longstr)) +
+p_box_ls <- ggplot(df_indicators, aes(y = Longstr)) +
     geom_boxplot(fill = "#E07B39", alpha = 0.4, width = 0.3) +
     labs(title = NULL, y = "Longstring") +
     theme_light() +
@@ -147,12 +147,12 @@ p_hist_ls + p_box_ls + plot_layout(widths = c(3, 1))
 ```{r}
 #| label: viz-md
 
-p_hist_md <- ggplot(df_indicadores, aes(x = MD)) +
+p_hist_md <- ggplot(df_indicators, aes(x = MD)) +
     geom_histogram(bins = 40, fill = "#2CA02C", color = "white", alpha = 0.85) +
-    labs(title = "Mahalanobis Distance", x = "MD", y = "Frequência") +
+    labs(title = "Mahalanobis Distance", x = "MD", y = "Frequency") +
     theme_light()
 
-p_box_md <- ggplot(df_indicadores, aes(y = MD)) +
+p_box_md <- ggplot(df_indicators, aes(y = MD)) +
     geom_boxplot(fill = "#2CA02C", alpha = 0.4, width = 0.3) +
     labs(title = NULL, y = "MD") +
     theme_light() +
@@ -169,12 +169,12 @@ p_hist_md + p_box_md + plot_layout(widths = c(3, 1))
 ```{r}
 #| label: viz-irv
 
-p_hist_irv <- ggplot(df_indicadores, aes(x = IRV)) +
+p_hist_irv <- ggplot(df_indicators, aes(x = IRV)) +
     geom_histogram(bins = 40, fill = "#9467BD", color = "white", alpha = 0.85) +
-    labs(title = "IRV", x = "IRV", y = "Frequência") +
+    labs(title = "IRV", x = "IRV", y = "Frequency") +
     theme_light()
 
-p_box_irv <- ggplot(df_indicadores, aes(y = IRV)) +
+p_box_irv <- ggplot(df_indicators, aes(y = IRV)) +
     geom_boxplot(fill = "#9467BD", alpha = 0.4, width = 0.3) +
     labs(title = NULL, y = "IRV") +
     theme_light() +
@@ -186,7 +186,7 @@ p_box_irv <- ggplot(df_indicadores, aes(y = IRV)) +
 p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
 ```
 
-## Pontos de corte via algoritmo Kneedle
+## Cut-off points via Kneedle algorithm
 
 ```{r}
 #| label: kneedle-cutoffs
@@ -203,42 +203,42 @@ calc_kneedle <- function(x, sign_val) {
     list(pct = pct, crit = crit, sorted = x_sorted)
 }
 
-kn_lazr <- calc_kneedle(df_indicadores$LazR, -1)
-kn_longstr <- calc_kneedle(df_indicadores$Longstr, -1)
-kn_md <- calc_kneedle(df_indicadores$MD, -1)
-kn_irv_high <- calc_kneedle(df_indicadores$IRV, -1)
-kn_irv_low <- calc_kneedle(df_indicadores$IRV, +1)
+kn_lazr <- calc_kneedle(df_indicators$LazR, -1)
+kn_longstr <- calc_kneedle(df_indicators$Longstr, -1)
+kn_md <- calc_kneedle(df_indicators$MD, -1)
+kn_irv_high <- calc_kneedle(df_indicators$IRV, -1)
+kn_irv_low <- calc_kneedle(df_indicators$IRV, +1)
 
-tab_cutoffs <- tibble(
-    Indicador = c(
+cutoff_tab <- tibble(
+    Indicator = c(
         "Laz.R", "Longstring", "MD",
         "IRV (high end)", "IRV (low end)"
     ),
-    `Valor crítico` = round(c(
+    `Critical value` = round(c(
         kn_lazr$crit, kn_longstr$crit, kn_md$crit,
         kn_irv_high$crit, kn_irv_low$crit
     ), 2),
-    `% suspeitos` = round(c(
+    `% flagged` = round(c(
         kn_lazr$pct, kn_longstr$pct, kn_md$pct,
         kn_irv_high$pct, 1 - kn_irv_low$pct
     ) * 100, 1)
 )
 
-tab_cutoffs |>
+cutoff_tab |>
     knitr::kable(
-        caption = "Pontos de corte — Algoritmo Kneedle (Biemann et al., 2025)",
+        caption = "Cut-off points — Kneedle algorithm (Biemann et al., 2025)",
         digits  = c(0, 2, 1)
     )
 ```
 
-## Gráficos com pontos de corte
+## Plots with cut-off points
 
 ### Laz.R
 
 ```{r}
 #| label: cum-lazr
 
-# Monta o data frame para a curva cumulativa (ordenação decrescente)
+# Builds the data frame for the cumulative curve (descending order)
 make_cum_df <- function(sorted_vals) {
     n <- length(sorted_vals)
     tibble(Index_value = sorted_vals, percent = seq_len(n) / n)
@@ -256,8 +256,8 @@ ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
     ) +
     scale_x_continuous(labels = scales::percent) +
     labs(
-        title = "Laz.R — Frequência cumulativa",
-        x = "Percentil (ordenação decrescente)", y = "Laz.R"
+        title = "Laz.R — Cumulative frequency",
+        x = "Percentile (descending order)", y = "Laz.R"
     ) +
     theme_light()
 ```
@@ -279,8 +279,8 @@ ggplot(cum_ls, aes(x = percent, y = Index_value)) +
     ) +
     scale_x_continuous(labels = scales::percent) +
     labs(
-        title = "Longstring — Frequência cumulativa",
-        x = "Percentil (ordenação decrescente)", y = "Longstring"
+        title = "Longstring — Cumulative frequency",
+        x = "Percentile (descending order)", y = "Longstring"
     ) +
     theme_light()
 ```
@@ -302,8 +302,8 @@ ggplot(cum_md, aes(x = percent, y = Index_value)) +
     ) +
     scale_x_continuous(labels = scales::percent) +
     labs(
-        title = "Mahalanobis Distance — Frequência cumulativa",
-        x = "Percentil (ordenação decrescente)", y = "MD"
+        title = "Mahalanobis Distance — Cumulative frequency",
+        x = "Percentile (descending order)", y = "MD"
     ) +
     theme_light()
 ```
@@ -335,21 +335,21 @@ ggplot(cum_irv, aes(x = percent, y = Index_value)) +
     ) +
     scale_x_continuous(labels = scales::percent) +
     labs(
-        title = "IRV — Frequência cumulativa",
-        subtitle = "Vermelho = high end (variação excessiva); Azul = low end (variação insuficiente)",
-        x = "Percentil (ordenação decrescente)", y = "IRV"
+        title = "IRV — Cumulative frequency",
+        subtitle = "Red = high end (excessive variation); Blue = low end (insufficient variation)",
+        x = "Percentile (descending order)", y = "IRV"
     ) +
     theme_light()
 ```
 
 
 
-## Flags de C/IER
+## C/IER Flags
 
 ```{r}
 #| label: flags
 
-df_flags <- df_indicadores |>
+df_flags <- df_indicators |>
     mutate(
         LazR_FLAG     = if_else(LazR >= kn_lazr$crit, 1L, 0L),
         Longstr_FLAG  = if_else(Longstr > kn_longstr$crit, 1L, 0L),
@@ -361,36 +361,36 @@ df_flags <- df_indicadores |>
 df_flags
 ```
 
-### Resumo das flags
+### Flags overview
 
 ```{r}
-#| label: resumo-flags
+#| label: flags-overview
 
 df_flags |>
     summarise(
         across(ends_with("_FLAG"), list(
-            n_suspeitos   = \(x) sum(x, na.rm = TRUE),
-            pct_suspeitos = \(x) round(mean(x, na.rm = TRUE) * 100, 1)
+            n_flagged   = \(x) sum(x, na.rm = TRUE),
+            pct_flagged = \(x) round(mean(x, na.rm = TRUE) * 100, 1)
         ))
     ) |>
     pivot_longer(everything(),
-        names_to = c("Indicador", ".value"),
-        names_pattern = "(.+)_(n_suspeitos|pct_suspeitos)"
+        names_to = c("Indicator", ".value"),
+        names_pattern = "(.+)_(n_flagged|pct_flagged)"
     ) |>
     knitr::kable(
-        caption = "Resumo de respondentes sinalizados como C/IER",
-        col.names = c("Indicador", "N suspeitos", "% suspeitos")
+        caption = "Summary of flagged C/IER respondents",
+        col.names = c("Indicator", "N flagged", "% flagged")
     )
 ```
 
 ```{r}
-#| label: exportacao-flags
+#| label: flags-export
 #| include: false
 
-dados_screened <- dados_importados |>
+screened_data <- imported_data |>
     select(ID, Q1:Q26) |>
     left_join(df_flags, by = "ID")
 
-write_csv2(dados_screened, "../../Data/IntermediateData/whoqol_screened.csv")
+write_csv2(screened_data, "../../Data/IntermediateData/whoqol_screened.csv")
 ```
 

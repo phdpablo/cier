@@ -7,7 +7,7 @@
 
     <meta name="author" content="Pablo Rogers">
 
-    <title>Indicadores post hoc C/IER</title>
+    <title>Post-hoc C/IER Indicators</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -175,7 +175,7 @@
     <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
       
       <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
-      <h6><i class="bi bi-journal-code"></i> Indicadores post hoc C/IER</h6>
+      <h6><i class="bi bi-journal-code"></i> Post-hoc C/IER Indicators</h6>
 
             <a href="../../Scripts/ProcessingScripts/02_posthoc.out.ipynb" class="btn btn-primary quarto-download-embed" download="02_posthoc.qmd">Download Source</a>
           </div>
@@ -183,7 +183,7 @@
      <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Indicadores post hoc C/IER</h1>
+      <h1 class="title">Post-hoc C/IER Indicators</h1>
           </div>
 
     
@@ -217,27 +217,27 @@
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#definição-das-funções-auxiliares" id="toc-definição-das-funções-auxiliares" class="nav-link active" data-scroll-target="#definição-das-funções-auxiliares">Definição das funções auxiliares</a></li>
-  <li><a href="#cálculo-dos-quatro-indicadores" id="toc-cálculo-dos-quatro-indicadores" class="nav-link" data-scroll-target="#cálculo-dos-quatro-indicadores">Cálculo dos quatro indicadores</a></li>
-  <li><a href="#variáveis-individuais" id="toc-variáveis-individuais" class="nav-link" data-scroll-target="#variáveis-individuais">Variáveis individuais</a></li>
-  <li><a href="#visualização-univariada" id="toc-visualização-univariada" class="nav-link" data-scroll-target="#visualização-univariada">Visualização univariada</a>
+  <li><a href="#helper-functions-definition" id="toc-helper-functions-definition" class="nav-link active" data-scroll-target="#helper-functions-definition">Helper functions definition</a></li>
+  <li><a href="#calculation-of-the-four-indicators" id="toc-calculation-of-the-four-indicators" class="nav-link" data-scroll-target="#calculation-of-the-four-indicators">Calculation of the four indicators</a></li>
+  <li><a href="#individual-variables" id="toc-individual-variables" class="nav-link" data-scroll-target="#individual-variables">Individual variables</a></li>
+  <li><a href="#univariate-visualization" id="toc-univariate-visualization" class="nav-link" data-scroll-target="#univariate-visualization">Univariate visualization</a>
   <ul class="collapse">
   <li><a href="#laz.r" id="toc-laz.r" class="nav-link" data-scroll-target="#laz.r">Laz.R</a></li>
   <li><a href="#longstring" id="toc-longstring" class="nav-link" data-scroll-target="#longstring">Longstring</a></li>
   <li><a href="#mahalanobis-distance" id="toc-mahalanobis-distance" class="nav-link" data-scroll-target="#mahalanobis-distance">Mahalanobis Distance</a></li>
   <li><a href="#irv" id="toc-irv" class="nav-link" data-scroll-target="#irv">IRV</a></li>
   </ul></li>
-  <li><a href="#pontos-de-corte-via-algoritmo-kneedle" id="toc-pontos-de-corte-via-algoritmo-kneedle" class="nav-link" data-scroll-target="#pontos-de-corte-via-algoritmo-kneedle">Pontos de corte via algoritmo Kneedle</a></li>
-  <li><a href="#gráficos-com-pontos-de-corte" id="toc-gráficos-com-pontos-de-corte" class="nav-link" data-scroll-target="#gráficos-com-pontos-de-corte">Gráficos com pontos de corte</a>
+  <li><a href="#cut-off-points-via-kneedle-algorithm" id="toc-cut-off-points-via-kneedle-algorithm" class="nav-link" data-scroll-target="#cut-off-points-via-kneedle-algorithm">Cut-off points via Kneedle algorithm</a></li>
+  <li><a href="#plots-with-cut-off-points" id="toc-plots-with-cut-off-points" class="nav-link" data-scroll-target="#plots-with-cut-off-points">Plots with cut-off points</a>
   <ul class="collapse">
   <li><a href="#laz.r-1" id="toc-laz.r-1" class="nav-link" data-scroll-target="#laz.r-1">Laz.R</a></li>
   <li><a href="#longstring-1" id="toc-longstring-1" class="nav-link" data-scroll-target="#longstring-1">Longstring</a></li>
   <li><a href="#mahalanobis-distance-1" id="toc-mahalanobis-distance-1" class="nav-link" data-scroll-target="#mahalanobis-distance-1">Mahalanobis Distance</a></li>
   <li><a href="#irv-1" id="toc-irv-1" class="nav-link" data-scroll-target="#irv-1">IRV</a></li>
   </ul></li>
-  <li><a href="#flags-de-cier" id="toc-flags-de-cier" class="nav-link" data-scroll-target="#flags-de-cier">Flags de C/IER</a>
+  <li><a href="#cier-flags" id="toc-cier-flags" class="nav-link" data-scroll-target="#cier-flags">C/IER Flags</a>
   <ul class="collapse">
-  <li><a href="#resumo-das-flags" id="toc-resumo-das-flags" class="nav-link" data-scroll-target="#resumo-das-flags">Resumo das flags</a></li>
+  <li><a href="#flags-overview" id="toc-flags-overview" class="nav-link" data-scroll-target="#flags-overview">Flags overview</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -259,7 +259,7 @@
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dados_importados <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>imported_data <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"../../Data/IntermediateData/whoqol_imported.csv"</span>,</span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">show_col_types =</span> <span class="cn">FALSE</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -267,14 +267,14 @@
 <pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>id_col <span class="ot">&lt;-</span> dados_importados<span class="sc">$</span>ID</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>id_col <span class="ot">&lt;-</span> imported_data<span class="sc">$</span>ID</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>itens <span class="ot">&lt;-</span> dados_importados <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> imported_data <span class="sc">|&gt;</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
-<section id="definição-das-funções-auxiliares" class="level2">
-<h2 class="anchored" data-anchor-id="definição-das-funções-auxiliares">Definição das funções auxiliares</h2>
+<section id="helper-functions-definition" class="level2">
+<h2 class="anchored" data-anchor-id="helper-functions-definition">Helper functions definition</h2>
 <div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Laz.R index (Biemann et al., 2025) ---</span></span>
@@ -283,7 +283,7 @@
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(tr<span class="sc">^</span><span class="dv">2</span> <span class="sc">/</span> <span class="fu">rowSums</span>(tr)) <span class="sc">/</span> (<span class="fu">length</span>(x) <span class="sc">-</span> <span class="dv">1</span>)</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Algoritmo Kneedle (Biemann et al., 2025) ---</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># --- Kneedle Algorithm (Biemann et al., 2025) ---</span></span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>dist2d <span class="ot">&lt;-</span> <span class="cf">function</span>(a, b, c) {</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    v1 <span class="ot">&lt;-</span> b <span class="sc">-</span> c</span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    v2 <span class="ot">&lt;-</span> a <span class="sc">-</span> b</span>
@@ -300,29 +300,29 @@
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
-<section id="cálculo-dos-quatro-indicadores" class="level2">
-<h2 class="anchored" data-anchor-id="cálculo-dos-quatro-indicadores">Cálculo dos quatro indicadores</h2>
-<p>O IRV e o longstring são calculados através do pacote <code>careless</code>. O Laz.R é calculado através da função <code>calc_lazr</code> e o MD é calculado através do pacote <code>modi</code> e da função <code>MDmiss</code> para dar conta dos valores omissos.</p>
+<section id="calculation-of-the-four-indicators" class="level2">
+<h2 class="anchored" data-anchor-id="calculation-of-the-four-indicators">Calculation of the four indicators</h2>
+<p>The IRV and longstring are calculated using the <code>careless</code> package. The Laz.R is calculated through the <code>calc_lazr</code> function, and MD is calculated via the <code>modi</code> package using the <code>MDmiss</code> function to handle missing values.</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>lazr_vals <span class="ot">&lt;-</span> <span class="fu">apply</span>(itens, <span class="dv">1</span>, calc_lazr)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>lazr_vals <span class="ot">&lt;-</span> <span class="fu">apply</span>(items, <span class="dv">1</span>, calc_lazr)</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>longstr_vals <span class="ot">&lt;-</span> <span class="fu">longstring</span>(itens)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>longstr_vals <span class="ot">&lt;-</span> <span class="fu">longstring</span>(items)</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>md_vals <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">MDmiss</span>(</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">as.matrix</span>(itens),</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="fu">colMeans</span>(itens, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cov =</span> <span class="fu">cov</span>(itens, <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> <span class="fu">as.matrix</span>(items),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">center =</span> <span class="fu">colMeans</span>(items, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cov =</span> <span class="fu">cov</span>(items, <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>))</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>irv_vals <span class="ot">&lt;-</span> <span class="fu">irv</span>(itens, <span class="at">split =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>irv_vals <span class="ot">&lt;-</span> <span class="fu">irv</span>(items, <span class="at">split =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
-<section id="variáveis-individuais" class="level2">
-<h2 class="anchored" data-anchor-id="variáveis-individuais">Variáveis individuais</h2>
+<section id="individual-variables" class="level2">
+<h2 class="anchored" data-anchor-id="individual-variables">Individual variables</h2>
 <div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df_indicadores <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df_indicators <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">ID      =</span> id_col,</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">LazR    =</span> <span class="fu">round</span>(lazr_vals, <span class="dv">3</span>),</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Longstr =</span> <span class="fu">as.integer</span>(longstr_vals),</span>
@@ -330,37 +330,37 @@
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">IRV     =</span> <span class="fu">round</span>(irv_vals, <span class="dv">3</span>)</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>df_indicadores</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>df_indicators</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,298 × 5
+<pre><code># A tibble: 1,295 × 5
             ID  LazR Longstr    MD   IRV
          &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1 10441016017 0.388       3 49.5  1.47 
- 2 10440981694 0.493       5 13.5  0.662
- 3 10440601239 0.493       6 79.1  1.47 
- 4 10440562981 0.569       9 27.4  1.29 
- 5 10440358563 0.454       8 32.3  1.48 
- 6 10440199369 0.647      10  6.94 0.945
- 7 10438952564 0.444       6 39.9  0.951
- 8 10438951127 0.382       3 24.2  1.06 
- 9 10438633244 0.41        3 41.7  0.857
-10 10438605204 0.479       5 12.2  1.09 
-# ℹ 1,288 more rows</code></pre>
+ 1 10441016017 0.413       4 49.5  1.25 
+ 2 10440981694 0.502       5 13.5  0.634
+ 3 10440601239 0.5         6 79.0  1.47 
+ 4 10440562981 0.567       9 27.3  0.999
+ 5 10440358563 0.46        8 32.2  1.22 
+ 6 10440199369 0.673      11  6.94 0.528
+ 7 10438952564 0.416       5 39.9  0.977
+ 8 10438951127 0.395       3 24.1  0.796
+ 9 10438633244 0.447       4 41.8  0.857
+10 10438605204 0.479       5 12.2  0.637
+# ℹ 1,285 more rows</code></pre>
 </div>
 </div></div>
 </section>
-<section id="visualização-univariada" class="level2">
-<h2 class="anchored" data-anchor-id="visualização-univariada">Visualização univariada</h2>
+<section id="univariate-visualization" class="level2">
+<h2 class="anchored" data-anchor-id="univariate-visualization">Univariate visualization</h2>
 <section id="laz.r" class="level3">
 <h3 class="anchored" data-anchor-id="laz.r">Laz.R</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [6]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>p_hist_lazr <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">x =</span> LazR)) <span class="sc">+</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>p_hist_lazr <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicators, <span class="fu">aes</span>(<span class="at">x =</span> LazR)) <span class="sc">+</span></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">fill =</span> <span class="st">"#3B7DD8"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Laz.R"</span>, <span class="at">x =</span> <span class="st">"Laz.R"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Laz.R"</span>, <span class="at">x =</span> <span class="st">"Laz.R"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>p_box_lazr <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">y =</span> LazR)) <span class="sc">+</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>p_box_lazr <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicators, <span class="fu">aes</span>(<span class="at">y =</span> LazR)) <span class="sc">+</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#3B7DD8"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Laz.R"</span>) <span class="sc">+</span></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>() <span class="sc">+</span></span>
@@ -383,12 +383,12 @@
 <h3 class="anchored" data-anchor-id="longstring">Longstring</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [7]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>p_hist_ls <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">x =</span> Longstr)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>p_hist_ls <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicators, <span class="fu">aes</span>(<span class="at">x =</span> Longstr)) <span class="sc">+</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">1</span>, <span class="at">fill =</span> <span class="st">"#E07B39"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Longstring"</span>, <span class="at">x =</span> <span class="st">"Longstring"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Longstring"</span>, <span class="at">x =</span> <span class="st">"Longstring"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>p_box_ls <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">y =</span> Longstr)) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>p_box_ls <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicators, <span class="fu">aes</span>(<span class="at">y =</span> Longstr)) <span class="sc">+</span></span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#E07B39"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"Longstring"</span>) <span class="sc">+</span></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>() <span class="sc">+</span></span>
@@ -411,12 +411,12 @@
 <h3 class="anchored" data-anchor-id="mahalanobis-distance">Mahalanobis Distance</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [8]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>p_hist_md <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">x =</span> MD)) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>p_hist_md <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicators, <span class="fu">aes</span>(<span class="at">x =</span> MD)) <span class="sc">+</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">fill =</span> <span class="st">"#2CA02C"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mahalanobis Distance"</span>, <span class="at">x =</span> <span class="st">"MD"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Mahalanobis Distance"</span>, <span class="at">x =</span> <span class="st">"MD"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>p_box_md <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">y =</span> MD)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>p_box_md <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicators, <span class="fu">aes</span>(<span class="at">y =</span> MD)) <span class="sc">+</span></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#2CA02C"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"MD"</span>) <span class="sc">+</span></span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>() <span class="sc">+</span></span>
@@ -439,12 +439,12 @@
 <h3 class="anchored" data-anchor-id="irv">IRV</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [9]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p_hist_irv <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">x =</span> IRV)) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p_hist_irv <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicators, <span class="fu">aes</span>(<span class="at">x =</span> IRV)) <span class="sc">+</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">40</span>, <span class="at">fill =</span> <span class="st">"#9467BD"</span>, <span class="at">color =</span> <span class="st">"white"</span>, <span class="at">alpha =</span> <span class="fl">0.85</span>) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"IRV"</span>, <span class="at">x =</span> <span class="st">"IRV"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"IRV"</span>, <span class="at">x =</span> <span class="st">"IRV"</span>, <span class="at">y =</span> <span class="st">"Frequency"</span>) <span class="sc">+</span></span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>p_box_irv <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicadores, <span class="fu">aes</span>(<span class="at">y =</span> IRV)) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>p_box_irv <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_indicators, <span class="fu">aes</span>(<span class="at">y =</span> IRV)) <span class="sc">+</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"#9467BD"</span>, <span class="at">alpha =</span> <span class="fl">0.4</span>, <span class="at">width =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">title =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="st">"IRV"</span>) <span class="sc">+</span></span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>() <span class="sc">+</span></span>
@@ -464,8 +464,8 @@
 </div></div>
 </section>
 </section>
-<section id="pontos-de-corte-via-algoritmo-kneedle" class="level2">
-<h2 class="anchored" data-anchor-id="pontos-de-corte-via-algoritmo-kneedle">Pontos de corte via algoritmo Kneedle</h2>
+<section id="cut-off-points-via-kneedle-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="cut-off-points-via-kneedle-algorithm">Cut-off points via Kneedle algorithm</h2>
 <div class="cell-container"><div class="cell-decorator"><pre>In [10]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>calc_kneedle <span class="ot">&lt;-</span> <span class="cf">function</span>(x, sign_val) {</span>
@@ -480,80 +480,80 @@
 <span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">pct =</span> pct, <span class="at">crit =</span> crit, <span class="at">sorted =</span> x_sorted)</span>
 <span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>kn_lazr <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>LazR, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>kn_longstr <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>Longstr, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>kn_md <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>MD, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>kn_irv_high <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>IRV, <span class="sc">-</span><span class="dv">1</span>)</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>kn_irv_low <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicadores<span class="sc">$</span>IRV, <span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>kn_lazr <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicators<span class="sc">$</span>LazR, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>kn_longstr <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicators<span class="sc">$</span>Longstr, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>kn_md <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicators<span class="sc">$</span>MD, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>kn_irv_high <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicators<span class="sc">$</span>IRV, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>kn_irv_low <span class="ot">&lt;-</span> <span class="fu">calc_kneedle</span>(df_indicators<span class="sc">$</span>IRV, <span class="sc">+</span><span class="dv">1</span>)</span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>tab_cutoffs <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">Indicador =</span> <span class="fu">c</span>(</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>cutoff_tab <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">Indicator =</span> <span class="fu">c</span>(</span>
 <span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Laz.R"</span>, <span class="st">"Longstring"</span>, <span class="st">"MD"</span>,</span>
 <span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">"IRV (high end)"</span>, <span class="st">"IRV (low end)"</span></span>
 <span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    ),</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Valor crítico</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Critical value</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
 <span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        kn_lazr<span class="sc">$</span>crit, kn_longstr<span class="sc">$</span>crit, kn_md<span class="sc">$</span>crit,</span>
 <span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        kn_irv_high<span class="sc">$</span>crit, kn_irv_low<span class="sc">$</span>crit</span>
 <span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    ), <span class="dv">2</span>),</span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">% suspeitos</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">% flagged</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(<span class="fu">c</span>(</span>
 <span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>        kn_lazr<span class="sc">$</span>pct, kn_longstr<span class="sc">$</span>pct, kn_md<span class="sc">$</span>pct,</span>
 <span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>        kn_irv_high<span class="sc">$</span>pct, <span class="dv">1</span> <span class="sc">-</span> kn_irv_low<span class="sc">$</span>pct</span>
 <span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
 <span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>tab_cutoffs <span class="sc">|&gt;</span></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>cutoff_tab <span class="sc">|&gt;</span></span>
 <span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Pontos de corte — Algoritmo Kneedle (Biemann et al., 2025)"</span>,</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Cut-off points — Kneedle algorithm (Biemann et al., 2025)"</span>,</span>
 <span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">digits  =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2</span>, <span class="dv">1</span>)</span>
 <span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
-<caption>Pontos de corte — Algoritmo Kneedle (Biemann et al., 2025)</caption>
+<caption>Cut-off points — Kneedle algorithm (Biemann et al., 2025)</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Indicador</th>
-<th style="text-align: right;">Valor crítico</th>
-<th style="text-align: right;">% suspeitos</th>
+<th style="text-align: left;">Indicator</th>
+<th style="text-align: right;">Critical value</th>
+<th style="text-align: right;">% flagged</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Laz.R</td>
 <td style="text-align: right;">0.60</td>
-<td style="text-align: right;">6.8</td>
+<td style="text-align: right;">11.6</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Longstring</td>
 <td style="text-align: right;">7.00</td>
-<td style="text-align: right;">14.8</td>
+<td style="text-align: right;">15.2</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">MD</td>
-<td style="text-align: right;">40.17</td>
+<td style="text-align: right;">40.12</td>
 <td style="text-align: right;">15.4</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">IRV (high end)</td>
-<td style="text-align: right;">1.34</td>
-<td style="text-align: right;">4.9</td>
+<td style="text-align: right;">1.14</td>
+<td style="text-align: right;">8.0</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">IRV (low end)</td>
-<td style="text-align: right;">0.69</td>
-<td style="text-align: right;">3.8</td>
+<td style="text-align: right;">0.48</td>
+<td style="text-align: right;">5.0</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div></div>
 </section>
-<section id="gráficos-com-pontos-de-corte" class="level2">
-<h2 class="anchored" data-anchor-id="gráficos-com-pontos-de-corte">Gráficos com pontos de corte</h2>
+<section id="plots-with-cut-off-points" class="level2">
+<h2 class="anchored" data-anchor-id="plots-with-cut-off-points">Plots with cut-off points</h2>
 <section id="laz.r-1" class="level3">
 <h3 class="anchored" data-anchor-id="laz.r-1">Laz.R</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [11]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Monta o data frame para a curva cumulativa (ordenação decrescente)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Builds the data frame for the cumulative curve (descending order)</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>make_cum_df <span class="ot">&lt;-</span> <span class="cf">function</span>(sorted_vals) {</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    n <span class="ot">&lt;-</span> <span class="fu">length</span>(sorted_vals)</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tibble</span>(<span class="at">Index_value =</span> sorted_vals, <span class="at">percent =</span> <span class="fu">seq_len</span>(n) <span class="sc">/</span> n)</span>
@@ -571,8 +571,8 @@
 <span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
 <span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Laz.R — Frequência cumulativa"</span>,</span>
-<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Percentil (ordenação decrescente)"</span>, <span class="at">y =</span> <span class="st">"Laz.R"</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Laz.R — Cumulative frequency"</span>,</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Percentile (descending order)"</span>, <span class="at">y =</span> <span class="st">"Laz.R"</span></span>
 <span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -600,8 +600,8 @@
 <span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
 <span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Longstring — Frequência cumulativa"</span>,</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Percentil (ordenação decrescente)"</span>, <span class="at">y =</span> <span class="st">"Longstring"</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Longstring — Cumulative frequency"</span>,</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Percentile (descending order)"</span>, <span class="at">y =</span> <span class="st">"Longstring"</span></span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -629,8 +629,8 @@
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Mahalanobis Distance — Frequência cumulativa"</span>,</span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Percentil (ordenação decrescente)"</span>, <span class="at">y =</span> <span class="st">"MD"</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"Mahalanobis Distance — Cumulative frequency"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Percentile (descending order)"</span>, <span class="at">y =</span> <span class="st">"MD"</span></span>
 <span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -668,9 +668,9 @@
 <span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> scales<span class="sc">::</span>percent) <span class="sc">+</span></span>
 <span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"IRV — Frequência cumulativa"</span>,</span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Vermelho = high end (variação excessiva); Azul = low end (variação insuficiente)"</span>,</span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Percentil (ordenação decrescente)"</span>, <span class="at">y =</span> <span class="st">"IRV"</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">"IRV — Cumulative frequency"</span>,</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">subtitle =</span> <span class="st">"Red = high end (excessive variation); Blue = low end (insufficient variation)"</span>,</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">"Percentile (descending order)"</span>, <span class="at">y =</span> <span class="st">"IRV"</span></span>
 <span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
 <span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_light</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
@@ -683,11 +683,11 @@
 </div></div>
 </section>
 </section>
-<section id="flags-de-cier" class="level2">
-<h2 class="anchored" data-anchor-id="flags-de-cier">Flags de C/IER</h2>
+<section id="cier-flags" class="level2">
+<h2 class="anchored" data-anchor-id="cier-flags">C/IER Flags</h2>
 <div class="cell-container"><div class="cell-decorator"><pre>In [15]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_flags <span class="ot">&lt;-</span> df_indicadores <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_flags <span class="ot">&lt;-</span> df_indicators <span class="sc">|&gt;</span></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">LazR_FLAG     =</span> <span class="fu">if_else</span>(LazR <span class="sc">&gt;=</span> kn_lazr<span class="sc">$</span>crit, <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">Longstr_FLAG  =</span> <span class="fu">if_else</span>(Longstr <span class="sc">&gt;</span> kn_longstr<span class="sc">$</span>crit, <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
@@ -698,77 +698,77 @@
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>df_flags</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,298 × 10
+<pre><code># A tibble: 1,295 × 10
             ID  LazR Longstr    MD   IRV LazR_FLAG Longstr_FLAG MD_FLAG
          &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;int&gt;        &lt;int&gt;   &lt;int&gt;
- 1 10441016017 0.388       3 49.5  1.47          0            0       1
- 2 10440981694 0.493       5 13.5  0.662         0            0       0
- 3 10440601239 0.493       6 79.1  1.47          0            0       1
- 4 10440562981 0.569       9 27.4  1.29          0            1       0
- 5 10440358563 0.454       8 32.3  1.48          0            1       0
- 6 10440199369 0.647      10  6.94 0.945         1            1       0
- 7 10438952564 0.444       6 39.9  0.951         0            0       0
- 8 10438951127 0.382       3 24.2  1.06          0            0       0
- 9 10438633244 0.41        3 41.7  0.857         0            0       1
-10 10438605204 0.479       5 12.2  1.09          0            0       0
-# ℹ 1,288 more rows
+ 1 10441016017 0.413       4 49.5  1.25          0            0       1
+ 2 10440981694 0.502       5 13.5  0.634         0            0       0
+ 3 10440601239 0.5         6 79.0  1.47          0            0       1
+ 4 10440562981 0.567       9 27.3  0.999         0            1       0
+ 5 10440358563 0.46        8 32.2  1.22          0            1       0
+ 6 10440199369 0.673      11  6.94 0.528         1            1       0
+ 7 10438952564 0.416       5 39.9  0.977         0            0       0
+ 8 10438951127 0.395       3 24.1  0.796         0            0       0
+ 9 10438633244 0.447       4 41.8  0.857         0            0       1
+10 10438605204 0.479       5 12.2  0.637         0            0       0
+# ℹ 1,285 more rows
 # ℹ 2 more variables: IRV_high_FLAG &lt;int&gt;, IRV_low_FLAG &lt;int&gt;</code></pre>
 </div>
 </div></div>
-<section id="resumo-das-flags" class="level3">
-<h3 class="anchored" data-anchor-id="resumo-das-flags">Resumo das flags</h3>
+<section id="flags-overview" class="level3">
+<h3 class="anchored" data-anchor-id="flags-overview">Flags overview</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [16]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df_flags <span class="sc">|&gt;</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>        <span class="fu">across</span>(<span class="fu">ends_with</span>(<span class="st">"_FLAG"</span>), <span class="fu">list</span>(</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_suspeitos   =</span> \(x) <span class="fu">sum</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">pct_suspeitos =</span> \(x) <span class="fu">round</span>(<span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">n_flagged   =</span> \(x) <span class="fu">sum</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">pct_flagged =</span> \(x) <span class="fu">round</span>(<span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        ))</span>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(),</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"Indicador"</span>, <span class="st">".value"</span>),</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">names_pattern =</span> <span class="st">"(.+)_(n_suspeitos|pct_suspeitos)"</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"Indicator"</span>, <span class="st">".value"</span>),</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">names_pattern =</span> <span class="st">"(.+)_(n_flagged|pct_flagged)"</span></span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Resumo de respondentes sinalizados como C/IER"</span>,</span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Indicador"</span>, <span class="st">"N suspeitos"</span>, <span class="st">"% suspeitos"</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">caption =</span> <span class="st">"Summary of flagged C/IER respondents"</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Indicator"</span>, <span class="st">"N flagged"</span>, <span class="st">"% flagged"</span>)</span>
 <span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
-<caption>Resumo de respondentes sinalizados como C/IER</caption>
+<caption>Summary of flagged C/IER respondents</caption>
 <thead>
 <tr class="header">
-<th style="text-align: left;">Indicador</th>
-<th style="text-align: right;">N suspeitos</th>
-<th style="text-align: right;">% suspeitos</th>
+<th style="text-align: left;">Indicator</th>
+<th style="text-align: right;">N flagged</th>
+<th style="text-align: right;">% flagged</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">LazR_FLAG</td>
-<td style="text-align: right;">91</td>
-<td style="text-align: right;">7.0</td>
+<td style="text-align: right;">152</td>
+<td style="text-align: right;">11.7</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Longstr_FLAG</td>
-<td style="text-align: right;">191</td>
-<td style="text-align: right;">14.7</td>
+<td style="text-align: right;">196</td>
+<td style="text-align: right;">15.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">MD_FLAG</td>
-<td style="text-align: right;">200</td>
-<td style="text-align: right;">15.4</td>
+<td style="text-align: right;">201</td>
+<td style="text-align: right;">15.5</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">IRV_high_FLAG</td>
-<td style="text-align: right;">66</td>
-<td style="text-align: right;">5.1</td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">8.3</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">IRV_low_FLAG</td>
-<td style="text-align: right;">49</td>
-<td style="text-align: right;">3.8</td>
+<td style="text-align: right;">65</td>
+<td style="text-align: right;">5.0</td>
 </tr>
 </tbody>
 </table>
@@ -776,11 +776,11 @@
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>dados_screened <span class="ot">&lt;-</span> dados_importados <span class="sc">|&gt;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>screened_data <span class="ot">&lt;-</span> imported_data <span class="sc">|&gt;</span></span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(df_flags, <span class="at">by =</span> <span class="st">"ID"</span>)</span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(dados_screened, <span class="st">"../../Data/IntermediateData/whoqol_screened.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(screened_data, <span class="st">"../../Data/IntermediateData/whoqol_screened.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 </section>

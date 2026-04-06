@@ -1,5 +1,5 @@
 ---
-title: "Multicolinearidade"
+title: "Multicollinearity"
 author: Pablo Rogers
 execute:
   echo: true
@@ -15,64 +15,60 @@ library(gt)
 ```
 
 ```{r}
-#| label: leitura-nivel-3
+#| label: level-3-reading
 #| include: false
 
-dados_screened <- read_csv2(
+screened_data <- read_csv2(
   "../../Data/IntermediateData/whoqol_screened.csv",
   show_col_types = FALSE
 )
 
-itens <- dados_screened |>
+items <- screened_data |>
   select(Q1:Q26) |>
   mutate(across(everything(), as.numeric))
 ```
 
-## Cálculo do VIF por item
+## VIF calculation per item
 
-O VIF (Variance Inflation Factor) diagnostica multicolinearidade entre itens.
-Valores acima de 5 indicam multicolinearidade problemática, antecipando
-problemas de convergência e interpretação na AFC.
+The VIF (Variance Inflation Factor) diagnoses multicollinearity among items.
+Values above 5 indicate problematic multicollinearity, anticipating
+convergence and interpretation issues in CFA.
 
 ```{r}
-#| label: vif-calculo
+#| label: vif-calculation
 
-response <- seq_len(nrow(itens))
-modelo <- lm(response ~ ., data = itens)
-vif_valores <- car::vif(modelo)
+response <- seq_len(nrow(items))
+model <- lm(response ~ ., data = items)
+vif_values <- car::vif(model)
 ```
 
-### Tabela de VIF
+### VIF Table
 
 ```{r}
-#| label: vif-tabela
+#| label: vif-table
 
 vif_df <- tibble(
-  Item = names(vif_valores),
-  VIF  = round(as.numeric(vif_valores), 3),
-  Problematico = if_else(VIF > 5, "Sim", "Não")
+  Item = names(vif_values),
+  VIF  = round(as.numeric(vif_values), 3),
+  Problematic = if_else(VIF > 5, "Yes", "No")
 )
 
 vif_df |>
   knitr::kable(
-    caption = "Variance Inflation Factor (VIF) por item — VIF > 5 indica multicolinearidade problemática",
+    caption = "Variance Inflation Factor (VIF) per item — VIF > 5 indicates problematic multicollinearity",
     digits  = 3
   )
 ```
 
 ```{r}
-#| label: exportacao-base
+#| label: base-export
 #| include: false
 
-# Exportar tabela de VIF
-dir.create("../../Output/Results", recursive = TRUE, showWarnings = FALSE)
-write_csv2(vif_df, "../../Output/Results/vif_table.csv")
+# Export VIF table
+write_csv2(vif_df, "../../Output/DataAppendixOutput/vif_table.csv")
 
-# Exportar base analítica final para AFC (apenas ID e Q1:Q26)
-dir.create("../../Data/AnalysisData", recursive = TRUE, showWarnings = FALSE)
-
-dados_analise_final <- dados_screened |>
+final_analysis_data <- screened_data |>
   select(ID, Q1:Q26)
 
-write_csv2(dados_analise_final, "../../Data/AnalysisData/whoqol_analysis.csv")
+write_csv2(final_analysis_data, "../../Data/AnalysisData/whoqol_analysis.csv")
 ```

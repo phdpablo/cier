@@ -7,7 +7,7 @@
 
     <meta name="author" content="Pablo Rogers">
 
-    <title>Multicolinearidade</title>
+    <title>Multicollinearity</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -172,7 +172,7 @@
     <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
       
       <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
-      <h6><i class="bi bi-journal-code"></i> Multicolinearidade</h6>
+      <h6><i class="bi bi-journal-code"></i> Multicollinearity</h6>
 
             <a href="../../Scripts/ProcessingScripts/03_vif.out.ipynb" class="btn btn-primary quarto-download-embed" download="03_vif.qmd">Download Source</a>
           </div>
@@ -180,7 +180,7 @@
      <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Multicolinearidade</h1>
+      <h1 class="title">Multicollinearity</h1>
           </div>
 
     
@@ -214,9 +214,9 @@
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#cálculo-do-vif-por-item" id="toc-cálculo-do-vif-por-item" class="nav-link active" data-scroll-target="#cálculo-do-vif-por-item">Cálculo do VIF por item</a>
+  <li><a href="#vif-calculation-per-item" id="toc-vif-calculation-per-item" class="nav-link active" data-scroll-target="#vif-calculation-per-item">VIF calculation per item</a>
   <ul class="collapse">
-  <li><a href="#tabela-de-vif" id="toc-tabela-de-vif" class="nav-link" data-scroll-target="#tabela-de-vif">Tabela de VIF</a></li>
+  <li><a href="#vif-table" id="toc-vif-table" class="nav-link" data-scroll-target="#vif-table">VIF Table</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -275,7 +275,7 @@ The following object is masked from 'package:purrr':
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [2]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>dados_screened <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>screened_data <span class="ot">&lt;-</span> <span class="fu">read_csv2</span>(</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../../Data/IntermediateData/whoqol_screened.csv"</span>,</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">show_col_types =</span> <span class="cn">FALSE</span></span>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -283,174 +283,174 @@ The following object is masked from 'package:purrr':
 <pre><code>ℹ Using "','" as decimal and "'.'" as grouping mark. Use `read_delim()` for more control.</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>itens <span class="ot">&lt;-</span> dados_screened <span class="sc">|&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>items <span class="ot">&lt;-</span> screened_data <span class="sc">|&gt;</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), as.numeric))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
-<section id="cálculo-do-vif-por-item" class="level2">
-<h2 class="anchored" data-anchor-id="cálculo-do-vif-por-item">Cálculo do VIF por item</h2>
-<p>O VIF (Variance Inflation Factor) diagnostica multicolinearidade entre itens. Valores acima de 5 indicam multicolinearidade problemática, antecipando problemas de convergência e interpretação na AFC.</p>
+<section id="vif-calculation-per-item" class="level2">
+<h2 class="anchored" data-anchor-id="vif-calculation-per-item">VIF calculation per item</h2>
+<p>The VIF (Variance Inflation Factor) diagnoses multicollinearity among items. Values above 5 indicate problematic multicollinearity, anticipating convergence and interpretation issues in CFA.</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [3]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(itens))</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>modelo <span class="ot">&lt;-</span> <span class="fu">lm</span>(response <span class="sc">~</span> ., <span class="at">data =</span> itens)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>vif_valores <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">vif</span>(modelo)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">seq_len</span>(<span class="fu">nrow</span>(items))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(response <span class="sc">~</span> ., <span class="at">data =</span> items)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>vif_values <span class="ot">&lt;-</span> car<span class="sc">::</span><span class="fu">vif</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
-<section id="tabela-de-vif" class="level3">
-<h3 class="anchored" data-anchor-id="tabela-de-vif">Tabela de VIF</h3>
+<section id="vif-table" class="level3">
+<h3 class="anchored" data-anchor-id="vif-table">VIF Table</h3>
 <div class="cell-container"><div class="cell-decorator"><pre>In [4]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>vif_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Item =</span> <span class="fu">names</span>(vif_valores),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">VIF  =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(vif_valores), <span class="dv">3</span>),</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Problematico =</span> <span class="fu">if_else</span>(VIF <span class="sc">&gt;</span> <span class="dv">5</span>, <span class="st">"Sim"</span>, <span class="st">"Não"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Item =</span> <span class="fu">names</span>(vif_values),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">VIF  =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(vif_values), <span class="dv">3</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Problematic =</span> <span class="fu">if_else</span>(VIF <span class="sc">&gt;</span> <span class="dv">5</span>, <span class="st">"Yes"</span>, <span class="st">"No"</span>)</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>vif_df <span class="sc">|&gt;</span></span>
 <span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Variance Inflation Factor (VIF) por item — VIF &gt; 5 indica multicolinearidade problemática"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Variance Inflation Factor (VIF) per item — VIF &gt; 5 indicates problematic multicollinearity"</span>,</span>
 <span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">digits  =</span> <span class="dv">3</span></span>
 <span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small">
-<caption>Variance Inflation Factor (VIF) por item — VIF &gt; 5 indica multicolinearidade problemática</caption>
+<caption>Variance Inflation Factor (VIF) per item — VIF &gt; 5 indicates problematic multicollinearity</caption>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Item</th>
 <th style="text-align: right;">VIF</th>
-<th style="text-align: left;">Problematico</th>
+<th style="text-align: left;">Problematic</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Q1</td>
 <td style="text-align: right;">2.137</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q2</td>
 <td style="text-align: right;">1.979</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q3</td>
 <td style="text-align: right;">1.699</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q4</td>
 <td style="text-align: right;">1.553</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q5</td>
 <td style="text-align: right;">2.252</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q6</td>
 <td style="text-align: right;">1.808</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q7</td>
 <td style="text-align: right;">1.726</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q8</td>
 <td style="text-align: right;">1.323</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q9</td>
 <td style="text-align: right;">1.492</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q10</td>
 <td style="text-align: right;">2.302</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q11</td>
 <td style="text-align: right;">1.627</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q12</td>
 <td style="text-align: right;">1.838</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q13</td>
 <td style="text-align: right;">1.575</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q14</td>
 <td style="text-align: right;">1.973</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q15</td>
 <td style="text-align: right;">1.581</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q16</td>
 <td style="text-align: right;">1.417</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q17</td>
 <td style="text-align: right;">3.580</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q18</td>
 <td style="text-align: right;">3.145</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q19</td>
 <td style="text-align: right;">2.608</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q20</td>
 <td style="text-align: right;">1.888</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q21</td>
 <td style="text-align: right;">1.366</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q22</td>
 <td style="text-align: right;">1.739</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q23</td>
 <td style="text-align: right;">1.434</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q24</td>
 <td style="text-align: right;">1.391</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Q25</td>
 <td style="text-align: right;">1.417</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Q26</td>
 <td style="text-align: right;">1.566</td>
-<td style="text-align: left;">Não</td>
+<td style="text-align: left;">No</td>
 </tr>
 </tbody>
 </table>
@@ -458,17 +458,13 @@ The following object is masked from 'package:purrr':
 </div></div>
 <div class="cell-container"><div class="cell-decorator"><pre>In [5]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar tabela de VIF</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"../../Output/Results"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(vif_df, <span class="st">"../../Output/Results/vif_table.csv"</span>)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Exportar base analítica final para AFC (apenas ID e Q1:Q26)</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"../../Data/AnalysisData"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>dados_analise_final <span class="ot">&lt;-</span> dados_screened <span class="sc">|&gt;</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(dados_analise_final, <span class="st">"../../Data/AnalysisData/whoqol_analysis.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Export VIF table</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(vif_df, <span class="st">"../../Output/DataAppendixOutput/vif_table.csv"</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>final_analysis_data <span class="ot">&lt;-</span> screened_data <span class="sc">|&gt;</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(final_analysis_data, <span class="st">"../../Data/AnalysisData/whoqol_analysis.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 </section>

@@ -1,5 +1,5 @@
 ---
-title: "Exclusões procedimentais"
+title: "Procedural exclusions"
 author: Pablo Rogers
 execute:
   echo: true
@@ -13,27 +13,27 @@ library(tidyverse)
 library(gt)
 ```
 
-## Leitura e preparação dos dados
+## Data reading and preparation
 
-O arquivo `data.csv` contém as respostas brutas do questionário (separador `;`).
-Nesta etapa, removem-se registros de abandono, selecionam-se as variáveis do
-fluxo analítico e deriva-se o tempo total de resposta (`TIME`).
+The `data.csv` file contains the raw survey responses (separator `;`).
+In this step, dropout records are removed, variables for the analytical 
+flow are selected, and the total response time (`TIME`) is derived.
 
 ```{r}
-#| label: leitura-dados
+#| label: data-reading
 
-dados_brutos <- read_csv2(
+raw_data <- read_csv2(
     "../../Data/InputData/data.csv",
     show_col_types = FALSE
 )
 
-dados_preparados <- dados_brutos |>
+prepared_data <- raw_data |>
     mutate(
-        abandono = is.na(ID) | rowSums(across(Q1:Q26, \(x) !is.na(x))) == 0
+        dropout = is.na(ID) | rowSums(across(Q1:Q26, \(x) !is.na(x))) == 0
     )
 
-dados_importados <- dados_preparados |>
-    filter(!abandono) |>
+imported_data <- prepared_data |>
+    filter(!dropout) |>
     select(ID, CREATED, MODIFIED, CQ1, CQ2, CQ3, Q1:Q26) |>
     mutate(
         across(c(CQ1, CQ2, CQ3, Q1:Q26), as.numeric),
@@ -43,105 +43,104 @@ dados_importados <- dados_preparados |>
     ) |>
     select(-CREATED_dt, -MODIFIED_dt)
 
-glimpse(dados_importados)
+glimpse(imported_data)
 ```
 
-## Exclusões procedimentais (Nível 1)
+## Procedural exclusions (Level 1)
 
-- `CQ == 1`: o respondente acertou o item de controle de qualidade.
-- `CQ == 0`: o respondente falhou no item de controle de qualidade.
+- `CQ == 1`: the respondent passed the quality control item.
+- `CQ == 0`: the respondent failed the quality control item.
 
 ```{r}
-#| label: nivel-1
+#| label: level-1
 
-dados_nivel1 <- dados_importados |>
+level1_data <- imported_data |>
     mutate(
-        cq_falhas = rowSums(across(CQ1:CQ3, \(x) x != 1), na.rm = TRUE),
+        qc_fails = rowSums(across(CQ1:CQ3, \(x) x != 1), na.rm = TRUE),
         na_count = rowSums(across(Q1:Q26, is.na)),
         excl_time = TIME < 208,
-        excl_cq = cq_falhas >= 2,
+        excl_qc = qc_fails >= 2,
         excl_na = na_count > 5,
-        nivel1_excluido = excl_time | excl_cq | excl_na
+        level1_excluded = excl_time | excl_qc | excl_na
     )
 
 exclusion_log <- bind_rows(
-    dados_preparados |>
-        filter(abandono) |>
+    prepared_data |>
+        filter(dropout) |>
         transmute(
             ID,
-            criterio = "abandono",
-            valor    = NA_real_,
-            detalhe  = "Sem respostas válidas em Q1-Q26"
+            criterion = "dropout",
+            value     = NA_real_,
+            detail    = "No valid responses in Q1-Q26"
         ),
-    dados_nivel1 |>
+    level1_data |>
         filter(excl_time) |>
         transmute(
             ID,
-            criterio = "time_rapido",
-            valor    = TIME,
-            detalhe  = paste0("TIME = ", TIME, " s")
+            criterion = "fast_time",
+            value     = TIME,
+            detail    = paste0("TIME = ", TIME, " s")
         ),
-    dados_nivel1 |>
-        filter(excl_cq) |>
+    level1_data |>
+        filter(excl_qc) |>
         transmute(
             ID,
-            criterio = "cq_falhas",
-            valor    = cq_falhas,
-            detalhe  = paste0("Falhas CQ = ", cq_falhas)
+            criterion = "qc_fails",
+            value     = qc_fails,
+            detail    = paste0("QC fails = ", qc_fails)
         ),
-    dados_nivel1 |>
+    level1_data |>
         filter(excl_na) |>
         transmute(
             ID,
-            criterio = "missings_excessivos",
-            valor    = as.numeric(na_count),
-            detalhe  = paste0("Missings em Q1-Q26 = ", na_count)
+            criterion = "excessive_missings",
+            value     = as.numeric(na_count),
+            detail    = paste0("Missings in Q1-Q26 = ", na_count)
         )
 ) |>
-    distinct(ID, criterio, .keep_all = TRUE)
+    distinct(ID, criterion, .keep_all = TRUE)
 
-dir.create("../../Output/Results", recursive = TRUE, showWarnings = FALSE)
-write_csv2(exclusion_log, "../../Output/Results/exclusion_log.csv")
+write_csv2(exclusion_log, "../../Output/DataAppendixOutput/exclusion_log.csv")
 
-dados_elegiveis <- dados_nivel1 |>
-    filter(!nivel1_excluido) |>
+eligible_data <- level1_data |>
+    filter(!level1_excluded) |>
     select(ID, CQ1, CQ2, CQ3, TIME, Q1:Q26) |>
-    # Inversão dos itens reversos (6 - valor)
+    # Inversion of reverse-scored items (6 - value)
     mutate(across(c(Q3, Q4, Q26), ~ 6 - .x))
 ```
 
-### Sumário do Nível 1
+### Level 1 Summary
 
 ```{r}
-#| label: sumario-nivel-1
+#| label: level-1-summary
 
 tibble(
-    Etapa = c(
-        "Dados brutos",
-        "Abandono removido",
-        "Excluídos por tempo (< 208 s)",
-        "Excluídos por CQ (≥ 2 falhas)",
-        "Excluídos por missings (> 5 em Q1-Q26)",
-        "Elegíveis para Nível 2",
-        "NAs restantes na escala Q1-Q26"
+    Step = c(
+        "Raw data",
+        "Dropouts removed",
+        "Excluded by time (< 208 s)",
+        "Excluded by QC (≥ 2 fails)",
+        "Excluded by missings (> 5 in Q1-Q26)",
+        "Eligible for Level 2",
+        "Remaining NAs in Q1-Q26"
     ),
     N = c(
-        nrow(dados_brutos),
-        sum(dados_preparados$abandono, na.rm = TRUE),
-        sum(dados_nivel1$excl_time, na.rm = TRUE),
-        sum(dados_nivel1$excl_cq, na.rm = TRUE),
-        sum(dados_nivel1$excl_na, na.rm = TRUE),
-        nrow(dados_elegiveis),
-        sum(is.na(dados_elegiveis |> select(Q1:Q26)))
+        nrow(raw_data),
+        sum(prepared_data$dropout, na.rm = TRUE),
+        sum(level1_data$excl_time, na.rm = TRUE),
+        sum(level1_data$excl_qc, na.rm = TRUE),
+        sum(level1_data$excl_na, na.rm = TRUE),
+        nrow(eligible_data),
+        sum(is.na(eligible_data |> select(Q1:Q26)))
     )
 ) |>
-    knitr::kable(caption = "Resumo das exclusões procedimentais")
+    knitr::kable(caption = "Procedural exclusions summary")
 ```
 
 ```{r}
-#| label: exportacao-nivel-1
+#| label: level-1-export
 #| include: false
 
 dir.create("../../Data/IntermediateData", recursive = TRUE, showWarnings = FALSE)
-write_csv2(dados_elegiveis, "../../Data/IntermediateData/whoqol_imported.csv")
+write_csv2(eligible_data, "../../Data/IntermediateData/whoqol_imported.csv")
 ```
