@@ -11,18 +11,20 @@ _site/
 _temp/
 _freeze/
 _manuscript/
+docs/_tex/
 *_cache/
+/Scripts/ProcessingScripts/*_files/
 /index_files/
 /site_libs/
 *.tex
 
 # Management
-adm/
-/.quarto/
+/ADM/
 **/*.quarto_ipynb
 
 # Agent artifacts
 .agents/
+.posit/
 PLAN.md
 SKILL.md
 **/SKILL.md
