@@ -1,116 +1,117 @@
-# Respostas descuidadas e esforço insuficiente (C/IER)
+# Careless/Insufficient Effort Responding (C/IER)
 
-Este repositório apresenta um tutorial reproduzível sobre a identificação de
-**respostas descuidadas ou com esforço insuficiente** (*Careless/Insufficient
-Effort Responding*, C/IER) em questionários de autorrelato.
+This repository presents a reproducible tutorial on detecting
+**Careless/Insufficient Effort Responding (C/IER)** in self-report
+questionnaires.
 
-O exemplo utiliza respostas à escala **WHOQOL-Bref** para demonstrar, em R e
-Quarto, um fluxo de controle de qualidade em duas etapas: critérios
-procedimentais definidos antes da análise e indicadores estatísticos calculados
-após a coleta.
+Using responses to the **WHOQOL-Bref** scale as an example, the tutorial
+demonstrates a two-stage data quality control workflow in R and Quarto:
+procedural criteria defined before the analysis and statistical indicators
+calculated after data collection.
 
-> 📖 **Tutorial:** [acesse a versão publicada no GitHub Pages](https://phdpablo.github.io/cier/)
+> 📖 **Tutorial:** [view the published version on GitHub Pages](https://phdpablo.github.io/cier/)
 
-## 🎯 Objetivo
+## 🎯 Objective
 
-O projeto foi desenvolvido com finalidade didática. Ele mostra como:
+This project was developed for educational purposes. It demonstrates how to:
 
-- documentar exclusões procedimentais sem perder a rastreabilidade;
-- calcular diferentes indicadores de C/IER;
-- estimar pontos de corte com o algoritmo Kneedle;
-- produzir tabelas, figuras e bases intermediárias de forma reproduzível;
-- separar dados de entrada, dados processados, scripts e resultados.
+- document procedural exclusions while preserving traceability;
+- calculate different C/IER indicators;
+- estimate cut-off points using the Kneedle algorithm;
+- produce tables, figures, and intermediate datasets reproducibly;
+- separate input data, processed data, scripts, and outputs.
 
-O tutorial não pretende cobrir todas as estratégias disponíveis na literatura.
-Os procedimentos apresentados devem ser avaliados à luz do instrumento, da
-população e do desenho de cada pesquisa.
+The tutorial does not aim to cover every strategy available in the literature.
+The procedures presented here should be evaluated in light of the instrument,
+population, and design of each study.
 
-## 🔎 Fluxo da análise
+## 🔎 Analysis workflow
 
-### 1. Critérios procedimentais
+### 1. Procedural criteria
 
-A primeira etapa identifica:
+The first stage identifies:
 
-- abandono do questionário;
-- tempo total de resposta inferior a 208 segundos;
-- duas ou mais falhas entre três questões de controle de qualidade;
-- mais de cinco respostas ausentes nos 26 itens do WHOQOL-Bref.
+- questionnaire dropout;
+- total response time below 208 seconds;
+- two or more failures across three quality control items;
+- more than five missing responses across the 26 WHOQOL-Bref items.
 
-As exclusões e seus respectivos motivos são registradas em um log. Em seguida,
-os itens de pontuação reversa (`Q3`, `Q4` e `Q26`) são recodificados.
+Each exclusion and its corresponding reason are recorded in a log. The
+reverse-scored items (`Q3`, `Q4`, and `Q26`) are then recoded.
 
-### 2. Indicadores pós-hoc
+### 2. Post-hoc indicators
 
-Para as respostas elegíveis, são calculados quatro indicadores:
+Four indicators are calculated for eligible responses:
 
 - **Laz.R**;
 - **Longstring**;
-- **distância de Mahalanobis**, com tratamento de valores ausentes;
+- **Mahalanobis distance**, adjusted for missing values;
 - **Intra-Individual Response Variability (IRV)**.
 
-Os pontos de corte são estimados com o algoritmo **Kneedle**. Nesta etapa, os
-indicadores têm função **diagnóstica**: as sinalizações não produzem exclusões
-automáticas e devem ser examinadas em conjunto com outras evidências.
+Cut-off points are estimated using the **Kneedle** algorithm. At this stage,
+the indicators serve a **diagnostic** purpose: flags do not result in automatic
+exclusions and should be examined alongside other evidence.
 
-## 🗂️ Estrutura do repositório
+## 🗂️ Repository structure
 
 ```text
 .
 ├── Data/
-│   ├── InputData/          # dados originais e metadados
-│   ├── IntermediateData/   # produtos intermediários do processamento
-│   └── AnalysisData/       # base preparada para análises
+│   ├── InputData/          # original data and metadata
+│   ├── IntermediateData/   # intermediate processing products
+│   └── AnalysisData/       # analysis-ready dataset
 ├── Scripts/
-│   └── ProcessingScripts/  # exclusões procedimentais e indicadores pós-hoc
+│   └── ProcessingScripts/  # procedural exclusions and post-hoc indicators
 ├── Output/
-│   └── DataAppendixOutput/ # tabelas e figuras geradas
-├── docs/                   # versão renderizada para o GitHub Pages
-├── index.qmd               # texto principal do tutorial
-├── _quarto.yml             # configuração do projeto Quarto
-├── references.bib          # referências bibliográficas
-└── renv.lock               # versões das dependências de R
+│   └── DataAppendixOutput/ # generated tables and figures
+├── docs/                   # rendered version for GitHub Pages
+├── index.qmd               # main tutorial manuscript
+├── _quarto.yml             # Quarto project configuration
+├── references.bib          # bibliographic references
+└── renv.lock               # locked R package versions
 ```
 
-As pastas `Data`, `Scripts` e `Output` possuem documentação própria, organizada
-com base nas recomendações do [TIER Protocol](https://www.projecttier.org/tier-protocol/).
+The `Data`, `Scripts`, and `Output` directories include their own documentation,
+organized according to the recommendations of the
+[TIER Protocol](https://www.projecttier.org/tier-protocol/).
 
-## ♻️ Reprodutibilidade
+## ♻️ Reproducibility
 
-Para reproduzir o projeto, é necessário ter instalados:
+To reproduce the project, install:
 
 - [R](https://cran.r-project.org/);
 - [Quarto](https://quarto.org/);
-- o pacote R [`renv`](https://rstudio.github.io/renv/).
+- the R package [`renv`](https://rstudio.github.io/renv/).
 
-Clone o repositório:
+Clone the repository:
 
 ```bash
 git clone https://github.com/phdpablo/cier.git
 cd cier
 ```
 
-Restaure o ambiente de pacotes no console do R:
+Restore the package environment from the R console:
 
 ```r
 renv::restore()
 ```
 
-Depois, renderize o manuscrito a partir da raiz do projeto:
+Then render the manuscript from the project root:
 
 ```bash
 quarto render
 ```
 
-Os arquivos renderizados são gravados em `docs/`. Os notebooks de processamento
-também podem ser consultados a partir do manuscrito Quarto.
+Rendered files are written to `docs/`. The processing notebooks can also be
+accessed through the Quarto manuscript.
 
-## 👤 Autor
+## 👤 Author
 
-**Pablo Rogers**  
-Universidade Federal de Uberlândia  
+**Pablo Rogers**<br>
+Federal University of Uberlândia<br>
 [ORCID 0000-0002-0093-3834](https://orcid.org/0000-0002-0093-3834)
 
 ---
 
-Se este material for útil em ensino ou pesquisa, consulte e cite as referências
-metodológicas apresentadas no próprio tutorial.
+If this material is useful for teaching or research, please consult and cite
+the methodological references provided in the tutorial.
