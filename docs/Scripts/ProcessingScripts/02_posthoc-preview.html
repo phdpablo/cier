@@ -250,8 +250,8 @@
 
        <div class="cell-container"><div class="cell-decorator"><pre>In [1]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load necessary packages for analysis and plotting</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load packages for data handling, C/IER indicators, and presentation</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># Data import, manipulation, and visualization</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'tidyverse' was built under R version 4.5.3</code></pre>
 </div>
@@ -280,18 +280,18 @@
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(careless)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(careless) <span class="co"># Longstring and IRV calculation</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'careless' was built under R version 4.5.3</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gt) <span class="co"># Table formatting; not currently called directly</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'gt' was built under R version 4.5.3</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modi)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork) <span class="co"># Composition of multiple ggplot2 plots</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(modi) <span class="co"># Mahalanobis distance with missing item responses</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: package 'modi' was built under R version 4.5.3</code></pre>
 </div>
@@ -381,16 +381,16 @@
 <pre><code># A tibble: 1,295 × 5
             ID  LazR Longstr    MD   IRV
          &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;
- 1 10441016017 0.413       4 49.5  1.25 
- 2 10440981694 0.502       5 13.5  0.634
- 3 10440601239 0.5         6 79.0  1.47 
- 4 10440562981 0.567       9 27.3  0.999
- 5 10440358563 0.46        8 32.2  1.22 
- 6 10440199369 0.673      11  6.94 0.528
- 7 10438952564 0.416       5 39.9  0.977
- 8 10438951127 0.395       3 24.1  0.796
- 9 10438633244 0.447       4 41.8  0.857
-10 10438605204 0.479       5 12.2  0.637
+ 1 10441016017 0.388       3 49.5  1.47 
+ 2 10440981694 0.493       5 13.5  0.662
+ 3 10440601239 0.493       6 79.0  1.47 
+ 4 10440562981 0.569       9 27.3  1.29 
+ 5 10440358563 0.454       8 32.2  1.48 
+ 6 10440199369 0.647      10  6.94 0.945
+ 7 10438952564 0.444       6 39.9  0.951
+ 8 10438951127 0.382       3 24.1  1.06 
+ 9 10438633244 0.41        3 41.8  0.857
+10 10438605204 0.479       5 12.2  1.09 
 # ℹ 1,285 more rows</code></pre>
 </div>
 </div></div>
@@ -589,12 +589,12 @@
 <tr class="odd">
 <td style="text-align: left;">Laz.R</td>
 <td style="text-align: right;">0.60</td>
-<td style="text-align: right;">11.6</td>
+<td style="text-align: right;">6.8</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Longstring</td>
 <td style="text-align: right;">7.00</td>
-<td style="text-align: right;">15.2</td>
+<td style="text-align: right;">14.8</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">MD</td>
@@ -603,13 +603,13 @@
 </tr>
 <tr class="even">
 <td style="text-align: left;">IRV (high end)</td>
-<td style="text-align: right;">1.14</td>
-<td style="text-align: right;">8.0</td>
+<td style="text-align: right;">1.34</td>
+<td style="text-align: right;">4.9</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">IRV (low end)</td>
-<td style="text-align: right;">0.48</td>
-<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">0.69</td>
+<td style="text-align: right;">3.8</td>
 </tr>
 </tbody>
 </table>
@@ -791,16 +791,16 @@
 <pre><code># A tibble: 1,295 × 10
             ID  LazR Longstr    MD   IRV LazR_FLAG Longstr_FLAG MD_FLAG
          &lt;dbl&gt; &lt;dbl&gt;   &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt;     &lt;int&gt;        &lt;int&gt;   &lt;int&gt;
- 1 10441016017 0.413       4 49.5  1.25          0            0       1
- 2 10440981694 0.502       5 13.5  0.634         0            0       0
- 3 10440601239 0.5         6 79.0  1.47          0            0       1
- 4 10440562981 0.567       9 27.3  0.999         0            1       0
- 5 10440358563 0.46        8 32.2  1.22          0            1       0
- 6 10440199369 0.673      11  6.94 0.528         1            1       0
- 7 10438952564 0.416       5 39.9  0.977         0            0       0
- 8 10438951127 0.395       3 24.1  0.796         0            0       0
- 9 10438633244 0.447       4 41.8  0.857         0            0       1
-10 10438605204 0.479       5 12.2  0.637         0            0       0
+ 1 10441016017 0.388       3 49.5  1.47          0            0       1
+ 2 10440981694 0.493       5 13.5  0.662         0            0       0
+ 3 10440601239 0.493       6 79.0  1.47          0            0       1
+ 4 10440562981 0.569       9 27.3  1.29          0            1       0
+ 5 10440358563 0.454       8 32.2  1.48          0            1       0
+ 6 10440199369 0.647      10  6.94 0.945         1            1       0
+ 7 10438952564 0.444       6 39.9  0.951         0            0       0
+ 8 10438951127 0.382       3 24.1  1.06          0            0       0
+ 9 10438633244 0.41        3 41.8  0.857         0            0       1
+10 10438605204 0.479       5 12.2  1.09          0            0       0
 # ℹ 1,285 more rows
 # ℹ 2 more variables: IRV_high_FLAG &lt;int&gt;, IRV_low_FLAG &lt;int&gt;</code></pre>
 </div>
@@ -844,13 +844,13 @@
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">LazR_FLAG</td>
-<td style="text-align: right;">152</td>
-<td style="text-align: right;">11.7</td>
+<td style="text-align: right;">91</td>
+<td style="text-align: right;">7.0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Longstr_FLAG</td>
-<td style="text-align: right;">196</td>
-<td style="text-align: right;">15.1</td>
+<td style="text-align: right;">191</td>
+<td style="text-align: right;">14.7</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">MD_FLAG</td>
@@ -859,13 +859,13 @@
 </tr>
 <tr class="even">
 <td style="text-align: left;">IRV_high_FLAG</td>
-<td style="text-align: right;">108</td>
-<td style="text-align: right;">8.3</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">5.1</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">IRV_low_FLAG</td>
-<td style="text-align: right;">65</td>
-<td style="text-align: right;">5.0</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">3.8</td>
 </tr>
 </tbody>
 </table>
@@ -880,12 +880,13 @@
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(screened_data, <span class="st">"../../Data/IntermediateData/whoqol_screened.csv"</span>)</span>
 <span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Extract only ID and items for the Confirmatory Factor Analysis (CFA)</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverse-score items only after calculating all C/IER indicators</span></span>
 <span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>final_analysis_data <span class="ot">&lt;-</span> screened_data <span class="sc">|&gt;</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26)</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Export final analytical dataset</span></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(final_analysis_data, <span class="st">"../../Data/AnalysisData/whoqol_analysis.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Q3, Q4, Q26), \(x) <span class="dv">6</span> <span class="sc">-</span> x))</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Export final analytical dataset</span></span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(final_analysis_data, <span class="st">"../../Data/AnalysisData/whoqol_analysis.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 </section>
 </section>

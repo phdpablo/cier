@@ -109,12 +109,10 @@ exclusion_log <- bind_rows(
 # Export the exclusion log
 write_csv2(exclusion_log, "../../Output/DataAppendixOutput/Tables/exclusion_log.csv")
 
-# Filter eligible respondents and invert reverse-scored scale items
+# Keep original item responses for the Level 2 response-pattern indicators
 eligible_data <- level1_data |>
     filter(!level1_excluded) |>
-    select(ID, CQ1, CQ2, CQ3, TIME, Q1:Q26) |>
-    # Inversion of reverse-scored items (6 - value)
-    mutate(across(c(Q3, Q4, Q26), ~ 6 - .x))
+    select(ID, CQ1, CQ2, CQ3, TIME, Q1:Q26)
 ```
 
 ### Level 1 Summary

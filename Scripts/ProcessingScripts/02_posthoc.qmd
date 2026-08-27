@@ -9,12 +9,12 @@ execute:
 #| label: setup-02
 #| include: false
 
-# Load necessary packages for analysis and plotting
-library(tidyverse)
-library(careless)
-library(gt)
-library(patchwork)
-library(modi)
+# Load packages for data handling, C/IER indicators, and presentation
+library(tidyverse) # Data import, manipulation, and visualization
+library(careless) # Longstring and IRV calculation
+library(gt) # Table formatting; not currently called directly
+library(patchwork) # Composition of multiple ggplot2 plots
+library(modi) # Mahalanobis distance with missing item responses
 ```
 
 ```{r}
@@ -453,9 +453,10 @@ screened_data <- imported_data |>
 
 write_csv2(screened_data, "../../Data/IntermediateData/whoqol_screened.csv")
 
-# Extract only ID and items for the Confirmatory Factor Analysis (CFA)
+# Reverse-score items only after calculating all C/IER indicators
 final_analysis_data <- screened_data |>
-  select(ID, Q1:Q26)
+    select(ID, Q1:Q26) |>
+    mutate(across(c(Q3, Q4, Q26), \(x) 6 - x))
 
 # Export final analytical dataset
 write_csv2(final_analysis_data, "../../Data/AnalysisData/whoqol_analysis.csv")

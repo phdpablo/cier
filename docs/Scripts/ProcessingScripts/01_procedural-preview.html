@@ -396,12 +396,10 @@ $ TIME     &lt;dbl&gt; 1200, 1320, 960, 1260, 1140, 1140, 540, 1080, 1380, 660, 
 <span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Export the exclusion log</span></span>
 <span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(exclusion_log, <span class="st">"../../Output/DataAppendixOutput/Tables/exclusion_log.csv"</span>)</span>
 <span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter eligible respondents and invert reverse-scored scale items</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Keep original item responses for the Level 2 response-pattern indicators</span></span>
 <span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>eligible_data <span class="ot">&lt;-</span> level1_data <span class="sc">|&gt;</span></span>
 <span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(<span class="sc">!</span>level1_excluded) <span class="sc">|&gt;</span></span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ID, CQ1, CQ2, CQ3, TIME, Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Inversion of reverse-scored items (6 - value)</span></span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Q3, Q4, Q26), <span class="sc">~</span> <span class="dv">6</span> <span class="sc">-</span> .x))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ID, CQ1, CQ2, CQ3, TIME, Q1<span class="sc">:</span>Q26)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div></div>
 <section id="level-1-summary" class="level3">
 <h3 class="anchored" data-anchor-id="level-1-summary">Level 1 Summary</h3>

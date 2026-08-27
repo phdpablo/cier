@@ -36,8 +36,8 @@ The first stage identifies:
 - two or more failures across three quality control items;
 - more than five missing responses across the 26 WHOQOL-Bref items.
 
-Each exclusion and its corresponding reason are recorded in a log. The
-reverse-scored items (`Q3`, `Q4`, and `Q26`) are then recoded.
+Each exclusion and its corresponding reason are recorded in a log. Original
+item responses are preserved for the response-pattern indicators.
 
 ### 2. Post-hoc indicators
 
@@ -51,6 +51,9 @@ Four indicators are calculated for eligible responses:
 Cut-off points are estimated using the **Kneedle** algorithm. At this stage,
 the indicators serve a **diagnostic** purpose: flags do not result in automatic
 exclusions and should be examined alongside other evidence.
+
+Only after all C/IER indicators have been calculated are the reverse-scored
+items (`Q3`, `Q4`, and `Q26`) recoded in the final analysis dataset.
 
 ## 🗂️ Repository structure
 
