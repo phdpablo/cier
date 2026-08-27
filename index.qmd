@@ -71,19 +71,19 @@ tibble, and the plots below show the univariate distribution of each one.
 
 #### Laz.R
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#viz-lazr >}}
+![](Output/DataAppendixOutput/Figures/viz-lazr.png){fig-alt="Histogram and boxplot of the Laz.R distribution."}
 
 #### Longstring
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#viz-longstr >}}
+![](Output/DataAppendixOutput/Figures/viz-longstr.png){fig-alt="Histogram and boxplot of the Longstring distribution."}
 
 #### Mahalanobis Distance
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#viz-md >}}
+![](Output/DataAppendixOutput/Figures/viz-md.png){fig-alt="Histogram and boxplot of the Mahalanobis distance distribution."}
 
 #### IRV
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#viz-irv >}}
+![](Output/DataAppendixOutput/Figures/viz-irv.png){fig-alt="Histogram and boxplot of the IRV distribution."}
 
 :::
 
@@ -103,19 +103,19 @@ For **IRV**, `sign = -1` is used to detect excessively high IRV and
 
 #### Laz.R
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#cum-lazr >}}
+![](Output/DataAppendixOutput/Figures/cum-lazr.png){fig-alt="Cumulative Laz.R curve with the Kneedle cut-off point."}
 
 #### Longstring
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#cum-longstr >}}
+![](Output/DataAppendixOutput/Figures/cum-longstr.png){fig-alt="Cumulative Longstring curve with the Kneedle cut-off point."}
 
 #### Mahalanobis Distance
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#cum-md >}}
+![](Output/DataAppendixOutput/Figures/cum-md.png){fig-alt="Cumulative Mahalanobis distance curve with the Kneedle cut-off point."}
 
 #### IRV
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#cum-irv >}}
+![](Output/DataAppendixOutput/Figures/cum-irv.png){fig-alt="Cumulative IRV curve with the high and low Kneedle cut-off points."}
 
 :::
 

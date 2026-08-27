@@ -129,8 +129,9 @@ p_box_lazr <- ggplot(df_indicators, aes(y = LazR)) +
 # Save plot
 p_combined_lazr <- p_hist_lazr + p_box_lazr + plot_layout(widths = c(3, 1))
 ggsave("../../Output/DataAppendixOutput/Figures/viz-lazr.png", p_combined_lazr, width = 8, height = 4)
-p_combined_lazr
 ```
+
+![](../../Output/DataAppendixOutput/Figures/viz-lazr.png){fig-alt="Histogram and boxplot of the Laz.R distribution."}
 
 ### Longstring
 
@@ -155,8 +156,9 @@ p_box_ls <- ggplot(df_indicators, aes(y = Longstr)) +
 # Save plot
 p_combined_ls <- p_hist_ls + p_box_ls + plot_layout(widths = c(3, 1))
 ggsave("../../Output/DataAppendixOutput/Figures/viz-longstr.png", p_combined_ls, width = 8, height = 4)
-p_combined_ls
 ```
+
+![](../../Output/DataAppendixOutput/Figures/viz-longstr.png){fig-alt="Histogram and boxplot of the Longstring distribution."}
 
 ### Mahalanobis Distance
 
@@ -181,8 +183,9 @@ p_box_md <- ggplot(df_indicators, aes(y = MD)) +
 # Save plot
 p_combined_md <- p_hist_md + p_box_md + plot_layout(widths = c(3, 1))
 ggsave("../../Output/DataAppendixOutput/Figures/viz-md.png", p_combined_md, width = 8, height = 4)
-p_combined_md
 ```
+
+![](../../Output/DataAppendixOutput/Figures/viz-md.png){fig-alt="Histogram and boxplot of the Mahalanobis distance distribution."}
 
 ### IRV
 
@@ -207,8 +210,9 @@ p_box_irv <- ggplot(df_indicators, aes(y = IRV)) +
 # Save plot
 p_combined_irv <- p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
 ggsave("../../Output/DataAppendixOutput/Figures/viz-irv.png", p_combined_irv, width = 8, height = 4)
-p_combined_irv
 ```
+
+![](../../Output/DataAppendixOutput/Figures/viz-irv.png){fig-alt="Histogram and boxplot of the IRV distribution."}
 
 ## Cut-off points via Kneedle algorithm
 
@@ -295,8 +299,9 @@ p_cum_lazr <- ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
 
 # Save plot
 ggsave("../../Output/DataAppendixOutput/Figures/cum-lazr.png", p_cum_lazr, width = 6, height = 4)
-p_cum_lazr
 ```
+
+![](../../Output/DataAppendixOutput/Figures/cum-lazr.png){fig-alt="Cumulative Laz.R curve with the Kneedle cut-off point."}
 
 ### Longstring
 
@@ -323,8 +328,9 @@ p_cum_ls <- ggplot(cum_ls, aes(x = percent, y = Index_value)) +
 
 # Save plot
 ggsave("../../Output/DataAppendixOutput/Figures/cum-longstr.png", p_cum_ls, width = 6, height = 4)
-p_cum_ls
 ```
+
+![](../../Output/DataAppendixOutput/Figures/cum-longstr.png){fig-alt="Cumulative Longstring curve with the Kneedle cut-off point."}
 
 ### Mahalanobis Distance
 
@@ -351,8 +357,9 @@ p_cum_md <- ggplot(cum_md, aes(x = percent, y = Index_value)) +
 
 # Save plot
 ggsave("../../Output/DataAppendixOutput/Figures/cum-md.png", p_cum_md, width = 6, height = 4)
-p_cum_md
 ```
+
+![](../../Output/DataAppendixOutput/Figures/cum-md.png){fig-alt="Cumulative Mahalanobis distance curve with the Kneedle cut-off point."}
 
 ### IRV
 
@@ -390,8 +397,9 @@ p_cum_irv <- ggplot(cum_irv, aes(x = percent, y = Index_value)) +
 
 # Save plot
 ggsave("../../Output/DataAppendixOutput/Figures/cum-irv.png", p_cum_irv, width = 6, height = 4)
-p_cum_irv
 ```
+
+![](../../Output/DataAppendixOutput/Figures/cum-irv.png){fig-alt="Cumulative IRV curve with the high and low Kneedle cut-off points."}
 
 
 

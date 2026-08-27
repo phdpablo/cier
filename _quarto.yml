@@ -16,6 +16,8 @@ execute: # https://quarto.org/docs/computations/execution-options.html
 manuscript: # https://quarto.org/docs/manuscripts/authoring/rstudio.html
   article: index.qmd # Main manuscript file.
   meca-bundle: false # Generate MECA bundle for journal submission.
+  resources:
+    - Output/DataAppendixOutput/Figures/ # Include persistent figures in notebook previews.
   notebooks:
     - notebook: Scripts/ProcessingScripts/01_procedural.qmd
       title: "Procedural Exclusions"
