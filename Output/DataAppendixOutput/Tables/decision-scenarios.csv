@@ -1,0 +1,7 @@
+Decision rule;Excluded;% excluded;Retained
+Any of the five diagnostic flags;436;33,7;859
+At least two of the five diagnostic flags;139;10,7;1156
+Any of the four decision flags (excluding Longstring);344;26,6;951
+At least two of the four decision flags (Plan A);62;4,8;1233
+Laz.R or MD (case-review screening);290;22,4;1005
+Laz.R and MD;2;0,2;1293

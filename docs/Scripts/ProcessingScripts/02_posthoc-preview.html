@@ -58,7 +58,27 @@
       @media screen {
       pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
       }
-    </style>
+      /* CSS for citations */
+      div.csl-bib-body { }
+      div.csl-entry {
+        clear: both;
+        margin-bottom: 0em;
+      }
+      .hanging-indent div.csl-entry {
+        margin-left:2em;
+        text-indent:-2em;
+      }
+      div.csl-left-margin {
+        min-width:2em;
+        float:left;
+      }
+      div.csl-right-inline {
+        margin-left:2em;
+        padding-left:1em;
+      }
+      div.csl-indent {
+        margin-left: 2em;
+      }    </style>
 
     <style>
       body.hypothesis-enabled #quarto-embed-header {
@@ -240,6 +260,13 @@
   <li><a href="#cier-flags" id="toc-cier-flags" class="nav-link" data-scroll-target="#cier-flags">C/IER Flags</a>
   <ul class="collapse">
   <li><a href="#flags-overview" id="toc-flags-overview" class="nav-link" data-scroll-target="#flags-overview">Flags overview</a></li>
+  </ul></li>
+  <li><a href="#posthoc-decision" id="toc-posthoc-decision" class="nav-link" data-scroll-target="#posthoc-decision">From diagnostic flags to final exclusions</a>
+  <ul class="collapse">
+  <li><a href="#consequences-of-alternative-decision-rules" id="toc-consequences-of-alternative-decision-rules" class="nav-link" data-scroll-target="#consequences-of-alternative-decision-rules">Consequences of alternative decision rules</a></li>
+  <li><a href="#what-the-intersections-show" id="toc-what-the-intersections-show" class="nav-link" data-scroll-target="#what-the-intersections-show">What the intersections show</a></li>
+  <li><a href="#final-rule-at-least-two-of-four-decision-flags" id="toc-final-rule-at-least-two-of-four-decision-flags" class="nav-link" data-scroll-target="#final-rule-at-least-two-of-four-decision-flags">Final rule: at least two of four decision flags</a></li>
+  <li><a href="#final-analysis-dataset" id="toc-final-analysis-dataset" class="nav-link" data-scroll-target="#final-analysis-dataset">Final analysis dataset</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -815,23 +842,535 @@
 </table>
 </div>
 </div></div>
+</section>
+</section>
+<section id="posthoc-decision" class="level2">
+<h2 class="anchored" data-anchor-id="posthoc-decision">From diagnostic flags to final exclusions</h2>
+<p>The cut-offs above identify response patterns that warrant attention; they do not, by themselves, prove that a respondent answered carelessly. Detection methods are sensitive to different manifestations of C/IER and may also flag unusual but valid response profiles. Consequently, combining every available flag with an <strong>OR</strong> rule can increase sensitivity at the cost of specificity and sample size <span class="citation" data-cites="curran2016 hong2020">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>; <a href="#ref-hong2020" role="doc-biblioref">Hong et al., 2020</a>)</span>. Recent evidence also shows that indiscriminate post-hoc removal may distort statistical and psychometric estimates when valid atypical respondents are classified as inattentive <span class="citation" data-cites="wang2025b">(<a href="#ref-wang2025b" role="doc-biblioref">Wang et al., 2025</a>)</span>.</p>
+<section id="consequences-of-alternative-decision-rules" class="level3">
+<h3 class="anchored" data-anchor-id="consequences-of-alternative-decision-rules">Consequences of alternative decision rules</h3>
+<p>The following scenarios make the cost of each possible rule explicit. The first two use all five diagnostic flags. The next two remove Longstring from the decision set, while retaining it as a descriptive diagnostic. The final two show the previously considered Laz.R–MD screening alternative.</p>
 <div class="cell-container"><div class="cell-decorator"><pre>In [17]:</pre></div><div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Merge indicators with original data and export for final evaluation</span></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>screened_data <span class="ot">&lt;-</span> imported_data <span class="sc">|&gt;</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">left_join</span>(df_flags, <span class="at">by =</span> <span class="st">"ID"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>all_flags <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LazR_FLAG"</span>, <span class="st">"Longstr_FLAG"</span>, <span class="st">"MD_FLAG"</span>,</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"IRV_high_FLAG"</span>, <span class="st">"IRV_low_FLAG"</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(screened_data, <span class="st">"../../Data/IntermediateData/whoqol_screened.csv"</span>)</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Reverse-score items only after calculating all C/IER indicators</span></span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>final_analysis_data <span class="ot">&lt;-</span> screened_data <span class="sc">|&gt;</span></span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Q3, Q4, Q26), \(x) <span class="dv">6</span> <span class="sc">-</span> x))</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Export final analytical dataset</span></span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(final_analysis_data, <span class="st">"../../Data/AnalysisData/whoqol_analysis.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>decision_flags <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"LazR_FLAG"</span>, <span class="st">"MD_FLAG"</span>, <span class="st">"IRV_high_FLAG"</span>, <span class="st">"IRV_low_FLAG"</span></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>df_decisions <span class="ot">&lt;-</span> df_flags <span class="sc">|&gt;</span></span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_all_flags =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(all_flags))),</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_decision_flags =</span> <span class="fu">rowSums</span>(<span class="fu">pick</span>(<span class="fu">all_of</span>(decision_flags)))</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>n_eligible <span class="ot">&lt;-</span> <span class="fu">nrow</span>(df_decisions)</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a>decision_scenarios <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">`</span><span class="at">Decision rule</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(</span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Any of the five diagnostic flags"</span>,</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"At least two of the five diagnostic flags"</span>,</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Any of the four decision flags (excluding Longstring)"</span>,</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"At least two of the four decision flags (Plan A)"</span>,</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Laz.R or MD (case-review screening)"</span>,</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Laz.R and MD"</span></span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">Excluded =</span> <span class="fu">c</span>(</span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>n_all_flags <span class="sc">&gt;=</span> <span class="dv">1</span>),</span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>n_all_flags <span class="sc">&gt;=</span> <span class="dv">2</span>),</span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>n_decision_flags <span class="sc">&gt;=</span> <span class="dv">1</span>),</span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>n_decision_flags <span class="sc">&gt;=</span> <span class="dv">2</span>),</span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>LazR_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">|</span> df_decisions<span class="sc">$</span>MD_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>LazR_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>MD_FLAG <span class="sc">==</span> <span class="dv">1</span>)</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-36"><a href="#cb33-36" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb33-37"><a href="#cb33-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb33-38"><a href="#cb33-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">% excluded</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(Excluded <span class="sc">/</span> n_eligible <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>),</span>
+<span id="cb33-39"><a href="#cb33-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">Retained =</span> n_eligible <span class="sc">-</span> Excluded</span>
+<span id="cb33-40"><a href="#cb33-40" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb33-41"><a href="#cb33-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-42"><a href="#cb33-42" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(</span>
+<span id="cb33-43"><a href="#cb33-43" aria-hidden="true" tabindex="-1"></a>  decision_scenarios,</span>
+<span id="cb33-44"><a href="#cb33-44" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../../Output/DataAppendixOutput/Tables/decision-scenarios.csv"</span></span>
+<span id="cb33-45"><a href="#cb33-45" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb33-46"><a href="#cb33-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-47"><a href="#cb33-47" aria-hidden="true" tabindex="-1"></a>decision_scenarios <span class="sc">|&gt;</span></span>
+<span id="cb33-48"><a href="#cb33-48" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb33-49"><a href="#cb33-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Consequences of alternative post-hoc decision rules"</span>,</span>
+<span id="cb33-50"><a href="#cb33-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">col.names =</span> <span class="fu">c</span>(<span class="st">"Decision rule"</span>, <span class="st">"Excluded"</span>, <span class="st">"% excluded"</span>, <span class="st">"Retained"</span>)</span>
+<span id="cb33-51"><a href="#cb33-51" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Consequences of alternative post-hoc decision rules</caption>
+<colgroup>
+<col style="width: 65%">
+<col style="width: 10%">
+<col style="width: 13%">
+<col style="width: 10%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Decision rule</th>
+<th style="text-align: right;">Excluded</th>
+<th style="text-align: right;">% excluded</th>
+<th style="text-align: right;">Retained</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Any of the five diagnostic flags</td>
+<td style="text-align: right;">436</td>
+<td style="text-align: right;">33.7</td>
+<td style="text-align: right;">859</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">At least two of the five diagnostic flags</td>
+<td style="text-align: right;">139</td>
+<td style="text-align: right;">10.7</td>
+<td style="text-align: right;">1156</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Any of the four decision flags (excluding Longstring)</td>
+<td style="text-align: right;">344</td>
+<td style="text-align: right;">26.6</td>
+<td style="text-align: right;">951</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">At least two of the four decision flags (Plan A)</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">4.8</td>
+<td style="text-align: right;">1233</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Laz.R or MD (case-review screening)</td>
+<td style="text-align: right;">290</td>
+<td style="text-align: right;">22.4</td>
+<td style="text-align: right;">1005</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Laz.R and MD</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">1293</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div></div>
+<p><br></p>
+<p>An OR rule across all five flags would remove 436 respondents (33.7%), leaving 859 observations. Even after removing Longstring from the decision set, an OR rule would remove 344 respondents (26.6%). These reductions are difficult to defend when a single post-hoc indicator can produce false positives. In particular, Mahalanobis distance may overflag respondents when ordinal item responses depart from the multivariate-normal assumptions used in conventional outlier detection <span class="citation" data-cites="hong2020">(<a href="#ref-hong2020" role="doc-biblioref">Hong et al., 2020</a>)</span>.</p>
+</section>
+<section id="what-the-intersections-show" class="level3">
+<h3 class="anchored" data-anchor-id="what-the-intersections-show">What the intersections show</h3>
+<p>Longstring and low IRV are invariability-oriented diagnostics, high IRV targets excessive variation, and MD targets multivariate atypicality. Laz.R detects predictable transitions, including straightlining, alternating, and diagonal response patterns, but it is not a general detector of random responding. <span class="citation" data-cites="biemann2025">Biemann et al. (<a href="#ref-biemann2025" role="doc-biblioref">2025</a>)</span> therefore recommend using Laz.R with complementary approaches and treating the Kneedle cut-off as a basis for scrutiny and possible exclusion rather than as proof of carelessness <span class="citation" data-cites="biemann2025">(<a href="#ref-biemann2025" role="doc-biblioref">Biemann et al., 2025</a>)</span>.</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [18]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>flag_totals <span class="ot">&lt;-</span> <span class="fu">colSums</span>(df_decisions[all_flags])</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>pairwise_overlap <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span><span class="st">`</span><span class="at">Indicator 1</span><span class="st">`</span>, <span class="sc">~</span><span class="st">`</span><span class="at">Indicator 2</span><span class="st">`</span>, <span class="sc">~</span>intersection, <span class="sc">~</span>flag_1, <span class="sc">~</span>flag_2,</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Laz.R"</span>, <span class="st">"Longstring"</span>,</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>LazR_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>Longstr_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LazR_FLAG"</span>, <span class="st">"Longstr_FLAG"</span>,</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Laz.R"</span>, <span class="st">"MD"</span>,</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>LazR_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>MD_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LazR_FLAG"</span>, <span class="st">"MD_FLAG"</span>,</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Laz.R"</span>, <span class="st">"IRV high"</span>,</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>LazR_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>IRV_high_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LazR_FLAG"</span>, <span class="st">"IRV_high_FLAG"</span>,</span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Laz.R"</span>, <span class="st">"IRV low"</span>,</span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>LazR_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>IRV_low_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"LazR_FLAG"</span>, <span class="st">"IRV_low_FLAG"</span>,</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Longstring"</span>, <span class="st">"MD"</span>,</span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>Longstr_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>MD_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Longstr_FLAG"</span>, <span class="st">"MD_FLAG"</span>,</span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Longstring"</span>, <span class="st">"IRV high"</span>,</span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>Longstr_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>IRV_high_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Longstr_FLAG"</span>, <span class="st">"IRV_high_FLAG"</span>,</span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Longstring"</span>, <span class="st">"IRV low"</span>,</span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>Longstr_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>IRV_low_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Longstr_FLAG"</span>, <span class="st">"IRV_low_FLAG"</span>,</span>
+<span id="cb34-27"><a href="#cb34-27" aria-hidden="true" tabindex="-1"></a>  <span class="st">"MD"</span>, <span class="st">"IRV high"</span>,</span>
+<span id="cb34-28"><a href="#cb34-28" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>MD_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>IRV_high_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-29"><a href="#cb34-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MD_FLAG"</span>, <span class="st">"IRV_high_FLAG"</span>,</span>
+<span id="cb34-30"><a href="#cb34-30" aria-hidden="true" tabindex="-1"></a>  <span class="st">"MD"</span>, <span class="st">"IRV low"</span>,</span>
+<span id="cb34-31"><a href="#cb34-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>MD_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>IRV_low_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-32"><a href="#cb34-32" aria-hidden="true" tabindex="-1"></a>    <span class="st">"MD_FLAG"</span>, <span class="st">"IRV_low_FLAG"</span>,</span>
+<span id="cb34-33"><a href="#cb34-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"IRV high"</span>, <span class="st">"IRV low"</span>,</span>
+<span id="cb34-34"><a href="#cb34-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(df_decisions<span class="sc">$</span>IRV_high_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> df_decisions<span class="sc">$</span>IRV_low_FLAG <span class="sc">==</span> <span class="dv">1</span>),</span>
+<span id="cb34-35"><a href="#cb34-35" aria-hidden="true" tabindex="-1"></a>    <span class="st">"IRV_high_FLAG"</span>, <span class="st">"IRV_low_FLAG"</span></span>
+<span id="cb34-36"><a href="#cb34-36" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb34-37"><a href="#cb34-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb34-38"><a href="#cb34-38" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">% of indicator 1</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(intersection <span class="sc">/</span> flag_totals[flag_1] <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>),</span>
+<span id="cb34-39"><a href="#cb34-39" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">% of indicator 2</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(intersection <span class="sc">/</span> flag_totals[flag_2] <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)</span>
+<span id="cb34-40"><a href="#cb34-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb34-41"><a href="#cb34-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb34-42"><a href="#cb34-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Indicator 1</span><span class="st">`</span>, <span class="st">`</span><span class="at">Indicator 2</span><span class="st">`</span>, <span class="st">`</span><span class="at">N intersection</span><span class="st">`</span> <span class="ot">=</span> intersection,</span>
+<span id="cb34-43"><a href="#cb34-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">% of indicator 1</span><span class="st">`</span>, <span class="st">`</span><span class="at">% of indicator 2</span><span class="st">`</span></span>
+<span id="cb34-44"><a href="#cb34-44" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb34-45"><a href="#cb34-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-46"><a href="#cb34-46" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(</span>
+<span id="cb34-47"><a href="#cb34-47" aria-hidden="true" tabindex="-1"></a>  pairwise_overlap,</span>
+<span id="cb34-48"><a href="#cb34-48" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../../Output/DataAppendixOutput/Tables/flag-pairwise-overlap.csv"</span></span>
+<span id="cb34-49"><a href="#cb34-49" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb34-50"><a href="#cb34-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-51"><a href="#cb34-51" aria-hidden="true" tabindex="-1"></a>pairwise_overlap <span class="sc">|&gt;</span></span>
+<span id="cb34-52"><a href="#cb34-52" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb34-53"><a href="#cb34-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Pairwise overlap among diagnostic C/IER flags"</span></span>
+<span id="cb34-54"><a href="#cb34-54" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Pairwise overlap among diagnostic C/IER flags</caption>
+<colgroup>
+<col style="width: 16%">
+<col style="width: 16%">
+<col style="width: 20%">
+<col style="width: 23%">
+<col style="width: 23%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Indicator 1</th>
+<th style="text-align: left;">Indicator 2</th>
+<th style="text-align: right;">N intersection</th>
+<th style="text-align: right;">% of indicator 1</th>
+<th style="text-align: right;">% of indicator 2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Laz.R</td>
+<td style="text-align: left;">Longstring</td>
+<td style="text-align: right;">76</td>
+<td style="text-align: right;">83.5</td>
+<td style="text-align: right;">39.8</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Laz.R</td>
+<td style="text-align: left;">MD</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2.2</td>
+<td style="text-align: right;">1.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Laz.R</td>
+<td style="text-align: left;">IRV high</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2.2</td>
+<td style="text-align: right;">3.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Laz.R</td>
+<td style="text-align: left;">IRV low</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">19.8</td>
+<td style="text-align: right;">36.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Longstring</td>
+<td style="text-align: left;">MD</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">4.2</td>
+<td style="text-align: right;">4.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Longstring</td>
+<td style="text-align: left;">IRV high</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">5.8</td>
+<td style="text-align: right;">16.7</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Longstring</td>
+<td style="text-align: left;">IRV low</td>
+<td style="text-align: right;">26</td>
+<td style="text-align: right;">13.6</td>
+<td style="text-align: right;">53.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MD</td>
+<td style="text-align: left;">IRV high</td>
+<td style="text-align: right;">42</td>
+<td style="text-align: right;">20.9</td>
+<td style="text-align: right;">63.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">MD</td>
+<td style="text-align: left;">IRV low</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">IRV high</td>
+<td style="text-align: left;">IRV low</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.0</td>
+<td style="text-align: right;">0.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></div>
+<p><br></p>
+<p>The overlap is especially informative for the final decision. Of the 91 Laz.R flags, 76 (83.5%) are also Longstring flags. Counting both in the composite rule would therefore allow one narrow manifestation - repetitive or highly predictable responding - to contribute two votes. Longstring remains useful for teaching and diagnosis, but its narrower scope and empirical redundancy with Laz.R justify excluding it from the final flag count. Conversely, 42 of the 66 IRV-high cases are also flagged by MD, providing convergent evidence for excessive variability or multivariate atypicality.</p>
+<p>The Laz.R–MD table also explains why those two indicators alone were not used as an automatic deletion rule.</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [19]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>lazr_md_intersection <span class="ot">&lt;-</span> df_decisions <span class="sc">|&gt;</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(LazR_FLAG, MD_FLAG, <span class="at">name =</span> <span class="st">"N"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">Classification =</span> <span class="fu">case_when</span>(</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>      LazR_FLAG <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> MD_FLAG <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Neither flag"</span>,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>      LazR_FLAG <span class="sc">==</span> <span class="dv">0</span> <span class="sc">&amp;</span> MD_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"MD only"</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>      LazR_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> MD_FLAG <span class="sc">==</span> <span class="dv">0</span> <span class="sc">~</span> <span class="st">"Laz.R only"</span>,</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>      LazR_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">&amp;</span> MD_FLAG <span class="sc">==</span> <span class="dv">1</span> <span class="sc">~</span> <span class="st">"Both Laz.R and MD"</span></span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">% of sample</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(N <span class="sc">/</span> n_eligible <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(Classification, N, <span class="st">`</span><span class="at">% of sample</span><span class="st">`</span>)</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>  lazr_md_intersection,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../../Output/DataAppendixOutput/Tables/lazr-md-intersection.csv"</span></span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>lazr_md_intersection <span class="sc">|&gt;</span></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Intersection of Laz.R and Mahalanobis distance flags"</span></span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Intersection of Laz.R and Mahalanobis distance flags</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Classification</th>
+<th style="text-align: right;">N</th>
+<th style="text-align: right;">% of sample</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Neither flag</td>
+<td style="text-align: right;">1005</td>
+<td style="text-align: right;">77.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">MD only</td>
+<td style="text-align: right;">199</td>
+<td style="text-align: right;">15.4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Laz.R only</td>
+<td style="text-align: right;">89</td>
+<td style="text-align: right;">6.9</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Both Laz.R and MD</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.2</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></div>
+<p><br></p>
+<p>Only two respondents fail both Laz.R and MD, whereas 199 fail MD only and 89 fail Laz.R only. Thus, requiring both would remove almost no cases, while using either would identify 290 cases (22.4%) for review. The latter can be a useful screening pool when case-by-case inspection is feasible: Laz.R covers predictable nonrandom patterns and MD covers multivariate atypicality. It was not adopted here as an automatic exclusion rule because the two indicators are nearly disjoint in this sample and MD-only evidence is not sufficient to infer carelessness from ordinal responses <span class="citation" data-cites="hong2020 ward2023">(<a href="#ref-hong2020" role="doc-biblioref">Hong et al., 2020</a>; <a href="#ref-ward2023" role="doc-biblioref">Ward &amp; Meade, 2023</a>)</span>.</p>
+</section>
+<section id="final-rule-at-least-two-of-four-decision-flags" class="level3">
+<h3 class="anchored" data-anchor-id="final-rule-at-least-two-of-four-decision-flags">Final rule: at least two of four decision flags</h3>
+<p>The final rule counts <strong>Laz.R, MD, IRV high, and IRV low</strong> and excludes a respondent only when at least two of these four flags are present. This rule is deliberately conservative: it requires corroboration, avoids deletion based on MD alone, and retains IRV as evidence for both insufficient and excessive within-person variability. It also follows the broader recommendation to use multiple, context-appropriate indicators rather than relying blindly on a single index <span class="citation" data-cites="curran2016 ward2023">(<a href="#ref-curran2016" role="doc-biblioref">Curran, 2016</a>; <a href="#ref-ward2023" role="doc-biblioref">Ward &amp; Meade, 2023</a>)</span>.</p>
+<p><span class="citation" data-cites="hong2020">Hong et al. (<a href="#ref-hong2020" role="doc-biblioref">2020</a>)</span> best-subset simulations support selecting a smaller group of complementary indicators instead of a kitchen-sink combination, although their specific subset and cut-offs are design-dependent and should not be imported unchanged into the WHOQOL-Bref <span class="citation" data-cites="hong2020">(<a href="#ref-hong2020" role="doc-biblioref">Hong et al., 2020</a>)</span>. Plan A is therefore a transparent teaching decision for this dataset, not a universal threshold.</p>
+<div class="cell-container"><div class="cell-decorator"><pre>In [20]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>decision_labels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Laz.R"</span>, <span class="st">"MD"</span>, <span class="st">"IRV high"</span>, <span class="st">"IRV low"</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>df_decisions <span class="ot">&lt;-</span> df_decisions <span class="sc">|&gt;</span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rowwise</span>() <span class="sc">|&gt;</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">decision_evidence =</span> <span class="fu">str_c</span>(</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>      decision_labels[<span class="fu">c_across</span>(<span class="fu">all_of</span>(decision_flags)) <span class="sc">==</span> <span class="dv">1</span>],</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">collapse =</span> <span class="st">" + "</span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() <span class="sc">|&gt;</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">CIER_EXCLUDE =</span> <span class="fu">if_else</span>(n_decision_flags <span class="sc">&gt;=</span> <span class="dv">2</span>, <span class="dv">1</span>L, <span class="dv">0</span>L),</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">decision_evidence =</span> <span class="fu">if_else</span>(</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>      CIER_EXCLUDE <span class="sc">==</span> <span class="dv">1</span>L,</span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>      decision_evidence,</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>      <span class="cn">NA_character_</span></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>posthoc_exclusion_log <span class="ot">&lt;-</span> df_decisions <span class="sc">|&gt;</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CIER_EXCLUDE <span class="sc">==</span> <span class="dv">1</span>L) <span class="sc">|&gt;</span></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(</span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>    ID, LazR, Longstr, MD, IRV, <span class="fu">all_of</span>(all_flags),</span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>    n_decision_flags, decision_evidence</span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>  posthoc_exclusion_log,</span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../../Output/DataAppendixOutput/Tables/posthoc-exclusion-log.csv"</span></span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>exclusion_patterns <span class="ot">&lt;-</span> posthoc_exclusion_log <span class="sc">|&gt;</span></span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(decision_evidence, <span class="at">name =</span> <span class="st">"Excluded"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">% of exclusions</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">round</span>(Excluded <span class="sc">/</span> <span class="fu">sum</span>(Excluded) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(Excluded), decision_evidence)</span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(</span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a>  exclusion_patterns,</span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../../Output/DataAppendixOutput/Tables/posthoc-exclusion-patterns.csv"</span></span>
+<span id="cb36-42"><a href="#cb36-42" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb36-43"><a href="#cb36-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-44"><a href="#cb36-44" aria-hidden="true" tabindex="-1"></a>exclusion_patterns <span class="sc">|&gt;</span></span>
+<span id="cb36-45"><a href="#cb36-45" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb36-46"><a href="#cb36-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Evidence combinations among respondents excluded by Plan A"</span></span>
+<span id="cb36-47"><a href="#cb36-47" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Evidence combinations among respondents excluded by Plan A</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">decision_evidence</th>
+<th style="text-align: right;">Excluded</th>
+<th style="text-align: right;">% of exclusions</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">MD + IRV high</td>
+<td style="text-align: right;">41</td>
+<td style="text-align: right;">66.1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Laz.R + IRV low</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">29.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Laz.R + IRV high</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.6</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Laz.R + MD</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.6</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Laz.R + MD + IRV high</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></div>
+<p><br></p>
+<p>Plan A removes 62 of the 1,295 eligible respondents (4.8%). The full audit log preserves each excluded ID, indicator value, flag, composite count, and evidence combination in <code>posthoc-exclusion-log.csv</code>.</p>
+</section>
+<section id="final-analysis-dataset" class="level3">
+<h3 class="anchored" data-anchor-id="final-analysis-dataset">Final analysis dataset</h3>
+<div class="cell-container"><div class="cell-decorator"><pre>In [21]:</pre></div><div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Preserve indicators, flags, and the final decision in the intermediate data</span></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>screened_data <span class="ot">&lt;-</span> imported_data <span class="sc">|&gt;</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    df_decisions,</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">by =</span> <span class="fu">join_by</span>(ID),</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">relationship =</span> <span class="st">"one-to-one"</span></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(screened_data, <span class="st">"../../Data/IntermediateData/whoqol_screened.csv"</span>)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply Plan A, then reverse-score negatively keyed WHOQOL-Bref items</span></span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>final_analysis_data <span class="ot">&lt;-</span> screened_data <span class="sc">|&gt;</span></span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CIER_EXCLUDE <span class="sc">==</span> <span class="dv">0</span>L) <span class="sc">|&gt;</span></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(ID, Q1<span class="sc">:</span>Q26) <span class="sc">|&gt;</span></span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(Q3, Q4, Q26), \(x) <span class="dv">6</span> <span class="sc">-</span> x))</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Export final analytical dataset</span></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(final_analysis_data, <span class="st">"../../Data/AnalysisData/whoqol_analysis.csv"</span>)</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>analysis_sample_summary <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">Stage =</span> <span class="fu">c</span>(</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Eligible after procedural exclusions"</span>,</span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Excluded by Plan A post-hoc rule"</span>,</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Final analysis dataset"</span></span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">N =</span> <span class="fu">c</span>(</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nrow</span>(screened_data),</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>    <span class="fu">sum</span>(screened_data<span class="sc">$</span>CIER_EXCLUDE),</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>    <span class="fu">nrow</span>(final_analysis_data)</span>
+<span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv2</span>(</span>
+<span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a>  analysis_sample_summary,</span>
+<span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"../../Output/DataAppendixOutput/Tables/analysis-sample-summary.csv"</span></span>
+<span id="cb37-38"><a href="#cb37-38" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-39"><a href="#cb37-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-40"><a href="#cb37-40" aria-hidden="true" tabindex="-1"></a><span class="fu">stopifnot</span>(</span>
+<span id="cb37-41"><a href="#cb37-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>(screened_data) <span class="sc">==</span> <span class="dv">1295</span>L,</span>
+<span id="cb37-42"><a href="#cb37-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(screened_data<span class="sc">$</span>CIER_EXCLUDE) <span class="sc">==</span> <span class="dv">62</span>L,</span>
+<span id="cb37-43"><a href="#cb37-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>(final_analysis_data) <span class="sc">==</span> <span class="dv">1233</span>L,</span>
+<span id="cb37-44"><a href="#cb37-44" aria-hidden="true" tabindex="-1"></a>  <span class="sc">!</span><span class="fu">any</span>(final_analysis_data<span class="sc">$</span>ID <span class="sc">%in%</span> posthoc_exclusion_log<span class="sc">$</span>ID)</span>
+<span id="cb37-45"><a href="#cb37-45" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-46"><a href="#cb37-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-47"><a href="#cb37-47" aria-hidden="true" tabindex="-1"></a>analysis_sample_summary <span class="sc">|&gt;</span></span>
+<span id="cb37-48"><a href="#cb37-48" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="at">caption =</span> <span class="st">"Derivation of the final analysis sample"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<caption>Derivation of the final analysis sample</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Stage</th>
+<th style="text-align: right;">N</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Eligible after procedural exclusions</td>
+<td style="text-align: right;">1295</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Excluded by Plan A post-hoc rule</td>
+<td style="text-align: right;">62</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Final analysis dataset</td>
+<td style="text-align: right;">1233</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div></div>
+<p><br></p>
+<p>The final <code>whoqol_analysis.csv</code> contains 1,233 respondents, the <code>ID</code> column, and <code>Q1-Q26</code>. Items Q3, Q4, and Q26 are reverse-scored only after the C/IER indicators have been calculated on the response sequence as administered. For substantive analyses, the unfiltered 1,295-case dataset can be retained as a sensitivity condition. Large changes between filtered and unfiltered results should be reported rather than used to choose whichever cleaning rule produces the preferred result <span class="citation" data-cites="wang2025b">(<a href="#ref-wang2025b" role="doc-biblioref">Wang et al., 2025</a>)</span>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-biemann2025" class="csl-entry" role="listitem">
+Biemann, T., Koch-Bayram, I. F., Meier-Barthold, M., &amp; Aguinis, H. (2025). Using <span>Markov Chains</span> to <span>Detect Careless Responding</span> in <span>Survey Research</span>. <em>Organizational Research Methods</em>, <em>28</em>(4), 543–568. <a href="https://doi.org/10.1177/10944281251334778">https://doi.org/10.1177/10944281251334778</a>
+</div>
+<div id="ref-curran2016" class="csl-entry" role="listitem">
+Curran, P. G. (2016). Methods for the detection of carelessly invalid responses in survey data. <em>Journal of Experimental Social Psychology</em>, <em>66</em>, 4–19. <a href="https://doi.org/10.1016/j.jesp.2015.07.006">https://doi.org/10.1016/j.jesp.2015.07.006</a>
+</div>
+<div id="ref-hong2020" class="csl-entry" role="listitem">
+Hong, M., Steedle, J. T., &amp; Cheng, Y. (2020). Methods of <span>Detecting Insufficient Effort Responding</span>: <span>Comparisons</span> and <span>Practical Recommendations</span>. <em>Educ Psychol Meas</em>, <em>80</em>(2), 312–345. <a href="https://doi.org/10.1177/0013164419865316">https://doi.org/10.1177/0013164419865316</a>
+</div>
+<div id="ref-wang2025b" class="csl-entry" role="listitem">
+Wang, M. D., Xiao, L., &amp; Zang, X. (2025). When <span>Cleaning Data Introduces Bias</span>: <span>A Critical Examination</span> of <span>Post-Hoc Methods</span> in <span>Detecting Insufficient Effort Responding</span>. <em>Journal of Official Statistics</em>, <em>41</em>(4). <a href="https://doi.org/10.1177/0282423X251337843">https://doi.org/10.1177/0282423X251337843</a>
+</div>
+<div id="ref-ward2023" class="csl-entry" role="listitem">
+Ward, M. K., &amp; Meade, A. W. (2023). Dealing with <span>Careless Responding</span> in <span>Survey Data</span>: <span>Prevention</span>, <span>Identification</span>, and <span>Recommended Best Practices</span>. <em>Annu. Rev. Psychol.</em>, <em>74</em>(Volume 74, 2023), 577–596. <a href="https://doi.org/10.1146/annurev-psych-040422-045007">https://doi.org/10.1146/annurev-psych-040422-045007</a>
+</div>
+</div>
 </section>
 </section>
      </main>

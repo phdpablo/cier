@@ -450,23 +450,344 @@ table_flags |>
     )
 ```
 
+## From diagnostic flags to final exclusions {#posthoc-decision}
+
+The cut-offs above identify response patterns that warrant attention; they do
+not, by themselves, prove that a respondent answered carelessly. Detection
+methods are sensitive to different manifestations of C/IER and may also flag
+unusual but valid response profiles. Consequently, combining every available
+flag with an **OR** rule can increase sensitivity at the cost of specificity
+and sample size [@curran2016; @hong2020]. Recent evidence also shows that
+indiscriminate post-hoc removal may distort statistical and psychometric
+estimates when valid atypical respondents are classified as inattentive
+[@wang2025b].
+
+### Consequences of alternative decision rules
+
+The following scenarios make the cost of each possible rule explicit. The
+first two use all five diagnostic flags. The next two remove Longstring from
+the decision set, while retaining it as a descriptive diagnostic. The final
+two show the previously considered Laz.R--MD screening alternative.
+
+```{r}
+#| label: decision-scenarios
+
+all_flags <- c(
+  "LazR_FLAG", "Longstr_FLAG", "MD_FLAG",
+  "IRV_high_FLAG", "IRV_low_FLAG"
+)
+
+decision_flags <- c(
+  "LazR_FLAG", "MD_FLAG", "IRV_high_FLAG", "IRV_low_FLAG"
+)
+
+df_decisions <- df_flags |>
+  mutate(
+    n_all_flags = rowSums(pick(all_of(all_flags))),
+    n_decision_flags = rowSums(pick(all_of(decision_flags)))
+  )
+
+n_eligible <- nrow(df_decisions)
+
+decision_scenarios <- tibble(
+  `Decision rule` = c(
+    "Any of the five diagnostic flags",
+    "At least two of the five diagnostic flags",
+    "Any of the four decision flags (excluding Longstring)",
+    "At least two of the four decision flags (Plan A)",
+    "Laz.R or MD (case-review screening)",
+    "Laz.R and MD"
+  ),
+  Excluded = c(
+    sum(df_decisions$n_all_flags >= 1),
+    sum(df_decisions$n_all_flags >= 2),
+    sum(df_decisions$n_decision_flags >= 1),
+    sum(df_decisions$n_decision_flags >= 2),
+    sum(df_decisions$LazR_FLAG == 1 | df_decisions$MD_FLAG == 1),
+    sum(df_decisions$LazR_FLAG == 1 & df_decisions$MD_FLAG == 1)
+  )
+) |>
+  mutate(
+    `% excluded` = round(Excluded / n_eligible * 100, 1),
+    Retained = n_eligible - Excluded
+  )
+
+write_csv2(
+  decision_scenarios,
+  "../../Output/DataAppendixOutput/Tables/decision-scenarios.csv"
+)
+
+decision_scenarios |>
+  knitr::kable(
+    caption = "Consequences of alternative post-hoc decision rules",
+    col.names = c("Decision rule", "Excluded", "% excluded", "Retained")
+  )
+```
+
+<br>
+
+An OR rule across all five flags would remove 436 respondents (33.7%), leaving
+859 observations. Even after removing Longstring from the decision set, an OR
+rule would remove 344 respondents (26.6%). These reductions are difficult to
+defend when a single post-hoc indicator can produce false positives. In
+particular, Mahalanobis distance may overflag respondents when ordinal item
+responses depart from the multivariate-normal assumptions used in conventional
+outlier detection [@hong2020].
+
+### What the intersections show
+
+Longstring and low IRV are invariability-oriented diagnostics, high IRV targets
+excessive variation, and MD targets multivariate atypicality. Laz.R detects
+predictable transitions, including straightlining, alternating, and diagonal
+response patterns, but it is not a general detector of random responding.
+@biemann2025 therefore recommend using Laz.R with complementary approaches
+and treating the Kneedle cut-off as a basis for scrutiny and possible exclusion
+rather than as proof of carelessness [@biemann2025].
+
+```{r}
+#| label: flag-pairwise-overlap
+
+flag_totals <- colSums(df_decisions[all_flags])
+
+pairwise_overlap <- tribble(
+  ~`Indicator 1`, ~`Indicator 2`, ~intersection, ~flag_1, ~flag_2,
+  "Laz.R", "Longstring",
+    sum(df_decisions$LazR_FLAG == 1 & df_decisions$Longstr_FLAG == 1),
+    "LazR_FLAG", "Longstr_FLAG",
+  "Laz.R", "MD",
+    sum(df_decisions$LazR_FLAG == 1 & df_decisions$MD_FLAG == 1),
+    "LazR_FLAG", "MD_FLAG",
+  "Laz.R", "IRV high",
+    sum(df_decisions$LazR_FLAG == 1 & df_decisions$IRV_high_FLAG == 1),
+    "LazR_FLAG", "IRV_high_FLAG",
+  "Laz.R", "IRV low",
+    sum(df_decisions$LazR_FLAG == 1 & df_decisions$IRV_low_FLAG == 1),
+    "LazR_FLAG", "IRV_low_FLAG",
+  "Longstring", "MD",
+    sum(df_decisions$Longstr_FLAG == 1 & df_decisions$MD_FLAG == 1),
+    "Longstr_FLAG", "MD_FLAG",
+  "Longstring", "IRV high",
+    sum(df_decisions$Longstr_FLAG == 1 & df_decisions$IRV_high_FLAG == 1),
+    "Longstr_FLAG", "IRV_high_FLAG",
+  "Longstring", "IRV low",
+    sum(df_decisions$Longstr_FLAG == 1 & df_decisions$IRV_low_FLAG == 1),
+    "Longstr_FLAG", "IRV_low_FLAG",
+  "MD", "IRV high",
+    sum(df_decisions$MD_FLAG == 1 & df_decisions$IRV_high_FLAG == 1),
+    "MD_FLAG", "IRV_high_FLAG",
+  "MD", "IRV low",
+    sum(df_decisions$MD_FLAG == 1 & df_decisions$IRV_low_FLAG == 1),
+    "MD_FLAG", "IRV_low_FLAG",
+  "IRV high", "IRV low",
+    sum(df_decisions$IRV_high_FLAG == 1 & df_decisions$IRV_low_FLAG == 1),
+    "IRV_high_FLAG", "IRV_low_FLAG"
+) |>
+  mutate(
+    `% of indicator 1` = round(intersection / flag_totals[flag_1] * 100, 1),
+    `% of indicator 2` = round(intersection / flag_totals[flag_2] * 100, 1)
+  ) |>
+  select(
+    `Indicator 1`, `Indicator 2`, `N intersection` = intersection,
+    `% of indicator 1`, `% of indicator 2`
+  )
+
+write_csv2(
+  pairwise_overlap,
+  "../../Output/DataAppendixOutput/Tables/flag-pairwise-overlap.csv"
+)
+
+pairwise_overlap |>
+  knitr::kable(
+    caption = "Pairwise overlap among diagnostic C/IER flags"
+  )
+```
+
+<br>
+
+The overlap is especially informative for the final decision. Of the 91 Laz.R
+flags, 76 (83.5%) are also Longstring flags. Counting both in the composite
+rule would therefore allow one narrow manifestation - repetitive or highly
+predictable responding - to contribute two votes. Longstring remains useful
+for teaching and diagnosis, but its narrower scope and empirical redundancy
+with Laz.R justify excluding it from the final flag count. Conversely, 42 of
+the 66 IRV-high cases are also flagged by MD, providing convergent evidence for
+excessive variability or multivariate atypicality.
+
+The Laz.R--MD table also explains why those two indicators alone were not used
+as an automatic deletion rule.
+
+```{r}
+#| label: lazr-md-intersection
+
+lazr_md_intersection <- df_decisions |>
+  count(LazR_FLAG, MD_FLAG, name = "N") |>
+  mutate(
+    Classification = case_when(
+      LazR_FLAG == 0 & MD_FLAG == 0 ~ "Neither flag",
+      LazR_FLAG == 0 & MD_FLAG == 1 ~ "MD only",
+      LazR_FLAG == 1 & MD_FLAG == 0 ~ "Laz.R only",
+      LazR_FLAG == 1 & MD_FLAG == 1 ~ "Both Laz.R and MD"
+    )
+  ) |>
+  mutate(`% of sample` = round(N / n_eligible * 100, 1)) |>
+  select(Classification, N, `% of sample`)
+
+write_csv2(
+  lazr_md_intersection,
+  "../../Output/DataAppendixOutput/Tables/lazr-md-intersection.csv"
+)
+
+lazr_md_intersection |>
+  knitr::kable(
+    caption = "Intersection of Laz.R and Mahalanobis distance flags"
+  )
+```
+
+<br>
+
+Only two respondents fail both Laz.R and MD, whereas 199 fail MD only and 89
+fail Laz.R only. Thus, requiring both would remove almost no cases, while using
+either would identify 290 cases (22.4%) for review. The latter can be a useful
+screening pool when case-by-case inspection is feasible: Laz.R covers
+predictable nonrandom patterns and MD covers multivariate atypicality. It was
+not adopted here as an automatic exclusion rule because the two indicators are
+nearly disjoint in this sample and MD-only evidence is not sufficient to infer
+carelessness from ordinal responses [@hong2020; @ward2023].
+
+### Final rule: at least two of four decision flags
+
+The final rule counts **Laz.R, MD, IRV high, and IRV low** and excludes a
+respondent only when at least two of these four flags are present. This rule is
+deliberately conservative: it requires corroboration, avoids deletion based on
+MD alone, and retains IRV as evidence for both insufficient and excessive
+within-person variability. It also follows the broader recommendation to use
+multiple, context-appropriate indicators rather than relying blindly on a
+single index [@curran2016; @ward2023].
+
+@hong2020 best-subset simulations support selecting a smaller group of
+complementary indicators instead of a kitchen-sink combination, although their
+specific subset and cut-offs are design-dependent and should not be imported
+unchanged into the WHOQOL-Bref [@hong2020]. Plan A is therefore a transparent
+teaching decision for this dataset, not a universal threshold.
+
+```{r}
+#| label: final-posthoc-rule
+
+decision_labels <- c("Laz.R", "MD", "IRV high", "IRV low")
+
+df_decisions <- df_decisions |>
+  rowwise() |>
+  mutate(
+    decision_evidence = str_c(
+      decision_labels[c_across(all_of(decision_flags)) == 1],
+      collapse = " + "
+    )
+  ) |>
+  ungroup() |>
+  mutate(
+    CIER_EXCLUDE = if_else(n_decision_flags >= 2, 1L, 0L),
+    decision_evidence = if_else(
+      CIER_EXCLUDE == 1L,
+      decision_evidence,
+      NA_character_
+    )
+  )
+
+posthoc_exclusion_log <- df_decisions |>
+  filter(CIER_EXCLUDE == 1L) |>
+  select(
+    ID, LazR, Longstr, MD, IRV, all_of(all_flags),
+    n_decision_flags, decision_evidence
+  )
+
+write_csv2(
+  posthoc_exclusion_log,
+  "../../Output/DataAppendixOutput/Tables/posthoc-exclusion-log.csv"
+)
+
+exclusion_patterns <- posthoc_exclusion_log |>
+  count(decision_evidence, name = "Excluded") |>
+  mutate(`% of exclusions` = round(Excluded / sum(Excluded) * 100, 1)) |>
+  arrange(desc(Excluded), decision_evidence)
+
+write_csv2(
+  exclusion_patterns,
+  "../../Output/DataAppendixOutput/Tables/posthoc-exclusion-patterns.csv"
+)
+
+exclusion_patterns |>
+  knitr::kable(
+    caption = "Evidence combinations among respondents excluded by Plan A"
+  )
+```
+
+<br>
+
+Plan A removes 62 of the 1,295 eligible respondents (4.8%). The full audit log
+preserves each excluded ID, indicator value, flag, composite count, and evidence
+combination in `posthoc-exclusion-log.csv`.
+
+### Final analysis dataset
+
 ```{r}
 #| label: flags-export
-#| include: false
 
-# Merge indicators with original data and export for final evaluation
+# Preserve indicators, flags, and the final decision in the intermediate data
 screened_data <- imported_data |>
-    select(ID, Q1:Q26) |>
-    left_join(df_flags, by = "ID")
+  select(ID, Q1:Q26) |>
+  left_join(
+    df_decisions,
+    by = join_by(ID),
+    relationship = "one-to-one"
+  )
 
 write_csv2(screened_data, "../../Data/IntermediateData/whoqol_screened.csv")
 
-# Reverse-score items only after calculating all C/IER indicators
+# Apply Plan A, then reverse-score negatively keyed WHOQOL-Bref items
 final_analysis_data <- screened_data |>
-    select(ID, Q1:Q26) |>
-    mutate(across(c(Q3, Q4, Q26), \(x) 6 - x))
+  filter(CIER_EXCLUDE == 0L) |>
+  select(ID, Q1:Q26) |>
+  mutate(across(c(Q3, Q4, Q26), \(x) 6 - x))
 
 # Export final analytical dataset
 write_csv2(final_analysis_data, "../../Data/AnalysisData/whoqol_analysis.csv")
+
+analysis_sample_summary <- tibble(
+  Stage = c(
+    "Eligible after procedural exclusions",
+    "Excluded by Plan A post-hoc rule",
+    "Final analysis dataset"
+  ),
+  N = c(
+    nrow(screened_data),
+    sum(screened_data$CIER_EXCLUDE),
+    nrow(final_analysis_data)
+  )
+)
+
+write_csv2(
+  analysis_sample_summary,
+  "../../Output/DataAppendixOutput/Tables/analysis-sample-summary.csv"
+)
+
+stopifnot(
+  nrow(screened_data) == 1295L,
+  sum(screened_data$CIER_EXCLUDE) == 62L,
+  nrow(final_analysis_data) == 1233L,
+  !any(final_analysis_data$ID %in% posthoc_exclusion_log$ID)
+)
+
+analysis_sample_summary |>
+  knitr::kable(caption = "Derivation of the final analysis sample")
 ```
+
+<br>
+
+The final `whoqol_analysis.csv` contains 1,233 respondents, the `ID` column,
+and `Q1-Q26`. Items Q3, Q4, and Q26 are reverse-scored only after the C/IER
+indicators have been calculated on the response sequence as administered. For
+substantive analyses, the unfiltered 1,295-case dataset can be retained as a
+sensitivity condition. Large changes between filtered and unfiltered results
+should be reported rather than used to choose whichever cleaning rule produces
+the preferred result [@wang2025b].
 

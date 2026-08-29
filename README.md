@@ -49,8 +49,10 @@ Four indicators are calculated for eligible responses:
 - **Intra-Individual Response Variability (IRV)**.
 
 Cut-off points are estimated using the **Kneedle** algorithm. At this stage,
-the indicators serve a **diagnostic** purpose: flags do not result in automatic
-exclusions and should be examined alongside other evidence.
+the indicators first serve a **diagnostic** purpose. The final analysis data
+exclude respondents with at least two flags among Laz.R, Mahalanobis distance,
+IRV high, and IRV low; Longstring remains descriptive and does not enter the
+composite decision rule.
 
 Only after all C/IER indicators have been calculated are the reverse-scored
 items (`Q3`, `Q4`, and `Q26`) recoded in the final analysis dataset.
