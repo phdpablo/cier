@@ -1,8 +1,8 @@
-﻿# Metadata Folder
+# Metadata Folder
 
 ## Overview
 
-The `Metadata` folder stores documentation for the raw input data files used in the Smart CFA project. It records dataset provenance, basic file characteristics, and variable-level definitions for files kept in `Data/InputData` before any cleaning or transformation.
+The `Metadata` folder stores documentation for the raw input data files used in the CIER project (Careless/Insufficient Effort Responding). It records dataset provenance, basic file characteristics, and variable-level definitions for files kept in `Data/InputData` before any cleaning or transformation.
 
 ## Contents
 

@@ -1,8 +1,14 @@
 project: # https://quarto.org/docs/manuscripts/
   type: manuscript # Specifies this project is a manuscript format.
+  execute-dir: project # Resolve R execution from the project root.
   output-dir: docs # Directory where the rendered output files will be placed.
+  pre-render:
+    - Rscript --vanilla Scripts/DataAppendixScripts/pre_render_prepare.R
+  post-render:
+    - Rscript --vanilla Scripts/DataAppendixScripts/post_render_figures.R
+    - Rscript --vanilla Scripts/DataAppendixScripts/post_render_tables.R
   render:
-    - "!adm/" # Exclude the 'adm' directory and its contents from rendering.
+    - "!ADM/" # Exclude the 'adm' directory and its contents from rendering.
     - "!renv/" # Exclude the 'renv' directory and its contents from rendering.
     - "!docker/" # Exclude the 'docker' directory and its contents from rendering.
 
@@ -17,12 +23,12 @@ manuscript: # https://quarto.org/docs/manuscripts/authoring/rstudio.html
   article: index.qmd # Main manuscript file.
   meca-bundle: false # Generate MECA bundle for journal submission.
   resources:
-    - Output/DataAppendixOutput/Figures/ # Include persistent figures in notebook previews.
+    - Output/Results/Figures/ # Include persistent manuscript figures in previews.
   notebooks:
     - notebook: Scripts/ProcessingScripts/01_procedural.qmd
-      title: "Procedural Exclusions"
+      title: "1. Procedural Exclusions"
     - notebook: Scripts/ProcessingScripts/02_posthoc.qmd
-      title: "Post-hoc C/IER Indicators"
+      title: "2. Post-hoc C/IER Indicators"
 
 bibliography: references.bib # https://quarto.org/docs/authoring/citations.html
 # File containing the bibliographic references in BibTeX format.
@@ -32,9 +38,12 @@ format: # https://quarto.org/docs/reference/formats/html.html
   html:
     theme: spacelab # A clean, modern theme for HTML output.
     toc: true # Include a table of contents in the HTML output.
+    css: custom.css # Include custom CSS for HTML output.
     comments:
       hypothesis: true # Enable Hypothesis comments in the HTML output.
   docx: default # Use the default Word template for DOCX output.
-  pdf: default # Use the default LaTeX template for PDF output.
+  pdf:
+    fig-pos: "H" # Keep figures strictly in-place below their respective headings
+
 
 editor: source # Sets the default editor mode to source.

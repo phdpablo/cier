@@ -2,34 +2,52 @@
 
 ## Overview
 
-The `Scripts` folder holds all scripts for data processing, analysis, and result generation. Scripts are organized into subfolders by function and workflow stage. Good organization and documentation here are key for research reproducibility and transparency.
+The `Scripts` folder holds all computational scripts and executable companion notebooks for the CIER project, organized according to **Project TIER Protocol 4.0** guidelines.
 
-## Contents
+## Subdirectories
 
-### Subfolders
+### 1. `ProcessingScripts/`
+Contains the core analytical and diagnostic Quarto companion notebooks that transform raw survey responses into the final analysis-ready dataset:
+- **`01_procedural.qmd`**: Level 1 procedural exclusions (dropout identification, response time filtering, attention check evaluation, missing item control).
+- **`02_posthoc.qmd`**: Level 2 post-hoc statistical C/IER detection (Laz.R, Longstring, Mahalanobis Distance, IRV, Kneedle thresholding, and composite decision rules).
 
-1.  **ProcessingScripts**
-    -   **Purpose**: Scripts for initial processing and cleaning of raw data.
-    -   **Description**: These transform raw data from the `InputData` folder into intermediate forms in the `IntermediateData` folder.
-2.  **DataAppendixScripts**
-    -   **Purpose**: Scripts to generate Data Appendix documentation for processed data.
-    -   **Description**: These automate documentation, accurately recording all transformations and steps.
-3.  **AnalysisScripts**
-    -   **Purpose**: Scripts for actual data analysis.
-    -   **Description**: These take intermediate data and apply statistical or analytical methods. They produce final outputs stored in the `Output` folder.
+### 2. `DataAppendixScripts/`
+Contains lightweight, zero-dependency Base R scripts executed as pre-render and post-render lifecycle hooks by Quarto (`_quarto.yml`):
+- **`pre_render_prepare.R`**: Pre-render environment verification and folder scaffolding.
+- **`post_render_figures.R`**: Post-render dynamic figure mirroring to `docs/` and synchronization of companion notebook preview assets.
+- **`post_render_tables.R`**: Post-render dynamic table and log mirroring to `docs/Output/`.
 
-### Master Script
+### 3. `AnalysisScripts/`
+Reserved for downstream substantive analytical models (e.g., Confirmatory Factor Analysis [CFA] or Structural Equation Modeling [SEM] operating on the screened `whoqol_analysis.csv` dataset).
 
--   **Purpose**: The main script that orchestrates execution of all other scripts.
--   **Description**: This script typically runs all processing, analysis, and documentation scripts in order. It reproduces the entire workflow from raw data to final results.
+## Execution and Reproduction Workflow
 
-## Guidelines
+The execution flow is orchestrated seamlessly by the Quarto Manuscript build system:
 
--   **Organization**: Keep scripts organized in their subfolders by function. Use clear, descriptive names that reflect purpose.
--   **Documentation**: Document each script thoroughly with comments. Explain the purpose, inputs, outputs, and key steps. Include usage instructions if needed.
--   **Modularity**: Write scripts in a modular way. This allows easy updates and code reuse. Separate different processing and analysis stages into distinct scripts.
--   **Version Control**: Use version control to track script changes. Record major changes and maintain a version history.
+```text
+[ quarto render ]
+       │
+       ▼
+ 1. pre_render_prepare.R      ──> Checks inputs (data.csv) & builds directory scaffold
+       │
+       ▼
+ 2. 01_procedural.qmd         ──> Level 1: raw data -> whoqol_imported.csv + exclusion_log.csv
+       │
+       ▼
+ 3. 02_posthoc.qmd            ──> Level 2: whoqol_imported.csv -> whoqol_analysis.csv + tables/plots
+       │
+       ▼
+ 4. index.qmd                 ──> Compiles manuscript (embeds chunks via {{< embed >}})
+       │
+       ▼
+ 5. post_render_figures.R     ──> Dynamically mirrors figures & syncs notebook preview assets
+ 6. post_render_tables.R      ──> Dynamically mirrors tables and audit logs to docs/
+```
+
+To execute manually in R without rendering the manuscript, run the processing notebooks in order:
+1. `Scripts/ProcessingScripts/01_procedural.qmd`
+2. `Scripts/ProcessingScripts/02_posthoc.qmd`
 
 ## Additional Resources
 
-We recommend the [Tidyverse Style Guide](https://style.tidyverse.org/) for standardization. For more detailed instructions, see the [TIER Protocol 4.0 Scripts Guidelines](https://www.projecttier.org/tier-protocol/protocol-4-0/root/scripts/).
+Refer to the [TIER Protocol 4.0 Scripts Guidelines](https://www.projecttier.org/tier-protocol/protocol-4-0/root/scripts/) for standard replication specifications.

@@ -8,10 +8,13 @@ execute:
 ```{r}
 #| label: setup-01
 #| include: false
+#| warning: false
 
 # Load required packages for data manipulation and table formatting
-library(tidyverse)
-library(gt)
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(gt)
+})
 ```
 
 ## Data reading and preparation
@@ -22,11 +25,15 @@ flow are selected, and the total response time (`TIME`) is derived.
 
 ```{r}
 #| label: data-reading
+#| message: false
+#| warning: false
 
 # Read raw dataset
-raw_data <- read_csv2(
-    "../../Data/InputData/data.csv",
-    show_col_types = FALSE
+raw_data <- suppressMessages(
+    read_csv2(
+        here::here("Data", "InputData", "data.csv"),
+        show_col_types = FALSE
+    )
 )
 
 # Identify respondents who dropped out (no basic ID or zero valid answers)
@@ -47,7 +54,22 @@ imported_data <- prepared_data |>
     ) |>
     select(-CREATED_dt, -MODIFIED_dt)
 
-glimpse(imported_data)
+dataset_structure <- tibble::tibble(
+  `Group` = c("Identification", "Timing", "Attention Checks", "WHOQOL-Bref Scale"),
+  `Variables` = c("ID", "CREATED, MODIFIED, TIME", "CQ1, CQ2, CQ3", "Q1 to Q26 (26 items)"),
+  `Class / Type` = c("Numeric (Double)", "Date-time / Numeric (s)", "Binary (0/1)", "Ordinal (1 to 5)"),
+  `Description` = c(
+    "Unique respondent identifier",
+    "Survey timestamps and total response duration in seconds",
+    "Quality control check items (1 = passed, 0 = failed)",
+    "Self-reported quality of life items"
+  )
+)
+
+dataset_structure |>
+  knitr::kable(
+    caption = "Structure and variable dictionary of the prepared survey dataset (`imported_data`)"
+  )
 ```
 
 ## Procedural exclusions (Level 1)
@@ -107,7 +129,12 @@ exclusion_log <- bind_rows(
     distinct(ID, criterion, .keep_all = TRUE)
 
 # Export the exclusion log
-write_csv2(exclusion_log, "../../Output/DataAppendixOutput/Tables/exclusion_log.csv")
+write_csv2(
+  exclusion_log,
+  here::here(
+    "Output", "DataAppendixOutput", "Tables", "exclusion_log.csv"
+  )
+)
 
 # Keep original item responses for the Level 2 response-pattern indicators
 eligible_data <- level1_data |>
@@ -118,7 +145,8 @@ eligible_data <- level1_data |>
 ### Level 1 Summary
 
 ```{r}
-#| label: level-1-summary
+#| label: tbl-level-1-summary
+#| tbl-cap: "Procedural exclusions summary"
 
 # Generate a summary table of procedural exclusions during Level 1
 table_level1 <- tibble(
@@ -143,11 +171,14 @@ table_level1 <- tibble(
 )
 
 # Save table
-write_csv2(table_level1, "../../Output/DataAppendixOutput/Tables/level-1-summary.csv")
+write_csv2(
+  table_level1,
+  here::here("Output", "Results", "Tables", "tbl-level-1-summary.csv")
+)
 
 # Print table
 table_level1 |>
-    knitr::kable(caption = "Procedural exclusions summary")
+    knitr::kable()
 ```
 
 ```{r}
@@ -155,5 +186,8 @@ table_level1 |>
 #| include: false
 
 # Save eligible respondents data for Level 2 post-hoc indicators analysis
-write_csv2(eligible_data, "../../Data/IntermediateData/whoqol_imported.csv")
+write_csv2(
+  eligible_data,
+  here::here("Data", "IntermediateData", "whoqol_imported.csv")
+)
 ```

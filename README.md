@@ -62,30 +62,33 @@ items (`Q3`, `Q4`, and `Q26`) recoded in the final analysis dataset.
 ```text
 .
 ├── Data/
-│   ├── InputData/          # original data and metadata
-│   ├── IntermediateData/   # intermediate processing products
-│   └── AnalysisData/       # analysis-ready dataset
+│   ├── InputData/            # raw survey data and metadata/codebook
+│   ├── IntermediateData/     # intermediate processed datasets (whoqol_imported, whoqol_screened)
+│   └── AnalysisData/         # final analysis-ready dataset (whoqol_analysis)
 ├── Scripts/
-│   └── ProcessingScripts/  # procedural exclusions and post-hoc indicators
+│   ├── ProcessingScripts/    # companion notebooks (01_procedural.qmd, 02_posthoc.qmd)
+│   ├── AnalysisScripts/      # destination for prospective substantive analyses
+│   └── DataAppendixScripts/  # automated pre-render and post-render hooks (.R)
 ├── Output/
-│   └── DataAppendixOutput/ # generated tables and figures
-├── docs/                   # rendered version for GitHub Pages
-├── index.qmd               # main tutorial manuscript
-├── _quarto.yml             # Quarto project configuration
-├── references.bib          # bibliographic references
-└── renv.lock               # locked R package versions
+│   ├── Results/              # published canonical tables (tbl-*.csv) and figures (fig-*.png)
+│   └── DataAppendixOutput/   # procedural audit logs (exclusion_log.csv, posthoc-exclusion-log.csv)
+├── docs/                     # rendered Quarto manuscript website (git-ignored)
+├── index.qmd                 # main Quarto Manuscript article
+├── _quarto.yml               # Quarto manuscript configuration and lifecycle hooks
+├── references.bib            # bibliographic references
+└── renv.lock                 # locked R package environment (R 4.5.2)
 ```
 
 The `Data`, `Scripts`, and `Output` directories include their own documentation,
 organized according to the recommendations of the
-[TIER Protocol](https://www.projecttier.org/tier-protocol/).
+[TIER Protocol 4.0](https://www.projecttier.org/tier-protocol/).
 
 ## ♻️ Reproducibility
 
 To reproduce the project, install:
 
-- [R](https://cran.r-project.org/);
-- [Quarto](https://quarto.org/);
+- [R](https://cran.r-project.org/) (version 4.5.2 recommended);
+- [Quarto CLI](https://quarto.org/) (>= 1.5);
 - the R package [`renv`](https://rstudio.github.io/renv/).
 
 Clone the repository:
@@ -101,14 +104,25 @@ Restore the package environment from the R console:
 renv::restore()
 ```
 
-Then render the manuscript from the project root:
+### Rendering the Manuscript
+
+Render the complete manuscript and companion notebooks from the project root:
 
 ```bash
+# Render to all configured formats (HTML, PDF, DOCX)
 quarto render
+
+# Or render to a specific target format:
+quarto render --to html
+quarto render --to pdf
+quarto render --to docx
 ```
 
-Rendered files are written to `docs/`. The processing notebooks can also be
-accessed through the Quarto manuscript.
+The Quarto build pipeline incorporates automated, lightweight Base R lifecycle hooks registered in `_quarto.yml`:
+1. **Pre-render** (`Scripts/DataAppendixScripts/pre_render_prepare.R`): validates raw data inputs and directory scaffolding.
+2. **Post-render** (`Scripts/DataAppendixScripts/post_render_figures.R` & `post_render_tables.R`): dynamically mirrors published assets to `docs/Output/` and synchronizes notebook preview assets.
+
+Rendered publication files are written to `docs/`.
 
 ## 👤 Author
 

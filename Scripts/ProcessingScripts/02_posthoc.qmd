@@ -8,23 +8,30 @@ execute:
 ```{r}
 #| label: setup-02
 #| include: false
+#| warning: false
 
 # Load packages for data handling, C/IER indicators, and presentation
-library(tidyverse) # Data import, manipulation, and visualization
-library(careless) # Longstring and IRV calculation
-library(gt) # Table formatting; not currently called directly
-library(patchwork) # Composition of multiple ggplot2 plots
-library(modi) # Mahalanobis distance with missing item responses
+suppressPackageStartupMessages({
+  library(tidyverse) # Data import, manipulation, and visualization
+  library(careless) # Longstring and IRV calculation
+  library(gt) # Table formatting; not currently called directly
+  library(patchwork) # Composition of multiple ggplot2 plots
+  library(modi) # Mahalanobis distance with missing item responses
+})
 ```
 
 ```{r}
 #| label: level-2-reading
 #| include: false
+#| message: false
+#| warning: false
 
 # Read eligible data from Level 1
-imported_data <- read_csv2(
-    "../../Data/IntermediateData/whoqol_imported.csv",
-    show_col_types = FALSE
+imported_data <- suppressMessages(
+    read_csv2(
+        here::here("Data", "IntermediateData", "whoqol_imported.csv"),
+        show_col_types = FALSE
+    )
 )
 
 # Extract respondent IDs and select scale items for calculation
@@ -101,7 +108,11 @@ df_indicators <- tibble(
     IRV     = round(irv_vals, 3)
 )
 
-df_indicators
+df_indicators |>
+  head(5) |>
+  knitr::kable(
+    caption = "First 5 observations of the calculated C/IER indicators"
+  )
 ```
 
 ## Univariate visualization
@@ -109,7 +120,9 @@ df_indicators
 ### Laz.R
 
 ```{r}
-#| label: viz-lazr
+#| label: fig-viz-lazr
+#| fig-cap: "Distribution of the Laz.R indicator"
+#| fig-alt: "Histogram and boxplot of the Laz.R distribution."
 
 # Plot histogram and boxplot for Laz.R distribution
 p_hist_lazr <- ggplot(df_indicators, aes(x = LazR)) +
@@ -128,15 +141,19 @@ p_box_lazr <- ggplot(df_indicators, aes(y = LazR)) +
 
 # Save plot
 p_combined_lazr <- p_hist_lazr + p_box_lazr + plot_layout(widths = c(3, 1))
-ggsave("../../Output/DataAppendixOutput/Figures/viz-lazr.png", p_combined_lazr, width = 8, height = 4)
+fig_viz_lazr_path <- here::here(
+  "Output", "Results", "Figures", "fig-viz-lazr.png"
+)
+ggsave(fig_viz_lazr_path, p_combined_lazr, width = 8, height = 4)
+p_combined_lazr
 ```
-
-![](../../Output/DataAppendixOutput/Figures/viz-lazr.png){fig-alt="Histogram and boxplot of the Laz.R distribution."}
 
 ### Longstring
 
 ```{r}
-#| label: viz-longstr
+#| label: fig-viz-longstr
+#| fig-cap: "Distribution of the Longstring indicator"
+#| fig-alt: "Histogram and boxplot of the Longstring distribution."
 
 # Plot histogram and boxplot for Longstring distribution
 p_hist_ls <- ggplot(df_indicators, aes(x = Longstr)) +
@@ -155,15 +172,19 @@ p_box_ls <- ggplot(df_indicators, aes(y = Longstr)) +
 
 # Save plot
 p_combined_ls <- p_hist_ls + p_box_ls + plot_layout(widths = c(3, 1))
-ggsave("../../Output/DataAppendixOutput/Figures/viz-longstr.png", p_combined_ls, width = 8, height = 4)
+fig_viz_longstr_path <- here::here(
+  "Output", "Results", "Figures", "fig-viz-longstr.png"
+)
+ggsave(fig_viz_longstr_path, p_combined_ls, width = 8, height = 4)
+p_combined_ls
 ```
-
-![](../../Output/DataAppendixOutput/Figures/viz-longstr.png){fig-alt="Histogram and boxplot of the Longstring distribution."}
 
 ### Mahalanobis Distance
 
 ```{r}
-#| label: viz-md
+#| label: fig-viz-md
+#| fig-cap: "Distribution of the Mahalanobis distance indicator"
+#| fig-alt: "Histogram and boxplot of the Mahalanobis distance distribution."
 
 # Plot histogram and boxplot for Mahalanobis Distance distribution
 p_hist_md <- ggplot(df_indicators, aes(x = MD)) +
@@ -182,15 +203,19 @@ p_box_md <- ggplot(df_indicators, aes(y = MD)) +
 
 # Save plot
 p_combined_md <- p_hist_md + p_box_md + plot_layout(widths = c(3, 1))
-ggsave("../../Output/DataAppendixOutput/Figures/viz-md.png", p_combined_md, width = 8, height = 4)
+fig_viz_md_path <- here::here(
+  "Output", "Results", "Figures", "fig-viz-md.png"
+)
+ggsave(fig_viz_md_path, p_combined_md, width = 8, height = 4)
+p_combined_md
 ```
-
-![](../../Output/DataAppendixOutput/Figures/viz-md.png){fig-alt="Histogram and boxplot of the Mahalanobis distance distribution."}
 
 ### IRV
 
 ```{r}
-#| label: viz-irv
+#| label: fig-viz-irv
+#| fig-cap: "Distribution of the intra-individual response variability indicator"
+#| fig-alt: "Histogram and boxplot of the IRV distribution."
 
 # Plot histogram and boxplot for IRV distribution
 p_hist_irv <- ggplot(df_indicators, aes(x = IRV)) +
@@ -209,15 +234,18 @@ p_box_irv <- ggplot(df_indicators, aes(y = IRV)) +
 
 # Save plot
 p_combined_irv <- p_hist_irv + p_box_irv + plot_layout(widths = c(3, 1))
-ggsave("../../Output/DataAppendixOutput/Figures/viz-irv.png", p_combined_irv, width = 8, height = 4)
+fig_viz_irv_path <- here::here(
+  "Output", "Results", "Figures", "fig-viz-irv.png"
+)
+ggsave(fig_viz_irv_path, p_combined_irv, width = 8, height = 4)
+p_combined_irv
 ```
-
-![](../../Output/DataAppendixOutput/Figures/viz-irv.png){fig-alt="Histogram and boxplot of the IRV distribution."}
 
 ## Cut-off points via Kneedle algorithm
 
 ```{r}
-#| label: kneedle-cutoffs
+#| label: tbl-kneedle-cutoffs
+#| tbl-cap: "Cut-off points estimated with the Kneedle algorithm"
 
 # Define function to calculate Kneedle point based on sorted values
 calc_kneedle <- function(x, sign_val) {
@@ -256,12 +284,14 @@ cutoff_tab <- tibble(
 )
 
 # Save table
-write_csv2(cutoff_tab, "../../Output/DataAppendixOutput/Tables/kneedle-cutoffs.csv")
+write_csv2(
+  cutoff_tab,
+  here::here("Output", "Results", "Tables", "tbl-kneedle-cutoffs.csv")
+)
 
 # Print table
 cutoff_tab |>
     knitr::kable(
-        caption = "Cut-off points — Kneedle algorithm (Biemann et al., 2025)",
         digits  = c(0, 2, 1)
     )
 ```
@@ -271,7 +301,9 @@ cutoff_tab |>
 ### Laz.R
 
 ```{r}
-#| label: cum-lazr
+#| label: fig-cum-lazr
+#| fig-cap: "Cumulative Laz.R curve with the Kneedle cut-off point"
+#| fig-alt: "Cumulative Laz.R curve with the Kneedle cut-off point."
 
 # Builds the data frame for the cumulative curve (descending order)
 make_cum_df <- function(sorted_vals) {
@@ -298,15 +330,19 @@ p_cum_lazr <- ggplot(cum_lazr, aes(x = percent, y = Index_value)) +
     theme_light()
 
 # Save plot
-ggsave("../../Output/DataAppendixOutput/Figures/cum-lazr.png", p_cum_lazr, width = 6, height = 4)
+fig_cum_lazr_path <- here::here(
+  "Output", "Results", "Figures", "fig-cum-lazr.png"
+)
+ggsave(fig_cum_lazr_path, p_cum_lazr, width = 6, height = 4)
+p_cum_lazr
 ```
-
-![](../../Output/DataAppendixOutput/Figures/cum-lazr.png){fig-alt="Cumulative Laz.R curve with the Kneedle cut-off point."}
 
 ### Longstring
 
 ```{r}
-#| label: cum-longstr
+#| label: fig-cum-longstr
+#| fig-cap: "Cumulative Longstring curve with the Kneedle cut-off point"
+#| fig-alt: "Cumulative Longstring curve with the Kneedle cut-off point."
 
 # Create cumulative frequency plot for Longstring with cut-off line
 cum_ls <- make_cum_df(kn_longstr$sorted)
@@ -327,15 +363,19 @@ p_cum_ls <- ggplot(cum_ls, aes(x = percent, y = Index_value)) +
     theme_light()
 
 # Save plot
-ggsave("../../Output/DataAppendixOutput/Figures/cum-longstr.png", p_cum_ls, width = 6, height = 4)
+fig_cum_longstr_path <- here::here(
+  "Output", "Results", "Figures", "fig-cum-longstr.png"
+)
+ggsave(fig_cum_longstr_path, p_cum_ls, width = 6, height = 4)
+p_cum_ls
 ```
-
-![](../../Output/DataAppendixOutput/Figures/cum-longstr.png){fig-alt="Cumulative Longstring curve with the Kneedle cut-off point."}
 
 ### Mahalanobis Distance
 
 ```{r}
-#| label: cum-md
+#| label: fig-cum-md
+#| fig-cap: "Cumulative Mahalanobis distance curve with the Kneedle cut-off point"
+#| fig-alt: "Cumulative Mahalanobis distance curve with the Kneedle cut-off point."
 
 # Create cumulative frequency plot for Mahalanobis Distance with cut-off line
 cum_md <- make_cum_df(kn_md$sorted)
@@ -356,15 +396,19 @@ p_cum_md <- ggplot(cum_md, aes(x = percent, y = Index_value)) +
     theme_light()
 
 # Save plot
-ggsave("../../Output/DataAppendixOutput/Figures/cum-md.png", p_cum_md, width = 6, height = 4)
+fig_cum_md_path <- here::here(
+  "Output", "Results", "Figures", "fig-cum-md.png"
+)
+ggsave(fig_cum_md_path, p_cum_md, width = 6, height = 4)
+p_cum_md
 ```
-
-![](../../Output/DataAppendixOutput/Figures/cum-md.png){fig-alt="Cumulative Mahalanobis distance curve with the Kneedle cut-off point."}
 
 ### IRV
 
 ```{r}
-#| label: cum-irv
+#| label: fig-cum-irv
+#| fig-cap: "Cumulative IRV curve with the high and low Kneedle cut-off points"
+#| fig-alt: "Cumulative IRV curve with the high and low Kneedle cut-off points."
 
 # Create cumulative frequency plot for IRV with high and low cut-off lines
 cum_irv <- make_cum_df(kn_irv_high$sorted)
@@ -396,10 +440,12 @@ p_cum_irv <- ggplot(cum_irv, aes(x = percent, y = Index_value)) +
     theme_light()
 
 # Save plot
-ggsave("../../Output/DataAppendixOutput/Figures/cum-irv.png", p_cum_irv, width = 6, height = 4)
+fig_cum_irv_path <- here::here(
+  "Output", "Results", "Figures", "fig-cum-irv.png"
+)
+ggsave(fig_cum_irv_path, p_cum_irv, width = 6, height = 4)
+p_cum_irv
 ```
-
-![](../../Output/DataAppendixOutput/Figures/cum-irv.png){fig-alt="Cumulative IRV curve with the high and low Kneedle cut-off points."}
 
 
 
@@ -418,13 +464,18 @@ df_flags <- df_indicators |>
         IRV_low_FLAG  = if_else(IRV <= kn_irv_low$crit, 1L, 0L)
     )
 
-df_flags
+df_flags |>
+  head(5) |>
+  knitr::kable(
+    caption = "First 5 observations of respondent C/IER indicator values and flags"
+  )
 ```
 
 ### Flags overview
 
 ```{r}
-#| label: flags-overview
+#| label: tbl-flags-overview
+#| tbl-cap: "Summary of respondents flagged by each C/IER indicator"
 
 # Summarize the count and percentage of flagged respondents globally
 table_flags <- df_flags |>
@@ -440,12 +491,14 @@ table_flags <- df_flags |>
     )
 
 # Save table
-write_csv2(table_flags, "../../Output/DataAppendixOutput/Tables/flags-overview.csv")
+write_csv2(
+  table_flags,
+  here::here("Output", "Results", "Tables", "tbl-flags-overview.csv")
+)
 
 # Print table
 table_flags |>
     knitr::kable(
-        caption = "Summary of flagged C/IER respondents",
         col.names = c("Indicator", "N flagged", "% flagged")
     )
 ```
@@ -470,7 +523,8 @@ the decision set, while retaining it as a descriptive diagnostic. The final
 two show the previously considered Laz.R--MD screening alternative.
 
 ```{r}
-#| label: decision-scenarios
+#| label: tbl-decision-scenarios
+#| tbl-cap: "Consequences of alternative post-hoc decision rules"
 
 all_flags <- c(
   "LazR_FLAG", "Longstr_FLAG", "MD_FLAG",
@@ -514,12 +568,11 @@ decision_scenarios <- tibble(
 
 write_csv2(
   decision_scenarios,
-  "../../Output/DataAppendixOutput/Tables/decision-scenarios.csv"
+  here::here("Output", "Results", "Tables", "tbl-decision-scenarios.csv")
 )
 
 decision_scenarios |>
   knitr::kable(
-    caption = "Consequences of alternative post-hoc decision rules",
     col.names = c("Decision rule", "Excluded", "% excluded", "Retained")
   )
 ```
@@ -545,7 +598,8 @@ and treating the Kneedle cut-off as a basis for scrutiny and possible exclusion
 rather than as proof of carelessness [@biemann2025].
 
 ```{r}
-#| label: flag-pairwise-overlap
+#| label: tbl-flag-pairwise-overlap
+#| tbl-cap: "Pairwise overlap among diagnostic C/IER flags"
 
 flag_totals <- colSums(df_decisions[all_flags])
 
@@ -593,13 +647,13 @@ pairwise_overlap <- tribble(
 
 write_csv2(
   pairwise_overlap,
-  "../../Output/DataAppendixOutput/Tables/flag-pairwise-overlap.csv"
+  here::here(
+    "Output", "Results", "Tables", "tbl-flag-pairwise-overlap.csv"
+  )
 )
 
 pairwise_overlap |>
-  knitr::kable(
-    caption = "Pairwise overlap among diagnostic C/IER flags"
-  )
+  knitr::kable()
 ```
 
 <br>
@@ -617,7 +671,8 @@ The Laz.R--MD table also explains why those two indicators alone were not used
 as an automatic deletion rule.
 
 ```{r}
-#| label: lazr-md-intersection
+#| label: tbl-lazr-md-intersection
+#| tbl-cap: "Intersection of Laz.R and Mahalanobis distance flags"
 
 lazr_md_intersection <- df_decisions |>
   count(LazR_FLAG, MD_FLAG, name = "N") |>
@@ -634,13 +689,13 @@ lazr_md_intersection <- df_decisions |>
 
 write_csv2(
   lazr_md_intersection,
-  "../../Output/DataAppendixOutput/Tables/lazr-md-intersection.csv"
+  here::here(
+    "Output", "Results", "Tables", "tbl-lazr-md-intersection.csv"
+  )
 )
 
 lazr_md_intersection |>
-  knitr::kable(
-    caption = "Intersection of Laz.R and Mahalanobis distance flags"
-  )
+  knitr::kable()
 ```
 
 <br>
@@ -671,7 +726,8 @@ unchanged into the WHOQOL-Bref [@hong2020]. Plan A is therefore a transparent
 teaching decision for this dataset, not a universal threshold.
 
 ```{r}
-#| label: final-posthoc-rule
+#| label: tbl-posthoc-exclusion-patterns
+#| tbl-cap: "Evidence combinations among respondents excluded by Plan A"
 
 decision_labels <- c("Laz.R", "MD", "IRV high", "IRV low")
 
@@ -702,7 +758,10 @@ posthoc_exclusion_log <- df_decisions |>
 
 write_csv2(
   posthoc_exclusion_log,
-  "../../Output/DataAppendixOutput/Tables/posthoc-exclusion-log.csv"
+  here::here(
+    "Output", "DataAppendixOutput", "Tables",
+    "posthoc-exclusion-log.csv"
+  )
 )
 
 exclusion_patterns <- posthoc_exclusion_log |>
@@ -712,13 +771,13 @@ exclusion_patterns <- posthoc_exclusion_log |>
 
 write_csv2(
   exclusion_patterns,
-  "../../Output/DataAppendixOutput/Tables/posthoc-exclusion-patterns.csv"
+  here::here(
+    "Output", "Results", "Tables", "tbl-posthoc-exclusion-patterns.csv"
+  )
 )
 
 exclusion_patterns |>
-  knitr::kable(
-    caption = "Evidence combinations among respondents excluded by Plan A"
-  )
+  knitr::kable()
 ```
 
 <br>
@@ -730,7 +789,8 @@ combination in `posthoc-exclusion-log.csv`.
 ### Final analysis dataset
 
 ```{r}
-#| label: flags-export
+#| label: tbl-analysis-sample-summary
+#| tbl-cap: "Derivation of the final analysis sample"
 
 # Preserve indicators, flags, and the final decision in the intermediate data
 screened_data <- imported_data |>
@@ -741,7 +801,10 @@ screened_data <- imported_data |>
     relationship = "one-to-one"
   )
 
-write_csv2(screened_data, "../../Data/IntermediateData/whoqol_screened.csv")
+write_csv2(
+  screened_data,
+  here::here("Data", "IntermediateData", "whoqol_screened.csv")
+)
 
 # Apply Plan A, then reverse-score negatively keyed WHOQOL-Bref items
 final_analysis_data <- screened_data |>
@@ -750,7 +813,10 @@ final_analysis_data <- screened_data |>
   mutate(across(c(Q3, Q4, Q26), \(x) 6 - x))
 
 # Export final analytical dataset
-write_csv2(final_analysis_data, "../../Data/AnalysisData/whoqol_analysis.csv")
+write_csv2(
+  final_analysis_data,
+  here::here("Data", "AnalysisData", "whoqol_analysis.csv")
+)
 
 analysis_sample_summary <- tibble(
   Stage = c(
@@ -767,7 +833,9 @@ analysis_sample_summary <- tibble(
 
 write_csv2(
   analysis_sample_summary,
-  "../../Output/DataAppendixOutput/Tables/analysis-sample-summary.csv"
+  here::here(
+    "Output", "Results", "Tables", "tbl-analysis-sample-summary.csv"
+  )
 )
 
 stopifnot(
@@ -778,7 +846,7 @@ stopifnot(
 )
 
 analysis_sample_summary |>
-  knitr::kable(caption = "Derivation of the final analysis sample")
+  knitr::kable()
 ```
 
 <br>
@@ -790,4 +858,9 @@ substantive analyses, the unfiltered 1,295-case dataset can be retained as a
 sensitivity condition. Large changes between filtered and unfiltered results
 should be reported rather than used to choose whichever cleaning rule produces
 the preferred result [@wang2025b].
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
 

@@ -54,7 +54,7 @@ dropout removal, exclusion for response time below 208 seconds
 on quality control items (`CQ1-CQ3`) [@curran2016]. Every exclusion is
 recorded in `exclusion_log.csv` with its reason and criterion.
 
-{{< embed Scripts/ProcessingScripts/01_procedural.qmd#level-1-summary >}}
+{{< embed Scripts/ProcessingScripts/01_procedural.qmd#tbl-level-1-summary >}}
 
 ## Calculation of C/IER indicators
 
@@ -64,27 +64,41 @@ presence offers stronger evidence than any single indicator alone [@curran2016;
 
 ### Univariate visualization
 
-Each respondent receives the values of the four indicators in a consolidated
-tibble, and the plots below show the univariate distribution of each one.
-
+::: {.content-visible when-format="html"}
 ::: {.panel-tabset}
 
 #### Laz.R
 
-![](Output/DataAppendixOutput/Figures/viz-lazr.png){fig-alt="Histogram and boxplot of the Laz.R distribution."}
+![Distribution of the Laz.R indicator](Output/Results/Figures/fig-viz-lazr.png){#fig-viz-lazr fig-alt="Histogram and boxplot of the Laz.R distribution."}
 
 #### Longstring
 
-![](Output/DataAppendixOutput/Figures/viz-longstr.png){fig-alt="Histogram and boxplot of the Longstring distribution."}
+![Distribution of the Longstring indicator](Output/Results/Figures/fig-viz-longstr.png){#fig-viz-longstr fig-alt="Histogram and boxplot of the Longstring distribution."}
 
 #### Mahalanobis Distance
 
-![](Output/DataAppendixOutput/Figures/viz-md.png){fig-alt="Histogram and boxplot of the Mahalanobis distance distribution."}
+![Distribution of the Mahalanobis distance indicator](Output/Results/Figures/fig-viz-md.png){#fig-viz-md fig-alt="Histogram and boxplot of the Mahalanobis distance distribution."}
 
 #### IRV
 
-![](Output/DataAppendixOutput/Figures/viz-irv.png){fig-alt="Histogram and boxplot of the IRV distribution."}
+![Distribution of the intra-individual response variability indicator](Output/Results/Figures/fig-viz-irv.png){#fig-viz-irv fig-alt="Histogram and boxplot of the IRV distribution."}
 
+:::
+:::
+
+::: {.content-visible unless-format="html"}
+::: {#fig-univariate layout-ncol=2}
+
+![Laz.R](Output/Results/Figures/fig-viz-lazr.png){#fig-viz-lazr-pdf}
+
+![Longstring](Output/Results/Figures/fig-viz-longstr.png){#fig-viz-longstr-pdf}
+
+![Mahalanobis Distance](Output/Results/Figures/fig-viz-md.png){#fig-viz-md-pdf}
+
+![IRV](Output/Results/Figures/fig-viz-irv.png){#fig-viz-irv-pdf}
+
+Univariate distributions of C/IER indicators
+:::
 :::
 
 ### Cut-off points via Kneedle algorithm
@@ -95,28 +109,45 @@ where extremely high values separate from the majority (right tail).
 For **IRV**, `sign = -1` is used to detect excessively high IRV and
 `sign = +1` for excessively low IRV, since both extremes can be considered suspicious.
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#kneedle-cutoffs >}}
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tbl-kneedle-cutoffs >}}
 
 ### Plots with cut-off points
 
+::: {.content-visible when-format="html"}
 ::: {.panel-tabset}
 
 #### Laz.R
 
-![](Output/DataAppendixOutput/Figures/cum-lazr.png){fig-alt="Cumulative Laz.R curve with the Kneedle cut-off point."}
+![Cumulative Laz.R curve with the Kneedle cut-off point](Output/Results/Figures/fig-cum-lazr.png){#fig-cum-lazr fig-alt="Cumulative Laz.R curve with the Kneedle cut-off point."}
 
 #### Longstring
 
-![](Output/DataAppendixOutput/Figures/cum-longstr.png){fig-alt="Cumulative Longstring curve with the Kneedle cut-off point."}
+![Cumulative Longstring curve with the Kneedle cut-off point](Output/Results/Figures/fig-cum-longstr.png){#fig-cum-longstr fig-alt="Cumulative Longstring curve with the Kneedle cut-off point."}
 
 #### Mahalanobis Distance
 
-![](Output/DataAppendixOutput/Figures/cum-md.png){fig-alt="Cumulative Mahalanobis distance curve with the Kneedle cut-off point."}
+![Cumulative Mahalanobis distance curve with the Kneedle cut-off point](Output/Results/Figures/fig-cum-md.png){#fig-cum-md fig-alt="Cumulative Mahalanobis distance curve with the Kneedle cut-off point."}
 
 #### IRV
 
-![](Output/DataAppendixOutput/Figures/cum-irv.png){fig-alt="Cumulative IRV curve with the high and low Kneedle cut-off points."}
+![Cumulative IRV curve with the high and low Kneedle cut-off points](Output/Results/Figures/fig-cum-irv.png){#fig-cum-irv fig-alt="Cumulative IRV curve with the high and low Kneedle cut-off points."}
 
+:::
+:::
+
+::: {.content-visible unless-format="html"}
+::: {#fig-cumulative layout-ncol=2}
+
+![Laz.R](Output/Results/Figures/fig-cum-lazr.png){#fig-cum-lazr-pdf}
+
+![Longstring](Output/Results/Figures/fig-cum-longstr.png){#fig-cum-longstr-pdf}
+
+![Mahalanobis Distance](Output/Results/Figures/fig-cum-md.png){#fig-cum-md-pdf}
+
+![IRV](Output/Results/Figures/fig-cum-irv.png){#fig-cum-irv-pdf}
+
+Cumulative frequency curves with Kneedle cut-off points
+:::
 :::
 
 ### C/IER Flags
@@ -128,7 +159,7 @@ For each indicator, a `_FLAG` variable is created (`1` = flagged,
 > exclusion in isolation. The final decision below requires corroboration from
 > at least two of four selected indicators.
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#flags-overview >}}
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tbl-flags-overview >}}
 
 ### From diagnostic flags to final exclusions {#posthoc-decision}
 
@@ -148,7 +179,7 @@ two use all five diagnostic flags. The next two remove Longstring from the
 decision set, while retaining it as a descriptive diagnostic. The final two
 show the Laz.R--MD screening alternative.
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#decision-scenarios >}}
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tbl-decision-scenarios >}}
 
 <br>
 
@@ -170,7 +201,7 @@ therefore be combined with complementary approaches, and its Kneedle cut-off
 should support scrutiny and possible exclusion rather than be treated as proof
 of carelessness [@biemann2025].
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#flag-pairwise-overlap >}}
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tbl-flag-pairwise-overlap >}}
 
 <br>
 
@@ -182,7 +213,7 @@ with Laz.R justify excluding it from the final flag count. Conversely, 42 of
 the 66 IRV-high cases are also flagged by MD, providing convergent evidence for
 excessive variability or multivariate atypicality.
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#lazr-md-intersection >}}
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tbl-lazr-md-intersection >}}
 
 <br>
 
@@ -208,7 +239,7 @@ specific subset and cut-offs are design-dependent and should not be imported
 unchanged into the WHOQOL-Bref [@hong2020]. Plan A is therefore a transparent
 teaching decision for this dataset, not a universal threshold.
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#final-posthoc-rule >}}
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tbl-posthoc-exclusion-patterns >}}
 
 <br>
 
@@ -218,7 +249,7 @@ combination in `posthoc-exclusion-log.csv`.
 
 #### Final analysis dataset
 
-{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#flags-export >}}
+{{< embed Scripts/ProcessingScripts/02_posthoc.qmd#tbl-analysis-sample-summary >}}
 
 <br>
 
@@ -229,3 +260,9 @@ substantive analyses, the unfiltered 1,295-case dataset can be retained as a
 sensitivity condition. Large changes between filtered and unfiltered results
 should be reported rather than used to choose whichever cleaning rule produces
 the preferred result [@wang2025b].
+
+## References {.unnumbered}
+
+::: {#refs}
+:::
+

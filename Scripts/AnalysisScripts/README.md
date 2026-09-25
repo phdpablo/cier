@@ -2,22 +2,19 @@
 
 ## Overview
 
-The `AnalysisScripts` folder holds all scripts for data analysis. These scripts transform intermediate or analysis data into final results and outputs. They apply various statistical or analytical methods. Good documentation and organization of these scripts are essential for analysis reproducibility and transparency.
+The `AnalysisScripts` folder is reserved for prospective substantive analyses that utilize the final, screened dataset produced by the C/IER screening pipeline.
 
-## Contents
+## Architectural Context (TIER Protocol 4.0)
 
--   **Analysis Scripts**: These scripts perform analysis tasks. This includes statistical tests, data visualization, and result generation. Each script should focus on a specific analysis aspect.
+In the Project TIER Protocol 4.0 architecture:
+- **`ProcessingScripts/`**: Handles data ingestion, cleaning, procedural exclusions, and diagnostic post-hoc screening of Careless/Insufficient Effort Responding (C/IER). Its final analytical deliverable is `Data/AnalysisData/whoqol_analysis.csv`.
+- **`AnalysisScripts/`**: Houses subsequent substantive models—such as Confirmatory Factor Analysis (CFA), Exploratory Structural Equation Modeling (ESEM), or regression models—that estimate substantive parameters on the clean sample.
 
-## Guidelines
+## Current Project Scope
 
--   **File Naming**: Use descriptive, consistent names. Names should indicate specific analysis tasks. Examples: `regression_analysis.R`, `data_visualization.py`, `summary_statistics.R`.
--   **Documentation**: Document each script thoroughly with comments. Explain its purpose, inputs, outputs, and key steps. Note any assumptions or important considerations.
-    -   **Header Comments**: Start each script with a header. Include the script name, author, date, and a brief function description.
-    -   **Inline Comments**: Use inline comments to explain specific lines or sections. This is especially important for complex tasks.
--   **Modularity**: Write scripts in a modular way. This allows easy updates and code reuse. Separate different analysis stages into distinct scripts.
--   **Version Control**: Use version control to track script changes. Record major changes and maintain a version history.
--   **Reproducibility**: Ensure each script can run independently. It should produce the same results with the same input data. Set random seeds where needed. Document dependencies or software requirements.
+Because this repository serves as a focused tutorial and methodological template on **C/IER detection and screening**, the core data transformation and diagnostic indicators reside entirely within `Scripts/ProcessingScripts/`.
 
-## Additional Resources
-
-We recommend the [Tidyverse Style Guide](https://style.tidyverse.org/) for standardization. For more detailed instructions, see the [TIER Protocol 4.0 AnalysisScripts Guidelines](https://www.projecttier.org/tier-protocol/protocol-4-0/root/scripts/analysis/).
+Researchers extending this project with downstream psychometric or empirical analyses should place their modeling scripts in this directory, adhering to the same self-contained and reproducible standards:
+1. Load data directly from `Data/AnalysisData/whoqol_analysis.csv`.
+2. Use `here::here()` for cross-platform path resolution.
+3. Export downstream results to `Output/Results/` or `Output/AnalysisOutput/`.

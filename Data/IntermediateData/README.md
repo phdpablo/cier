@@ -2,21 +2,23 @@
 
 ## Overview
 
-The `IntermediateData` folder stores data files generated during processing steps. These are not the final analysis data. They are intermediary products of data transformations, cleaning, and other preprocessing. They document the evolution of the data from raw input to final analysis data.
+The `IntermediateData` folder stores datasets generated during intermediate processing stages of the C/IER detection workflow. These files capture the evolution of the survey data between raw input ingestion and the final analysis-ready dataset, conforming to **Project TIER Protocol 4.0**.
 
-## Contents
+## File Inventory
 
--   **Intermediate Data Files**: These files capture various stages of data processing. They may include data that has been cleaned, merged, filtered, or otherwise transformed but is not yet in its final form for analysis.
+### 1. `whoqol_imported.csv`
+- **Generating Script**: `Scripts/ProcessingScripts/01_procedural.qmd`
+- **Sample Size**: 1,295 rows × 31 columns.
+- **Description**: Dataset of eligible respondents retained after Level 1 procedural screening (dropouts removed, completion time `TIME >= 208 s`, quality control failures `qc_fails < 2`, and missing scale items `na_count <= 5`).
+- **Variables**: `ID`, attention items (`CQ1`, `CQ2`, `CQ3`), total duration (`TIME`), and original item responses (`Q1:Q26`). Item responses remain in their raw positive/negative scale orientation.
+
+### 2. `whoqol_screened.csv`
+- **Generating Script**: `Scripts/ProcessingScripts/02_posthoc.qmd`
+- **Sample Size**: 1,295 rows × 43 columns.
+- **Description**: Comprehensive intermediate dataset appending all computed C/IER statistical indices (`LazR`, `Longstr`, `MD`, `IRV`), binary flags derived from Kneedle thresholds, and multi-indicator decision scenario flags.
+- **Variables**: Respondent identifiers, item responses, indicator values, individual flag indicators (`*_FLAG`), pairwise combinations, and scenario indicators (`scenario_a`, `scenario_b`, `scenario_c`, `scenario_d`).
 
 ## Guidelines
 
--   **File Naming**: Use descriptive and consistent names. Names should reflect the processing stage and specific transformations applied.
--   **Documentation**: Document each intermediate data file thoroughly. Include:
-    -   **Transformation Steps**: A detailed account of the transformations applied to generate the file.
-    -   **Rationale**: Reasoning behind each transformation step. Explain how it contributes to the overall analysis.
-    -   **Version Control**: Track different versions if files are updated or modified.
--   **Data Integrity**: Maintain data integrity at each processing stage. Document any issues and the steps taken to resolve them.
-
-## Additional Resources
-
-For more detailed instructions and best practices, refer to the [TIER Protocol 4.0 IntermediateData Guidelines](https://www.projecttier.org/tier-protocol/protocol-4-0/root/data/intermediatedata/).
+- All files in this directory are programmatically generated and fully reproducible.
+- Neither file should ever be modified manually.
