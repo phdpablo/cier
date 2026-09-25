@@ -1,0 +1,11 @@
+Indicator 1;Indicator 2;N intersection;% of indicator 1;% of indicator 2
+Laz.R;Longstring;76;83,5;39,8
+Laz.R;MD;2;2,2;1,0
+Laz.R;IRV high;2;2,2;3,0
+Laz.R;IRV low;18;19,8;36,7
+Longstring;MD;8;4,2;4,0
+Longstring;IRV high;11;5,8;16,7
+Longstring;IRV low;26;13,6;53,1
+MD;IRV high;42;20,9;63,6
+MD;IRV low;0;0,0;0,0
+IRV high;IRV low;0;0,0;0,0

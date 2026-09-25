@@ -1,0 +1,6 @@
+decision_evidence;Excluded;% of exclusions
+MD + IRV high;41;66,1
+Laz.R + IRV low;18;29,0
+Laz.R + IRV high;1;1,6
+Laz.R + MD;1;1,6
+Laz.R + MD + IRV high;1;1,6

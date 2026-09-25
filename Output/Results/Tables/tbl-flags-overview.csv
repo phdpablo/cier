@@ -1,0 +1,6 @@
+Indicator;n_flagged;pct_flagged
+LazR_FLAG;91;7,0
+Longstr_FLAG;191;14,7
+MD_FLAG;201;15,5
+IRV_high_FLAG;66;5,1
+IRV_low_FLAG;49;3,8
