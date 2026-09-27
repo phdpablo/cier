@@ -47,8 +47,3 @@ Each notebook is self-contained, relies on project-root path resolution (`here::
   - `Output/Results/Figures/`: 8 canonical PNG figures (`fig-viz-*.png`, `fig-cum-*.png`).
   - `Output/Results/Tables/`: 7 canonical CSV tables (`tbl-kneedle-cutoffs.csv`, `tbl-flags-overview.csv`, etc.).
 
-## Guidelines
-
-- **Self-Contained Execution**: All file paths use `here::here()`. Working directory is set to project root (`execute-dir: project` in `_quarto.yml`).
-- **Direct Export**: All tables are written directly using `readr::write_csv2()` to guarantee exact numerical reproducibility.
-- **Traceability**: All chunk names match the `#tbl-*` and `#fig-*` convention for cross-referencing and Quarto manuscript embeds.

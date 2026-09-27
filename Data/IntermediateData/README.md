@@ -16,9 +16,4 @@ The `IntermediateData` folder stores datasets generated during intermediate proc
 - **Generating Script**: `Scripts/ProcessingScripts/02_posthoc.qmd`
 - **Sample Size**: 1,295 rows × 43 columns.
 - **Description**: Comprehensive intermediate dataset appending all computed C/IER statistical indices (`LazR`, `Longstr`, `MD`, `IRV`), binary flags derived from Kneedle thresholds, and multi-indicator decision scenario flags.
-- **Variables**: Respondent identifiers, item responses, indicator values, individual flag indicators (`*_FLAG`), pairwise combinations, and scenario indicators (`scenario_a`, `scenario_b`, `scenario_c`, `scenario_d`).
-
-## Guidelines
-
-- All files in this directory are programmatically generated and fully reproducible.
-- Neither file should ever be modified manually.
+- **Variables**: Respondent identifiers, item responses, indicator values, individual flag indicators (`*_FLAG`), pairwise combinations, and scenario indicators.

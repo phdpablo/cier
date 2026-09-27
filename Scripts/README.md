@@ -47,7 +47,3 @@ The execution flow is orchestrated seamlessly by the Quarto Manuscript build sys
 To execute manually in R without rendering the manuscript, run the processing notebooks in order:
 1. `Scripts/ProcessingScripts/01_procedural.qmd`
 2. `Scripts/ProcessingScripts/02_posthoc.qmd`
-
-## Additional Resources
-
-Refer to the [TIER Protocol 4.0 Scripts Guidelines](https://www.projecttier.org/tier-protocol/protocol-4-0/root/scripts/) for standard replication specifications.

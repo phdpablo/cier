@@ -72,10 +72,10 @@ items (`Q3`, `Q4`, and `Q26`) recoded in the final analysis dataset.
 ├── Output/
 │   ├── Results/              # published canonical tables (tbl-*.csv) and figures (fig-*.png)
 │   └── DataAppendixOutput/   # procedural audit logs (exclusion_log.csv, posthoc-exclusion-log.csv)
-├── docs/                     # rendered Quarto manuscript website (git-ignored)
 ├── index.qmd                 # main Quarto Manuscript article
 ├── _quarto.yml               # Quarto manuscript configuration and lifecycle hooks
 ├── references.bib            # bibliographic references
+├── LICENSE.md                # Creative Commons Attribution-NonCommercial 4.0 (CC BY-NC 4.0)
 └── renv.lock                 # locked R package environment (R 4.5.2)
 ```
 
@@ -87,8 +87,8 @@ organized according to the recommendations of the
 
 To reproduce the project, install:
 
-- [R](https://cran.r-project.org/) (version 4.5.2 recommended);
-- [Quarto CLI](https://quarto.org/) (>= 1.5);
+- [R](https://cran.r-project.org/) (version 4.5.2);
+- [Quarto CLI](https://quarto.org/) (version 1.9.37);
 - the R package [`renv`](https://rstudio.github.io/renv/).
 
 Clone the repository:
@@ -122,13 +122,16 @@ The Quarto build pipeline incorporates automated, lightweight Base R lifecycle h
 1. **Pre-render** (`Scripts/DataAppendixScripts/pre_render_prepare.R`): validates raw data inputs and directory scaffolding.
 2. **Post-render** (`Scripts/DataAppendixScripts/post_render_figures.R` & `post_render_tables.R`): dynamically mirrors published assets to `docs/Output/` and synchronizes notebook preview assets.
 
-Rendered publication files are written to `docs/`.
 
 ## 👤 Author
 
 **Pablo Rogers**<br>
 Federal University of Uberlândia<br>
 [ORCID 0000-0002-0093-3834](https://orcid.org/0000-0002-0093-3834)
+
+## 📄 License
+
+This research compendium and all associated materials (manuscript text, companion notebooks, data documentation, tables, and figures) are licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**. See [LICENSE.md](LICENSE.md) for full terms and recommended citation.
 
 ---
 
