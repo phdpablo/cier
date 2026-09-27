@@ -43,16 +43,18 @@ The licensor cannot revoke these freedoms as long as you follow the license term
 If you use, adapt, or build upon this work in your research, teaching, or methodological workflows, please cite it as follows:
 
 ### APA Format
-> Rogers, P. (2026). *Careless/Insufficient Effort Responding (C/IER) Detection* [Research compendium and executable tutorial]. GitHub. https://github.com/phdpablo/cier
+> Rogers, P. (2026). *Careless/Insufficient Effort Responding (C/IER) Detection* (Version v1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23002392
 
 ### BibTeX
 ```bibtex
-@misc{rogers2026cier,
+@software{rogers2026_cier,
   author       = {Rogers, Pablo},
-  title        = {{Careless/Insufficient Effort Responding (C/IER) Detection: A reproducible tutorial using Quarto Manuscript and Project TIER Protocol 4.0}},
+  title        = {{Careless/Insufficient Effort Responding (C/IER) Detection}},
   year         = {2026},
-  howpublished = {\url{https://github.com/phdpablo/cier}},
-  note         = {Open-science research compendium licensed under CC BY-NC 4.0}
+  version      = {v1.0},
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.23002392},
+  url          = {https://doi.org/10.5281/zenodo.23002392}
 }
 ```
 

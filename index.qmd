@@ -1,6 +1,6 @@
 ---
 title: Careless/Insufficient Effort Responding (C/IER) Detection
-#subtitle: Laz.R, Longstring, Mahalanobis Distance, and IRV Indicators
+doi: 10.5281/zenodo.23002392
 author:
   - name: Pablo Rogers
     orcid: 0000-0002-0093-3834

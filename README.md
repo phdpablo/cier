@@ -1,5 +1,34 @@
 # Careless/Insufficient Effort Responding (C/IER)
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23002392.svg)](https://doi.org/10.5281/zenodo.23002392)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](LICENSE.md)
+
+**Author:** [Pablo Rogers](https://orcid.org/0000-0002-0093-3834) — Universidade Federal de Uberlândia (UFU)  
+**Online Tutorial:** [https://phdpablo.github.io/cier/](https://phdpablo.github.io/cier/)  
+**DOI:** [10.5281/zenodo.23002392](https://doi.org/10.5281/zenodo.23002392)
+
+---
+
+### 📌 Citation
+
+If you use or adapt this compendium, code, or methodology in your research, please cite:
+
+> Rogers, P. (2026). *Careless/Insufficient Effort Responding (C/IER) Detection* (Version v1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23002392
+
+```bibtex
+@software{rogers2026_cier,
+  author       = {Rogers, Pablo},
+  title        = {{Careless/Insufficient Effort Responding (C/IER) Detection}},
+  year         = {2026},
+  version      = {v1.0},
+  publisher    = {Zenodo},
+  doi          = {10.5281/zenodo.23002392},
+  url          = {https://doi.org/10.5281/zenodo.23002392}
+}
+```
+
+---
+
 This repository presents a reproducible tutorial on detecting
 **Careless/Insufficient Effort Responding (C/IER)** in self-report
 questionnaires.
@@ -8,8 +37,6 @@ Using responses to the **WHOQOL-Bref** scale as an example, the tutorial
 demonstrates a two-stage data quality control workflow in R and Quarto:
 procedural criteria defined before the analysis and statistical indicators
 calculated after data collection.
-
-> 📖 **Tutorial:** [view the published version on GitHub Pages](https://phdpablo.github.io/cier/)
 
 ## 🎯 Objective
 
@@ -123,15 +150,9 @@ The Quarto build pipeline incorporates automated, lightweight Base R lifecycle h
 2. **Post-render** (`Scripts/DataAppendixScripts/post_render_figures.R` & `post_render_tables.R`): dynamically mirrors published assets to `docs/Output/` and synchronizes notebook preview assets.
 
 
-## 👤 Author
-
-**Pablo Rogers**<br>
-Federal University of Uberlândia<br>
-[ORCID 0000-0002-0093-3834](https://orcid.org/0000-0002-0093-3834)
-
 ## 📄 License
 
-This research compendium and all associated materials (manuscript text, companion notebooks, data documentation, tables, and figures) are licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**. See [LICENSE.md](LICENSE.md) for full terms and recommended citation.
+This research compendium and all associated materials (manuscript text, companion notebooks, data documentation, tables, and figures) are licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**. See [LICENSE.md](LICENSE.md) for full terms.
 
 ---
 
