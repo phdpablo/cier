@@ -1,0 +1,3183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Careless and Insufficient Effort Responding (C/IER): Psychometric Foundations and Detection Methods</title>
+  <style>
+    /* ==========================================================================
+       DESIGN SYSTEM & COLOR TOKENS
+       Palette: Dark Blue (#0D232C), Vibrant Orange (#F18C22), Light Green/Teal (#87CBCC)
+       ========================================================================== */
+    :root {
+      --navy-950: #071318;
+      --navy-900: #0D232C;
+      --navy-850: #122B36;
+      --navy-800: #183745;
+      --navy-700: #20495B;
+      --navy-600: #2A5D74;
+      
+      --orange-500: #F18C22;
+      --orange-400: #F7A54C;
+      --orange-600: #D87612;
+      --orange-glow: rgba(241, 140, 34, 0.25);
+      
+      --teal-500: #87CBCC;
+      --teal-400: #A2D8D9;
+      --teal-600: #68B4B5;
+      --teal-glow: rgba(135, 203, 204, 0.2);
+      
+      --text-main: #FFFFFF;
+      --text-sub: #CBD5E1;
+      --text-muted: #94A3B8;
+      
+      --border-subtle: rgba(135, 203, 204, 0.22);
+      --border-strong: rgba(135, 203, 204, 0.45);
+      --border-orange: rgba(241, 140, 34, 0.4);
+      
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      
+      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-serif-math: "Cambria Math", "Latin Modern Math", "STIX Two Math", "Times New Roman", Times, Georgia, serif;
+      --font-mono: "JetBrains Mono", Consolas, "Courier New", monospace;
+      
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.45);
+      --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 0 25px rgba(241, 140, 34, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--navy-950);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: clip;
+      min-height: 100vh;
+    }
+
+    /* Math & Scientific Typography */
+    i.math-var {
+      font-family: var(--font-serif-math);
+      font-style: italic;
+      font-size: 1.05em;
+      letter-spacing: 0.02em;
+    }
+
+    sub, sup {
+      font-size: 0.74em;
+      line-height: 0;
+      position: relative;
+      vertical-align: baseline;
+    }
+    sub { bottom: -0.25em; }
+    sup { top: -0.45em; }
+
+    /* ==========================================================================
+       TOP APP HEADER
+       ========================================================================== */
+    .app-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 58px;
+      z-index: 1000;
+      background: rgba(13, 35, 44, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-sizing: border-box;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-title span {
+      color: var(--teal-500);
+      font-weight: 400;
+      font-size: 0.92rem;
+      margin-left: 0.35rem;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .mode-switch-group {
+      display: flex;
+      background: var(--navy-850);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      padding: 3px;
+    }
+
+    .mode-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.35rem 0.85rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .mode-btn.active {
+      background: var(--teal-500);
+      color: var(--navy-950);
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(135, 203, 204, 0.4);
+    }
+
+    .nav-select {
+      background: var(--navy-850);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      padding: 0.4rem 0.75rem;
+      font-size: 0.82rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      max-width: 280px;
+      outline: none;
+    }
+
+    .nav-select:focus {
+      border-color: var(--orange-500);
+    }
+
+    .ref-btn {
+      background: var(--navy-800);
+      border: 1px solid var(--orange-500);
+      color: var(--orange-400);
+      padding: 0.4rem 0.85rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .ref-btn:hover {
+      background: var(--orange-500);
+      color: var(--navy-950);
+    }
+
+    /* Progress bar */
+    .progress-track {
+      position: fixed;
+      top: 58px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 3px;
+      background: rgba(135, 203, 204, 0.15);
+      z-index: 999;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal-500), var(--orange-500));
+      width: 6.66%;
+      transition: width 0.3s ease;
+    }
+
+    /* ==========================================================================
+       MAIN CONTENT CONTAINER
+       ========================================================================== */
+    .main-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      gap: 2rem;
+      box-sizing: border-box;
+    }
+
+    /* Table of contents sidebar (Document Mode) */
+    .toc-sidebar {
+      position: sticky;
+      top: 77px;
+      width: 290px;
+      flex-shrink: 0;
+      background: var(--navy-900);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      height: calc(100vh - 95px);
+      overflow-y: auto;
+      align-self: flex-start;
+      display: none;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .toc-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--orange-400);
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .toc-link {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.5rem;
+      border-radius: var(--radius-sm);
+      display: block;
+      transition: all 0.2s ease;
+      line-height: 1.35;
+      border-left: 2px solid transparent;
+    }
+
+    .toc-link:hover, .toc-link.active {
+      color: var(--text-main);
+      background: var(--navy-850);
+      border-left-color: var(--teal-500);
+      padding-left: 0.75rem;
+    }
+
+    .content-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* ==========================================================================
+       SLIDE / MODULE CARD STYLING
+       ========================================================================== */
+    .module-card {
+      background: var(--navy-900);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2.25rem;
+      margin-bottom: 2.5rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Stepper Mode: Fixed viewport, slide area scrolls internally if needed, zero blank bottom void */
+    html.stepper-mode, body.stepper-mode {
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .stepper-mode .main-wrapper {
+      margin-top: 61px;
+      height: calc(100vh - 61px - 62px);
+      overflow-y: auto;
+      padding: 1.25rem 1.5rem;
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .stepper-mode .module-card {
+      display: none;
+      margin-bottom: 0;
+      min-height: auto;
+    }
+
+    .stepper-mode .toc-sidebar {
+      display: none !important;
+    }
+
+    /* Document Mode: Clean native window scroll across all 15 stacked modules */
+    html.document-mode {
+      height: auto;
+      overflow-y: auto;
+    }
+
+    body.document-mode {
+      height: auto;
+      min-height: 100vh;
+      overflow-y: visible;
+      overflow-x: clip;
+    }
+
+    .document-mode .main-wrapper {
+      margin-top: 61px;
+      height: auto;
+      min-height: calc(100vh - 61px);
+      overflow: visible;
+      padding: 1.5rem 1.5rem 6rem;
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+    }
+
+    .document-mode .toc-sidebar {
+      display: block !important;
+      position: sticky;
+      top: 77px;
+      width: 290px;
+      flex-shrink: 0;
+      background: var(--navy-900);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      height: calc(100vh - 95px);
+      overflow-y: auto;
+      align-self: flex-start;
+      z-index: 50;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .document-mode .content-area {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .document-mode .module-card {
+      display: block !important;
+      margin-bottom: 2.5rem;
+      min-height: auto;
+      scroll-margin-top: 77px;
+    }
+
+    .document-mode #stepper-footer {
+      display: none !important;
+    }
+
+    .stepper-mode .module-card.active-slide {
+      display: block;
+      animation: fadeInSlide 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .module-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--orange-500), var(--teal-500));
+    }
+
+    .module-header {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(135, 203, 204, 0.15);
+      padding-bottom: 1.25rem;
+    }
+
+    .module-meta-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .module-number-badge {
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      background: var(--navy-800);
+      color: var(--teal-400);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border-subtle);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .module-category {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--orange-400);
+      font-weight: 600;
+    }
+
+    .module-title {
+      font-size: 1.65rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: var(--text-main);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .module-abstract {
+      font-size: 0.95rem;
+      color: var(--text-sub);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    @media (max-width: 1024px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .text-column {
+      font-size: 0.94rem;
+      color: var(--text-sub);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .text-column p {
+      line-height: 1.65;
+    }
+
+    .text-column strong {
+      color: var(--text-main);
+    }
+
+    .interactive-column {
+      background: var(--navy-850);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .widget-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--teal-400);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Math Box */
+    .math-block {
+      background: var(--navy-950);
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--teal-500);
+      border-radius: var(--radius-sm);
+      padding: 1.1rem 1.4rem;
+      margin: 0.85rem 0;
+      overflow-x: auto;
+    }
+
+    .math-formula {
+      font-family: var(--font-serif-math);
+      font-size: 1.18rem;
+      color: var(--teal-400);
+      margin-bottom: 0.35rem;
+      line-height: 1.6;
+      letter-spacing: 0.02em;
+    }
+
+    .math-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    .callout-box {
+      background: rgba(241, 140, 34, 0.08);
+      border: 1px solid var(--border-orange);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      margin: 1rem 0;
+    }
+
+    .callout-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--orange-400);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .callout-content {
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    .cite {
+      color: var(--teal-400);
+      cursor: pointer;
+      text-decoration: underline dotted;
+      font-weight: 600;
+      transition: color 0.2s ease;
+    }
+
+    .cite:hover {
+      color: var(--orange-400);
+    }
+
+    /* ==========================================================================
+       INTERACTIVE WIDGET COMPONENTS
+       ========================================================================== */
+    .slider-control-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .slider-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 0.4rem;
+    }
+
+    .slider-val-badge {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--orange-400);
+      background: var(--navy-950);
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(241, 140, 34, 0.3);
+    }
+
+    input[type=range] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      background: var(--navy-950);
+      border-radius: var(--radius-full);
+      outline: none;
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--orange-500);
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(241, 140, 34, 0.6);
+      transition: transform 0.15s ease;
+    }
+
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .simulation-output-panel {
+      background: var(--navy-950);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .sim-metric-val {
+      font-size: 1.6rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--orange-400);
+      line-height: 1.2;
+    }
+
+    .sim-metric-label {
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .viz-canvas-container {
+      background: var(--navy-950);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      margin: 1rem 0;
+      position: relative;
+    }
+
+    canvas {
+      width: 100%;
+      height: 200px;
+      display: block;
+    }
+
+    .tab-header {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn.active {
+      background: var(--navy-800);
+      color: var(--orange-400);
+      border-bottom: 2px solid var(--orange-500);
+    }
+
+    .tab-panel {
+      display: none;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .tab-panel.active {
+      display: block;
+      animation: fadeInSlide 0.25s ease;
+    }
+
+    .flow-steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem;
+      margin: 1rem 0;
+    }
+
+    @media (max-width: 768px) {
+      .flow-steps-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .flow-card {
+      background: var(--navy-950);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .flow-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--teal-500);
+    }
+
+    .flow-card-header {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--orange-400);
+      margin-bottom: 0.4rem;
+    }
+
+    .flow-card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.4rem;
+    }
+
+    .flow-card-desc {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+
+    .quadrant-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      .quadrant-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .quadrant-box {
+      background: var(--navy-950);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      border-top: 3px solid var(--teal-500);
+    }
+
+    .quadrant-box.risk-high {
+      border-top-color: var(--orange-500);
+    }
+
+    .quadrant-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .quadrant-desc {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      line-height: 1.4;
+    }
+
+    .pattern-input-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .pattern-input {
+      flex: 1;
+      background: var(--navy-950);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: var(--radius-sm);
+      outline: none;
+    }
+
+    .pattern-input:focus {
+      border-color: var(--teal-500);
+    }
+
+    .pattern-presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .preset-chip {
+      background: var(--navy-800);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-sub);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .preset-chip:hover {
+      background: var(--teal-500);
+      color: var(--navy-950);
+    }
+
+    .statement-box {
+      background: var(--navy-950);
+      border: 1px solid var(--teal-500);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      line-height: 1.6;
+      font-style: italic;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: var(--teal-500);
+      color: var(--navy-950);
+      border: none;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       BOTTOM SLIDE CONTROLS (Stepper Mode)
+       ========================================================================== */
+    .slide-stepper-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(13, 35, 44, 0.95);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border-subtle);
+      padding: 0.75rem 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 90;
+    }
+
+    .stepper-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .stepper-counter {
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--teal-400);
+    }
+
+    .stepper-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 600px) {
+      .stepper-hint {
+        display: none;
+      }
+    }
+
+    .stepper-nav-btns {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .nav-arrow-btn {
+      background: var(--navy-800);
+      border: 1px solid var(--teal-500);
+      color: var(--text-main);
+      padding: 0.45rem 1.15rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-arrow-btn:hover:not(:disabled) {
+      background: var(--teal-500);
+      color: var(--navy-950);
+      box-shadow: 0 0 12px rgba(135, 203, 204, 0.4);
+    }
+
+    .nav-arrow-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      border-color: var(--border-subtle);
+    }
+
+    .nav-arrow-btn.primary {
+      background: var(--orange-500);
+      border-color: var(--orange-500);
+      color: var(--navy-950);
+    }
+
+    .nav-arrow-btn.primary:hover:not(:disabled) {
+      background: var(--orange-400);
+      box-shadow: 0 0 14px rgba(241, 140, 34, 0.5);
+    }
+
+    /* ==========================================================================
+       MODAL: ACADEMIC REFERENCES & BIBLIOGRAPHY
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 19, 24, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+      animation: fadeInSlide 0.2s ease;
+    }
+
+    .modal-dialog {
+      background: var(--navy-900);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-lg);
+      max-width: 900px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--navy-850);
+    }
+
+    .modal-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--orange-400);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+      line-height: 1;
+      transition: color 0.2s ease;
+    }
+
+    .modal-close-btn:hover {
+      color: var(--text-main);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .bib-entry {
+      background: var(--navy-950);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      font-size: 0.86rem;
+      line-height: 1.5;
+    }
+
+    .bib-entry-key {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--teal-400);
+      margin-bottom: 0.3rem;
+      font-size: 0.78rem;
+    }
+
+    .bib-entry-text {
+      color: var(--text-sub);
+    }
+
+    .bib-entry-text em {
+      color: var(--text-main);
+      font-style: italic;
+    }
+
+    .bib-doi {
+      margin-top: 0.35rem;
+      font-size: 0.76rem;
+      color: var(--orange-400);
+      font-family: var(--font-mono);
+    }
+
+    .cite-popover {
+      position: absolute;
+      background: var(--navy-850);
+      border: 1px solid var(--teal-500);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      box-shadow: var(--shadow-lg);
+      z-index: 500;
+      max-width: 320px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .cite-popover.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="stepper-mode">
+
+  <!-- ========================================================================
+       TOP HEADER & NAVIGATION BAR
+       ======================================================================== -->
+  <header class="app-header">
+    <div class="brand-group">
+      <h1 class="brand-title">Careless and Insufficient Effort Responding (C/IER) <span>| Psychometric Foundations and Detection Methods</span></h1>
+    </div>
+
+    <div class="header-controls">
+      <div class="mode-switch-group">
+        <button id="btn-stepper" class="mode-btn active" onclick="switchMode('stepper')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          Slide Stepper
+        </button>
+        <button id="btn-doc" class="mode-btn" onclick="switchMode('document')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          Continuous Reading
+        </button>
+      </div>
+
+      <select id="jump-select" class="nav-select" onchange="jumpToModule(this.value)">
+        <option value="0">01: Conceptual Foundations & Framework</option>
+        <option value="1">02: Measurement Error Paradigms</option>
+        <option value="2">03: Comparative Psychometrics (SDR & ARS)</option>
+        <option value="3">04: Catalyst–Carrier–Consequence Model</option>
+        <option value="4">05: Etiological Vectors & Interactions</option>
+        <option value="5">06: Midpoint Attraction Mechanism</option>
+        <option value="6">07: Methodological Vulnerabilities</option>
+        <option value="7">08: Dual-Front Data Quality Framework</option>
+        <option value="8">09: Ex Ante Procedural Controls</option>
+        <option value="9">10: Post Hoc Statistical Diagnostics</option>
+        <option value="10">11: Markov Transition Detection (Laz.R)</option>
+        <option value="11">12: Latent Mixture & Response Time</option>
+        <option value="12">13: Intensive Longitudinal Dynamics (EMA)</option>
+        <option value="13">14: Cross-Sectional Triage Funnel</option>
+        <option value="14">15: Synthesis & Reporting Standards</option>
+      </select>
+
+      <button class="ref-btn" onclick="openRefModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        Scholarly References (22)
+      </button>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="progress-track">
+    <div id="progress-bar" class="progress-fill"></div>
+  </div>
+
+  <!-- ========================================================================
+       MAIN BODY & MODULE CONTAINERS
+       ======================================================================== -->
+  <div class="main-wrapper">
+
+    <!-- Sticky TOC Sidebar (Visible in Document Mode) -->
+    <aside id="toc-sidebar" class="toc-sidebar">
+      <div class="toc-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Psychometric Modules
+      </div>
+      <ul class="toc-list" id="toc-list">
+      </ul>
+    </aside>
+
+    <!-- Content Presentation Area -->
+    <main class="content-area" id="content-area">
+
+      <!-- ====================================================================
+           MODULE 01
+           ==================================================================== -->
+      <article class="module-card active-slide" id="slide-0" data-index="0">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 01 / 15</span>
+            <span class="module-category">Theoretical Foundations</span>
+          </div>
+          <h2 class="module-title">Careless and Insufficient Effort Responding (C/IER): Conceptual Foundations and Theoretical Framework</h2>
+          <p class="module-abstract">Operationalizing non-purposeful and disengaged response behavior in survey-based psychometric research.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              In self-administered questionnaires, investigators routinely premise their statistical inferences on the axiomatic assumption that respondents actively read item stems, accurately retrieve relevant behavioral or psychological states from memory, and conscientiously map their judgments onto provided response scales. 
+            </p>
+            <p>
+              However, contemporary psychometric inquiry demonstrates that a substantial fraction of survey participants engage in <strong style="color:var(--orange-400)">Careless and Insufficient Effort Responding (C/IER)</strong>. As rigorously operationalized by <span class="cite" data-cite="huang2015">Huang et al. (2015)</span> and synthesized by <span class="cite" data-cite="curran2016">Curran (2016)</span> and <span class="cite" data-cite="hong2020">Hong et al. (2020)</span>, C/IER designates any response pattern wherein a participant fails to comply with instructions or neglects to exert the cognitive effort required to process item content.
+            </p>
+            <p>
+              C/IER is not a monolithic artifact. It spans a behavioral spectrum ranging from <em>sporadic, momentary inattention</em> (e.g., occasional misreading under cognitive overload) to <em>deliberate, non-substantive satisficing</em> (e.g., rapid speed-running to maximize financial payouts in crowdsourced platforms). Crucially, C/IER manifests in two distinct topologies:
+            </p>
+            <ul style="padding-left:1.25rem; display:flex; flex-direction:column; gap:0.4rem;">
+              <li><strong>Pseudo-Systematic Satisficing:</strong> Invariant option selection (<em>straightlining</em>), diagonal staircase selections, alternating extreme polar endpoints (1 &rarr; 5 &rarr; 1 &rarr; 5), or clustering near the neutral midpoint.</li>
+              <li><strong>Pure Stochastic Noise:</strong> Genuine random uniform guessing across item batteries devoid of semantic processing.</li>
+            </ul>
+            <div class="callout-box">
+              <div class="callout-title">Epidemiological Scope in Empirical Science</div>
+              <div class="callout-content">
+                Meta-analytic investigations (<span class="cite" data-cite="curran2016">Curran, 2016</span>; <span class="cite" data-cite="huang2026">Huang et al., 2026</span>) reveal that C/IER prevalence systematically contaminates between <strong>5% and 15%</strong> of cross-sectional survey samples in organizational, psychological, and behavioral domains. Even at baseline contamination rates as low as 5%, statistical parameters experience profound inferential instability.
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              Response Trajectory Analysis
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:1rem;">
+              Comparison of true psychological variance (coherent signal wave) versus synthetic C/IER contamination (degraded high-frequency artifact).
+            </p>
+            <div class="viz-canvas-container" style="height:auto; padding:0.85rem;">
+              <svg width="100%" height="150" viewBox="0 0 460 150" style="display:block;" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background Grid -->
+                <line x1="10" y1="30" x2="450" y2="30" stroke="rgba(135, 203, 204, 0.1)"/>
+                <line x1="10" y1="75" x2="450" y2="75" stroke="rgba(135, 203, 204, 0.1)"/>
+                <line x1="10" y1="120" x2="450" y2="120" stroke="rgba(135, 203, 204, 0.1)"/>
+
+                <!-- Attentive Signal Wave (Green) -->
+                <path d="M 15 75 Q 40 25, 65 75 T 115 75 T 165 75 T 215 75 T 255 75" fill="none" stroke="#87CBCC" stroke-width="2.6" stroke-linecap="round"/>
+                
+                <!-- Transition Pulse Point -->
+                <circle cx="255" cy="75" r="5" fill="#F18C22" stroke="#FFFFFF" stroke-width="1.5"/>
+                <text x="255" y="98" fill="#F18C22" font-size="9" font-weight="700" text-anchor="middle">Inattention Lapse</text>
+
+                <!-- Corrupted / Straightlined C/IER Signal (Orange) -->
+                <path d="M 255 75 L 310 75 L 310 40 L 315 110 L 320 75 L 445 75" fill="none" stroke="#F18C22" stroke-width="2.6" stroke-linecap="round"/>
+
+                <!-- Labels -->
+                <text x="70" y="24" fill="#87CBCC" font-size="9.5" font-weight="700">Veridical Construct Signal</text>
+                <text x="350" y="24" fill="#F18C22" font-size="9.5" font-weight="700">Straightlined / Spurious Artifact</text>
+              </svg>
+            </div>
+            <div style="font-size:0.78rem; color:var(--text-muted); line-height:1.45;">
+              <span style="color:var(--teal-400); font-weight:700;">Green Wave:</span> Attentive respondent trajectory reflecting latent trait <i class="math-var">&theta;<sub>i</sub></i> with contextual variance.<br>
+              <span style="color:var(--orange-400); font-weight:700;">Orange Disruption:</span> Inattentive satisficing interval introducing spurious method variance.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 02
+           ==================================================================== -->
+      <article class="module-card" id="slide-1" data-index="1">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 02 / 15</span>
+            <span class="module-category">Psychometric Theory</span>
+          </div>
+          <h2 class="module-title">Measurement Error Paradigms: Differentiating Classical Random Attenuation from Systematic Covariance Inflation</h2>
+          <p class="module-abstract">Why the classical test theory assumption of orthogonal error fails in the presence of C/IER.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              In classical psychometrics, measurement error is historically formalized within the Classical Test Theory (CTT) framework:
+            </p>
+            <div class="math-block">
+              <div class="math-formula">
+                <i class="math-var">X</i> = <i class="math-var">T<sub>X</sub></i> + <i class="math-var">E<sub>X</sub></i> &nbsp;&nbsp;&nbsp;&nbsp;and&nbsp;&nbsp;&nbsp;&nbsp; <i class="math-var">Y</i> = <i class="math-var">T<sub>Y</sub></i> + <i class="math-var">E<sub>Y</sub></i>
+              </div>
+              <div class="math-desc">Classical Orthogonality Assumption: <i>Cov</i>(<i class="math-var">E<sub>X</sub></i>, <i class="math-var">E<sub>Y</sub></i>) = 0</div>
+            </div>
+            <p>
+              Under this orthodox formulation, error variance (<i class="math-var">E</i>) represents independent, idiosyncratic Gaussian noise. The theoretical consequence of random noise is purely <em>attenuating</em>: it inflates standard errors, reduces internal consistency reliability (Cronbach's <i class="math-var">&alpha;</i>, McDonald's <i class="math-var">&omega;</i>), and attenuates observed effect sizes towards zero (Observed <i class="math-var">r<sub>XY</sub></i> &lt; True <i class="math-var">&rho;<sub>XY</sub></i>). Consequently, classical theory reassuringly concluded that careless responding merely produced <strong>Type II errors</strong> (failure to detect true relationships).
+            </p>
+            <p>
+              The paradigm-shifting contribution of <span class="cite" data-cite="huang2015">Huang, Liu, and Bowling (2015)</span> demonstrated that this classical assumption is empirically invalid for careless responding. When disengaged participants adopt non-random response patterns across multiple survey scales (e.g., tending toward midpoint choices or straightlining), the response artifact is <strong>shared across instruments</strong>:
+            </p>
+            <div class="math-block">
+              <div class="math-formula">
+                <i>Cov</i>(<i class="math-var">E<sub>X</sub></i>, <i class="math-var">E<sub>Y</sub></i>) &ne; 0 &nbsp;&rArr;&nbsp; <i>Cov</i>(<i class="math-var">X</i>, <i class="math-var">Y</i>) = <i>Cov</i>(<i class="math-var">T<sub>X</sub></i>, <i class="math-var">T<sub>Y</sub></i>) + <i>Cov</i>(<i class="math-var">E<sub>X</sub></i>, <i class="math-var">E<sub>Y</sub></i>)
+              </div>
+            </div>
+            <p>
+              Because <i>Cov</i>(<i class="math-var">E<sub>X</sub></i>, <i class="math-var">E<sub>Y</sub></i>) is strictly non-zero, C/IER operates as an unmeasured <strong>Common Method Factor</strong>. Far from merely attenuating correlations, it mechanically induces <strong>spurious covariance</strong>, triggering catastrophic <strong>Type I errors</strong>&mdash;leading investigators to discover and publish statistically significant relations between constructs where the true population correlation is exactly zero (<span class="cite" data-cite="curran2016">Curran, 2016</span>).
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
+              Error Covariance Impact Simulator
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:1rem;">
+              Observe how shifting from pure orthogonal noise to shared C/IER method covariance distorts the observed bivariate relationship (<i class="math-var">N</i> = 300).
+            </p>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Shared Method Error Covariance <i>Cov</i>(<i class="math-var">E<sub>X</sub></i>, <i class="math-var">E<sub>Y</sub></i>):</span>
+                <span class="slider-val-badge" id="val-s2-cov">0.00</span>
+              </div>
+              <input type="range" id="slider-s2-cov" min="0" max="0.40" step="0.02" value="0.00" oninput="updateSlide2Sim(this.value)">
+            </div>
+
+            <div class="simulation-output-panel">
+              <div>
+                <div class="sim-metric-val" id="disp-s2-r">0.00</div>
+                <div class="sim-metric-label">Observed <i class="math-var">r<sub>XY</sub></i> (True <i class="math-var">&rho;</i> = 0.00)</div>
+              </div>
+              <div>
+                <div class="sim-metric-val" id="disp-s2-type1">5.0%</div>
+                <div class="sim-metric-label">Empirical Type I Error (<i class="math-var">&alpha;</i> = .05)</div>
+              </div>
+            </div>
+
+            <div class="viz-canvas-container" style="height:140px; margin-top:1rem;">
+              <canvas id="canvas-slide-2" style="height:120px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 03
+           ==================================================================== -->
+      <article class="module-card" id="slide-2" data-index="2">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 03 / 15</span>
+            <span class="module-category">Differential Psychometrics</span>
+          </div>
+          <h2 class="module-title">Comparative Psychometric Taxonomy: Differentiating C/IER from Social Desirability and Acquiescence Response Styles</h2>
+          <p class="module-abstract">Isolating task disengagement from substantive impression management and directional response heuristics.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              Methodological rigor necessitates clear diagnostic boundaries between C/IER and classical survey response biases. Historically, researchers have occasionally conflated C/IER with <strong>Social Desirability (SDR)</strong> or <strong>Acquiescence Response Style (ARS)</strong>, because all three inject construct-irrelevant variance and threaten construct validity (<span class="cite" data-cite="alarcon2022">Alarcon & Lee, 2022</span>; <span class="cite" data-cite="hong2020">Hong et al., 2020</span>).
+            </p>
+            <p>
+              However, the theoretical etiologies and cognitive processes governing these phenomena diverge fundamentally:
+            </p>
+            <ul style="padding-left:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
+              <li>
+                <strong>Social Desirability (SDR):</strong> An intentional, motivated process of impression management and self-deceptive enhancement. The respondent <em>thoroughly reads</em> and cognitively comprehends the item content, deliberately selecting choices that align with social norms or expectations.
+              </li>
+              <li>
+                <strong>Acquiescence Response Style (ARS):</strong> A directional heuristic characterized by the propensity to agree with assertions regardless of semantic content. While cognitive processing is reduced, the respondent still processes linguistic anchors and applies a uniform positive valence.
+              </li>
+              <li>
+                <strong>C/IER:</strong> Characterized by <em>complete cognitive task disengagement</em>. The respondent bypasses semantic interpretation entirely. Response vectors are dictated by motor satisficing (e.g., straightlining option 3) or arbitrary stochastic selection.
+              </li>
+            </ul>
+            <div class="callout-box">
+              <div class="callout-title">The Alarcon & Lee (2022) Empirical Finding</div>
+              <div class="callout-content">
+                Empirical investigations comparing C/IER indices with traditional response style metrics demonstrate only weak-to-modest bivariate correlations (<i class="math-var">r</i> &asymp; .12 &minus; .24). This confirms that C/IER is a psychometrically distinct entity requiring specialized detection procedures rather than standard response-style corrections.
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              Differential Diagnostic Matrix
+            </div>
+
+            <div class="tab-header">
+              <button class="tab-btn active" onclick="switchDiagTab('tab-cier')">C/IER</button>
+              <button class="tab-btn" onclick="switchDiagTab('tab-sdr')">Social Desirability</button>
+              <button class="tab-btn" onclick="switchDiagTab('tab-ars')">Acquiescence</button>
+            </div>
+
+            <div id="tab-cier" class="tab-panel active">
+              <div style="background:var(--navy-950); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid var(--orange-500);">
+                <div style="font-weight:700; color:var(--orange-400); margin-bottom:0.4rem;">Core Cognitive Driver</div>
+                <div style="color:var(--text-sub); margin-bottom:0.75rem;">Apathy, cognitive fatigue, lack of task motivation; item semantic processing is absent.</div>
+                <div style="font-weight:700; color:var(--teal-400); margin-bottom:0.4rem;">Observable Response Pattern</div>
+                <div style="color:var(--text-sub); margin-bottom:0.75rem;">Extremely low response times (&lt;1.0 s/item), high Long String (LS), severe Infrequency/IMC failures.</div>
+                <div style="font-weight:700; color:var(--text-main); margin-bottom:0.4rem;">Psychometric Impact</div>
+                <div style="color:var(--text-sub);">Spurious covariance inflation across unrelated batteries; artificial factor structures; inflated Type I errors.</div>
+              </div>
+            </div>
+
+            <div id="tab-sdr" class="tab-panel">
+              <div style="background:var(--navy-950); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid var(--teal-500);">
+                <div style="font-weight:700; color:var(--teal-400); margin-bottom:0.4rem;">Core Cognitive Driver</div>
+                <div style="color:var(--text-sub); margin-bottom:0.75rem;">Impression management, ego defense; respondent actively reads and edits responses to look favorable.</div>
+                <div style="font-weight:700; color:var(--teal-400); margin-bottom:0.4rem;">Observable Response Pattern</div>
+                <div style="color:var(--text-sub); margin-bottom:0.75rem;">Normal/elevated reading times; high scores on Marlowe-Crowne / BIDR scales; zero IMC failures.</div>
+                <div style="font-weight:700; color:var(--text-main); margin-bottom:0.4rem;">Psychometric Impact</div>
+                <div style="color:var(--text-sub);">Suppressed variance on sensitive traits; systematic substantive skew; altered regression intercepts.</div>
+              </div>
+            </div>
+
+            <div id="tab-ars" class="tab-panel">
+              <div style="background:var(--navy-950); padding:1rem; border-radius:var(--radius-sm); border-left:3px solid var(--orange-400);">
+                <div style="font-weight:700; color:var(--orange-400); margin-bottom:0.4rem;">Core Cognitive Driver</div>
+                <div style="color:var(--text-sub); margin-bottom:0.75rem;">Cognitive confirmation bias; heuristic tendency to agree with assertions regardless of reverse-wording.</div>
+                <div style="font-weight:700; color:var(--teal-400); margin-bottom:0.4rem;">Observable Response Pattern</div>
+                <div style="color:var(--text-sub); margin-bottom:0.75rem;">Simultaneous agreement with polar-opposite item pairs (low psychometric antonym consistency).</div>
+                <div style="font-weight:700; color:var(--text-main); margin-bottom:0.4rem;">Psychometric Impact</div>
+                <div style="color:var(--text-sub);">Artificial method factors in balanced scales; distorted bifactor model loadings.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 04
+           ==================================================================== -->
+      <article class="module-card" id="slide-3" data-index="3">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 04 / 15</span>
+            <span class="module-category">Methodological Mechanisms</span>
+          </div>
+          <h2 class="module-title">Structural Mechanisms of Inferential Distortion: The Catalyst&ndash;Carrier&ndash;Consequence Model (Process &rarr; CMV &rarr; CMB)</h2>
+          <p class="module-abstract">Tracing the causal trajectory from micro-level cognitive satisficing to macro-level inferential bias.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              To unify the survey methodology and psychometric treatments of C/IER, <span class="cite" data-cite="huang2015">Huang et al. (2015)</span> articulated the direct connection to the classical <strong>Common Method Variance (CMV)</strong> and <strong>Common Method Bias (CMB)</strong> literature (<span class="cite" data-cite="podsakoff2003">Podsakoff et al., 2003</span>, <span class="cite" data-cite="podsakoff2012">2012</span>; <span class="cite" data-cite="spector2006">Spector, 2006</span>).
+            </p>
+            <p>
+              While researchers frequently use CMV and CMB interchangeably, maintaining their rigorous analytical distinction is critical:
+            </p>
+            <ul style="padding-left:1.25rem; display:flex; flex-direction:column; gap:0.5rem;">
+              <li><strong>Common Method Variance (CMV):</strong> The shared variance attributable to the measurement method rather than the substantive latent constructs of interest.</li>
+              <li><strong>Common Method Bias (CMB):</strong> The downstream inferential distortion (inflated parameter estimates, biased path coefficients, incorrect hypothesis tests) caused by CMV.</li>
+            </ul>
+            <p>
+              We formalize the pathway through a three-stage tripartite sequence:
+            </p>
+            <div class="callout-box">
+              <div class="callout-title">The Fundamental C/IER Method Axiom</div>
+              <div class="callout-content" style="font-weight:600; color:var(--text-main);">
+                "Every severe C/IER instance generates measurement error, but it constitutes Common Method Bias when the identical disengagement process uniformly affects multiple observed variables."
+              </div>
+            </div>
+            <p>
+              When a participant speed-clicks through both an independent variable scale (<i class="math-var">X</i>) and a dependent variable scale (<i class="math-var">Y</i>), the disengaged process acts as a shared variance carrier, binding <i class="math-var">X</i> and <i class="math-var">Y</i> together through non-substantive methodological covariance (<span class="cite" data-cite="ulitzsch2022">Ulitzsch et al., 2022</span>).
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              The Tripartite Causal Pipeline
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:1rem;">
+              Click each component below to inspect the mathematical and structural equation mechanism:
+            </p>
+
+            <div class="flow-steps-grid" style="grid-template-columns:1fr; gap:0.6rem;">
+              <div class="flow-card" onclick="inspectFlowStep('catalyst')">
+                <div class="flow-card-header">STAGE 1: THE CATALYST (PROCESS)</div>
+                <div class="flow-card-title">Micro-Level Cognitive Satisficing</div>
+                <div class="flow-card-desc">Respondent is depleted or unmotivated. Skips reading item stems and executes arbitrary keystrokes across survey pages.</div>
+              </div>
+              <div class="flow-card" onclick="inspectFlowStep('carrier')">
+                <div class="flow-card-header">STAGE 2: THE CARRIER (CMV)</div>
+                <div class="flow-card-title">Shared Method Variance Extraction</div>
+                <div class="flow-card-desc">The shared response behavior creates an unmeasured latent factor (<i class="math-var">F</i><sub>Method</sub>) loading onto items across unrelated batteries.</div>
+              </div>
+              <div class="flow-card" onclick="inspectFlowStep('consequence')">
+                <div class="flow-card-header">STAGE 3: THE CONSEQUENCE (CMB)</div>
+                <div class="flow-card-title">Inferential Estimation Distortion</div>
+                <div class="flow-card-desc">Structural paths (<i class="math-var">&beta;<sub>YX</sub></i>) and correlations become biased. Statistical significance tests falsely reject <i class="math-var">H</i><sub>0</sub>.</div>
+              </div>
+            </div>
+
+            <div id="flow-details-panel" style="background:var(--navy-950); border:1px solid var(--border-subtle); padding:0.85rem; border-radius:var(--radius-sm); font-size:0.82rem; color:var(--text-sub); margin-top:0.75rem;">
+              <em>Click any stage above to display its structural modeling representation.</em>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 05
+           ==================================================================== -->
+      <article class="module-card" id="slide-4" data-index="4">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 05 / 15</span>
+            <span class="module-category">Survey Etiology & Design</span>
+          </div>
+          <h2 class="module-title">Etiological Determinants of Insufficient Effort: Interactions Between Instrument Architecture, Situational Context, and Respondent Dispositions</h2>
+          <p class="module-abstract">Analyzing the triadic convergence of factors precipitating careless response behaviors.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              Careless responding does not occur in an empirical vacuum. Rather, it emerges from the continuous dynamic interaction between three distinct etiological vectors (<span class="cite" data-cite="bowling2021">Bowling et al., 2021</span>; <span class="cite" data-cite="curran2016">Curran, 2016</span>):
+            </p>
+            <ol style="padding-left:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
+              <li>
+                <strong>Vector 1: Instrument Architecture (Directly Researcher-Controlled):</strong>
+                Survey duration exceeding 15&ndash;20 minutes; repetitious matrix-grid layouts that foster optical hypnosis; double-barreled or overly complex syntactical item structures; absence of responsive mobile optimization.
+              </li>
+              <li>
+                <strong>Vector 2: Situational Context & Incentives (Partially Controlled):</strong>
+                Fixed-rate compensation structures on crowdsourced platforms (e.g., MTurk, Prolific) incentivizing minimum completion duration; unmonitored online settings with ambient distractions; perceived non-consequentiality of survey outcomes.
+              </li>
+              <li>
+                <strong>Vector 3: Respondent Baseline Dispositions (Uncontrolled Baseline):</strong>
+                Stable personality traits such as low Conscientiousness and low Agreeableness; low Need for Cognition; younger demographic cohorts; momentary cognitive fatigue or negative affect.
+              </li>
+            </ol>
+            <div class="callout-box">
+              <div class="callout-title">Methodological Action Principle</div>
+              <div class="callout-content">
+                While researchers cannot manipulate respondent dispositional baselines, <strong>instrument architecture and incentive structures are under total investigator control</strong>. Mitigating instrument fatigue reduces C/IER prevalence more effectively than post hoc participant exclusion (<span class="cite" data-cite="huang2012">Huang et al., 2012</span>).
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 22 22 22"/></svg>
+              Etiological Risk Vector Calculator
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:1rem;">
+              Adjust study design parameters to evaluate the predicted C/IER contamination threshold:
+            </p>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Survey Duration (Minutes):</span>
+                <span class="slider-val-badge" id="val-s5-len">12 min</span>
+              </div>
+              <input type="range" id="slider-s5-len" min="5" max="45" step="1" value="12" oninput="updateEtiologySim()">
+            </div>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Matrix Grid Repetition (Scale Blocks):</span>
+                <span class="slider-val-badge" id="val-s5-grid">2 Grids</span>
+              </div>
+              <input type="range" id="slider-s5-grid" min="1" max="10" step="1" value="2" oninput="updateEtiologySim()">
+            </div>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Subject Pool Incentive Structure:</span>
+                <span class="slider-val-badge" id="val-s5-pool">Academic Panel</span>
+              </div>
+              <input type="range" id="slider-s5-pool" min="1" max="3" step="1" value="2" oninput="updateEtiologySim()">
+            </div>
+
+            <div class="simulation-output-panel">
+              <div>
+                <div class="sim-metric-val" id="disp-s5-risk">6.8%</div>
+                <div class="sim-metric-label">Estimated C/IER Rate</div>
+              </div>
+              <div>
+                <div class="sim-metric-val" id="disp-s5-status" style="color:var(--teal-400)">MODERATE</div>
+                <div class="sim-metric-label">Design Vulnerability</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 06
+           ==================================================================== -->
+      <article class="module-card" id="slide-5" data-index="5">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 06 / 15</span>
+            <span class="module-category">Mathematical Psychometrics</span>
+          </div>
+          <h2 class="module-title">The Midpoint Attraction Mechanism: Mathematical Induction of Spurious Covariance and Type I Error Inflation</h2>
+          <p class="module-abstract">Deriving the mathematical proof of correlation inflation via midpoint response clustering.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              The most insidious mathematical mechanism through which C/IER generates Common Method Bias is the <strong>Midpoint Attraction Phenomenon</strong> formulated by <span class="cite" data-cite="huang2015">Huang et al. (2015)</span>.
+            </p>
+            <p>
+              Consider a survey measuring two substantively orthogonal constructs, <i class="math-var">X</i> and <i class="math-var">Y</i> (True <i class="math-var">&rho;</i> = 0.00), on 5-point Likert scales (midpoint <i class="math-var">M</i> = 3.0). In typical organizational and psychological inquiries, attentive respondents possess true latent means displaced from the neutral midpoint (e.g., Job Satisfaction <i class="math-var">&mu;</i><sub><i class="math-var">X</i>,Att</sub> = 4.20 and Organizational Commitment <i class="math-var">&mu;</i><sub><i class="math-var">Y</i>,Att</sub> = 4.00).
+            </p>
+            <p>
+              When a proportion <i class="math-var">p</i> of careless respondents disengage and cluster around the scale midpoint (<i class="math-var">M</i> = 3.0), the pooled sample covariance decomposes as:
+            </p>
+            <div class="math-block">
+              <div class="math-formula">
+                <i>Cov</i>(<i class="math-var">X</i>, <i class="math-var">Y</i>) = (1 &minus; <i class="math-var">p</i>) <i>Cov</i><sub>Att</sub>(<i class="math-var">X</i>, <i class="math-var">Y</i>) + <i class="math-var">p</i> <i>Cov</i><sub>CIER</sub>(<i class="math-var">X</i>, <i class="math-var">Y</i>) + <i class="math-var">p</i>(1 &minus; <i class="math-var">p</i>)(<i class="math-var">&mu;</i><sub><i class="math-var">X</i>,Att</sub> &minus; <i class="math-var">M</i>)(<i class="math-var">&mu;</i><sub><i class="math-var">Y</i>,Att</sub> &minus; <i class="math-var">M</i>)
+              </div>
+            </div>
+            <p>
+              When true covariance is zero (<i>Cov</i><sub>Att</sub>(<i class="math-var">X</i>, <i class="math-var">Y</i>) = 0) and careless responses are uncorrelated (<i>Cov</i><sub>CIER</sub>(<i class="math-var">X</i>, <i class="math-var">Y</i>) = 0), the equation simplifies to the <strong>Mean Displacement Product</strong>:
+            </p>
+            <div class="math-block">
+              <div class="math-formula">
+                <i>Cov</i><sub>Spurious</sub> = <i class="math-var">p</i>(1 &minus; <i class="math-var">p</i>)(<i class="math-var">&mu;</i><sub><i class="math-var">X</i>,Att</sub> &minus; <i class="math-var">M</i>)(<i class="math-var">&mu;</i><sub><i class="math-var">Y</i>,Att</sub> &minus; <i class="math-var">M</i>) &gt; 0
+              </div>
+            </div>
+            <p>
+              Because both (<i class="math-var">&mu;</i><sub><i class="math-var">X</i>,Att</sub> &minus; 3.0) &gt; 0 and (<i class="math-var">&mu;</i><sub><i class="math-var">Y</i>,Att</sub> &minus; 3.0) &gt; 0, their product is <strong>strictly positive</strong>. The mixture mechanically produces a spurious positive correlation. Notice also that if both scales had means below the midpoint, the product of two negatives is equally positive!
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+              Live Midpoint Pull Simulator
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:0.75rem;">
+              Simulate live the bivariate correlation inflation induced by C/IER contamination under true null relationship (True <i class="math-var">&rho;</i> = 0.00, <i class="math-var">M</i> = 3.0).
+            </p>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Attentive Group Mean <i class="math-var">&mu;</i><sub><i class="math-var">X</i>,Att</sub>:</span>
+                <span class="slider-val-badge" id="val-s6-mu">4.20</span>
+              </div>
+              <input type="range" id="slider-s6-mu" min="3.00" max="4.80" step="0.05" value="4.20" oninput="updateMidpointSim()">
+            </div>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>C/IER Contamination Proportion (<i class="math-var">p</i>):</span>
+                <span class="slider-val-badge" id="val-s6-p">10.0%</span>
+              </div>
+              <input type="range" id="slider-s6-p" min="0" max="0.30" step="0.01" value="0.10" oninput="updateMidpointSim()">
+            </div>
+
+            <div class="simulation-output-panel">
+              <div>
+                <div class="sim-metric-val" id="disp-s6-r">0.18</div>
+                <div class="sim-metric-label">Spurious Correlation <i class="math-var">r<sub>XY</sub></i></div>
+              </div>
+              <div>
+                <div class="sim-metric-val" id="disp-s6-pvalue" style="color:var(--orange-400)">p &lt; .01</div>
+                <div class="sim-metric-label">Spurious Significance (<i class="math-var">N</i> = 300)</div>
+              </div>
+            </div>
+
+            <div class="viz-canvas-container" style="height:150px; margin-top:0.75rem;">
+              <canvas id="canvas-slide-6" style="height:130px;"></canvas>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 07
+           ==================================================================== -->
+      <article class="module-card" id="slide-6" data-index="6">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 07 / 15</span>
+            <span class="module-category">Research Designs</span>
+          </div>
+          <h2 class="module-title">Vulnerability Across Methodological Designs: High-Skew Trait Distributions, Intensive Longitudinal Designs (EMA), and Continuous Visual Scales (VAS)</h2>
+          <p class="module-abstract">Identifying high-risk research topologies where C/IER consequences are exponentially magnified.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              The inferential vulnerability of an empirical study to C/IER is heavily contingent upon its methodological design and scaling characteristics (<span class="cite" data-cite="hong2020">Hong et al., 2020</span>). Four methodological environments exhibit acute vulnerability:
+            </p>
+            <p>
+              <strong>1. Highly Skewed Trait Baselines:</strong> Constructs such as Counterproductive Work Behavior (CWB), workplace bullying, or severe psychopathology naturally possess severely skewed distributions where attentive respondents report values near 1.0. Because the true mean is far from the midpoint (|1.0 &minus; 3.0| = 2.0), careless midpoint responding creates massive mean disparities, causing catastrophic spurious covariance inflation.
+            </p>
+            <p>
+              <strong>2. Ecological Momentary Assessment (EMA):</strong> Repeated measurement protocols (e.g., 6&ndash;10 notifications per day for several weeks) inevitably generate participant habituation and episodic fatigue, triggering localized inattention bursts (<span class="cite" data-cite="vogelsmeier2024">Vogelsmeier et al., 2024</span>).
+            </p>
+            <p>
+              <strong>3. Low-Stakes Online Crowdsourcing Panels:</strong> Platforms where respondent identity is anonymous and financial rewards are decoupled from data quality are prone to algorithmic speed-farming.
+            </p>
+            <p>
+              <strong>4. Visual Analogue Scales (VAS):</strong> Continuous slider response formats attract substantially higher rates of satisficing than discrete Likert scales due to slider motor friction (<span class="cite" data-cite="zhang2025">Zhang et al., 2025</span>).
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+              High-Risk Topology Matrix
+            </div>
+
+            <div class="quadrant-grid">
+              <div class="quadrant-box risk-high">
+                <div class="quadrant-title">
+                  Highly Skewed Baselines
+                  <span style="font-size:0.7rem; color:var(--orange-400); font-family:var(--font-mono);">SEVERE</span>
+                </div>
+                <div class="quadrant-desc">
+                  Massive distance from scale midpoint maximizes the mean displacement product, creating false structural paths between rare behaviors.
+                </div>
+              </div>
+
+              <div class="quadrant-box">
+                <div class="quadrant-title">
+                  Intensive EMA Designs
+                  <span style="font-size:0.7rem; color:var(--teal-400); font-family:var(--font-mono);">DYNAMIC</span>
+                </div>
+                <div class="quadrant-desc">
+                  Repeated daily sampling induces transient, time-varying inattention that cannot be addressed by casewise deletion.
+                </div>
+              </div>
+
+              <div class="quadrant-box risk-high">
+                <div class="quadrant-title">
+                  Crowdsourced Micro-Tasks
+                  <span style="font-size:0.7rem; color:var(--orange-400); font-family:var(--font-mono);">SEVERE</span>
+                </div>
+                <div class="quadrant-desc">
+                  Speed-runners and automated bot farms exploit survey logic to complete 20-minute batteries in under 3 minutes.
+                </div>
+              </div>
+
+              <div class="quadrant-box">
+                <div class="quadrant-title">
+                  Visual Analogue Scales
+                  <span style="font-size:0.7rem; color:var(--teal-400); font-family:var(--font-mono);">ELEVATED</span>
+                </div>
+                <div class="quadrant-desc">
+                  Sliders create motor resistance on mobile devices, inducing central dragging and default-anchor abandonments.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 08
+           ==================================================================== -->
+      <article class="module-card" id="slide-7" data-index="7">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 08 / 15</span>
+            <span class="module-category">Quality Control Framework</span>
+          </div>
+          <h2 class="module-title">Dual-Front Data Hygiene Architecture: Integrating Ex Ante Procedural Controls and Post Hoc Statistical Diagnostics</h2>
+          <p class="module-abstract">A comprehensive framework combining proactive prevention and forensic post-collection detection.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              Defending survey data integrity requires transcending single-method heuristics. Modern data hygiene standards demand a <strong>Two-Front Quality Control Architecture</strong> spanning the complete empirical lifecycle (<span class="cite" data-cite="curran2016">Curran, 2016</span>; <span class="cite" data-cite="ward2023">Ward &amp; Meade, 2023</span>; <span class="cite" data-cite="huang2026">Huang et al., 2026</span>):
+            </p>
+            <p>
+              <strong>Front 1: Ex Ante Procedural Controls (Design & Administration Phase)</strong><br>
+              Proactive controls embedded directly into the survey instrument prior to fielding. Their purpose is real-time interception of inattention and deterrence of speed-running. Key instruments include <em>Instructional Manipulation Checks (IMCs)</em>, <em>Infrequency/Bogus Items</em>, and <em>Page-Level Time Monitoring</em>.
+            </p>
+            <p>
+              <strong>Front 2: Post Hoc Statistical Diagnostics (Data Analysis Phase)</strong><br>
+              Forensic statistical mining executed after survey completion. It examines response distributions, multivariate covariance distances, and state transition matrices to detect inattentive patterns that bypassed procedural checks. Key metrics include <em>Long String (LS)</em>, <em>Intra-individual Response Variability (IRV; <span class="cite" data-cite="dunn2018a">Dunn et al., 2018</span>)</em>, <em>Mahalanobis <i class="math-var">D</i><sup>2</sup></em>, and <em>Markov Transition Probabilities (Laz.R)</em>.
+            </p>
+            <div class="callout-box">
+              <div class="callout-title">The Principle of Non-Redundancy</div>
+              <div class="callout-content">
+                Procedural checks and statistical indices capture different forms of inattention. An attentive participant might slip on a single convoluted IMC, while a sophisticated speeder might read IMCs carefully but straightline substantive batteries. Both fronts are mutually indispensable.
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+              Dual-Front Quality Control Lifecycle
+            </div>
+            
+            <div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:0.5rem;">
+              <div style="background:var(--navy-950); border-left:4px solid var(--teal-500); padding:1rem; border-radius:var(--radius-sm);">
+                <div style="font-weight:700; color:var(--teal-400); font-size:0.88rem; margin-bottom:0.25rem;">FRONT 1: EX ANTE PROCEDURAL (Real-Time)</div>
+                <div style="font-size:0.8rem; color:var(--text-sub);">
+                  • Instructional Manipulation Checks (IMCs)<br>
+                  • Bogus / Infrequency Validation Items<br>
+                  • Page & Screen Duration Monitoring (&lt;1.0 s/item flag)
+                </div>
+              </div>
+
+              <div style="text-align:center; color:var(--orange-400); font-size:0.85rem; font-weight:700;">
+                ▼ DATA COLLECTION COMPLETION ▼
+              </div>
+
+              <div style="background:var(--navy-950); border-left:4px solid var(--orange-500); padding:1rem; border-radius:var(--radius-sm);">
+                <div style="font-weight:700; color:var(--orange-400); font-size:0.88rem; margin-bottom:0.25rem;">FRONT 2: POST HOC STATISTICAL (Forensic)</div>
+                <div style="font-size:0.8rem; color:var(--text-sub);">
+                  • Uniformity Mining (Long String, IRV)<br>
+                  • Multivariate Outlier Distance (Mahalanobis <i class="math-var">D</i><sup>2</sup>)<br>
+                  • Markov Chain Transition Algorithms (Laz.R Index)<br>
+                  • Latent Mixture IRT / Response-Time Modeling
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 09
+           ==================================================================== -->
+      <article class="module-card" id="slide-8" data-index="8">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 09 / 15</span>
+            <span class="module-category">Procedural Controls</span>
+          </div>
+          <h2 class="module-title">Ex Ante Procedural Controls: Implementation of Instructional Manipulation Checks, Infrequency Scales, and Response Time Monitoring</h2>
+          <p class="module-abstract">Operationalizing embedded design controls to intercept non-diligent response behavior in real time.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              Ex ante procedural controls embed specific diagnostic tripwires into the survey architecture (<span class="cite" data-cite="oppenheimer2009">Oppenheimer et al., 2009</span>; <span class="cite" data-cite="huang2012">Huang et al., 2012</span>; <span class="cite" data-cite="huang2015a">Huang et al., 2015</span>):
+            </p>
+            <ul style="padding-left:1.25rem; display:flex; flex-direction:column; gap:0.6rem;">
+              <li>
+                <strong>Instructional Manipulation Checks (IMCs):</strong> Trapped questions formatted identically to surrounding items, but whose instructional prompt instructs the participant to select a specific counter-intuitive response option (e.g., <em>"To confirm you are reading these questions, please select 'Disagree' for this item"</em>).
+              </li>
+              <li>
+                <strong>Infrequency / Bogus Items:</strong> Statements with near-zero factual endorsement probability in the general population (e.g., <em>"I have never used electricity in my entire life"</em> or <em>"I eat lunch on the Moon every Tuesday"</em>). Endorsement indicates gross inattention or automated bot entry.
+              </li>
+              <li>
+                <strong>Page & Screen Response Time Monitoring:</strong> High-precision client-side timers recording total screen dwelling time. The biological reading threshold: items answered in under <strong>1.0 to 1.5 seconds per item</strong> represent neurobiological impossibilities (<span class="cite" data-cite="bowling2021">Bowling et al., 2021</span>).
+              </li>
+            </ul>
+            <div class="callout-box">
+              <div class="callout-title">Methodological Best Practice: The Multi-Check Rule</div>
+              <div class="callout-content">
+                <strong>Never exclude a participant based on a single failed IMC</strong>. Up to 15% of conscientious respondents make a single isolated slip due to visual skimming. Best practice mandates embedding &ge; 3 spaced checks and applying a lenient threshold (e.g., excluding only on &ge; 2 failures) to protect valid data.
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Procedural Threshold Simulator
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:1rem;">
+              Compare participant attrition and false-positive penalty rates under strict versus lenient IMC exclusion rules (Sample <i class="math-var">N</i> = 500):
+            </p>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Number of Embedded IMC Checks:</span>
+                <span class="slider-val-badge" id="val-s9-checks">3 Items</span>
+              </div>
+              <input type="range" id="slider-s9-checks" min="1" max="5" step="1" value="3" oninput="updateTripwireSim()">
+            </div>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Exclusion Threshold:</span>
+                <span class="slider-val-badge" id="val-s9-thresh">Fail &ge; 2 Checks</span>
+              </div>
+              <input type="range" id="slider-s9-thresh" min="1" max="3" step="1" value="2" oninput="updateTripwireSim()">
+            </div>
+
+            <div class="simulation-output-panel">
+              <div>
+                <div class="sim-metric-val" id="disp-s9-attrition">7.2%</div>
+                <div class="sim-metric-label">Excluded Sample %</div>
+              </div>
+              <div>
+                <div class="sim-metric-val" id="disp-s9-type1" style="color:var(--teal-400)">1.4%</div>
+                <div class="sim-metric-label">Valid False-Positive Loss</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 10
+           ==================================================================== -->
+      <article class="module-card" id="slide-9" data-index="9">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 10 / 15</span>
+            <span class="module-category">Statistical Diagnostics</span>
+          </div>
+          <h2 class="module-title">Post Hoc Statistical Detection: Non-Parametric Indices of Uniformity (LS), Variability (IRV), and Multidimensional Distance (<i class="math-var">D</i><sup>2</sup>)</h2>
+          <p class="module-abstract">Quantifying response uniformity, dispersion, and multivariate deviance without design constraints.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              When ex ante controls were omitted or when inattentive respondents successfully evade them, researchers deploy post hoc non-parametric indices mined directly from the response matrix (<span class="cite" data-cite="curran2016">Curran, 2016</span>; <span class="cite" data-cite="meade2012">Meade &amp; Craig, 2012</span>; <span class="cite" data-cite="steedle2018">Steedle, 2018</span>; <span class="cite" data-cite="hong2020">Hong et al., 2020</span>):
+            </p>
+            <ul style="padding-left:1.25rem; display:flex; flex-direction:column; gap:0.5rem;">
+              <li>
+                <strong>Long String (LS):</strong> The longest sequence of consecutive identical responses given by a respondent across an unbroken block of items. For instance, in a 20-item battery, an LS of 18 indicates straightlining.
+              </li>
+              <li>
+                <strong>Intra-individual Response Variability (IRV):</strong> The standard deviation of an individual's responses across consecutive items:
+              </li>
+            </ul>
+            <div class="math-block">
+              <div class="math-formula" style="overflow-x:auto; padding:0.25rem 0;">
+                <svg width="270" height="48" viewBox="0 0 270 48" style="max-width:100%; height:auto; display:block;" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Label IRV_i = -->
+                  <text x="0" y="30" fill="#87CBCC" font-family="'Cambria Math', 'Times New Roman', serif" font-size="17" font-style="italic">IRV<tspan font-size="11" dy="4">i</tspan><tspan font-size="17" dy="-4" font-style="normal"> =</tspan></text>
+                  <!-- Square root symbol with continuous vinculum -->
+                  <path d="M 72 26 L 76 34 L 83 10 L 265 10" fill="none" stroke="#87CBCC" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <!-- Fraction 1 / (K - 1) -->
+                  <text x="96" y="21" fill="#87CBCC" font-family="'Cambria Math', 'Times New Roman', serif" font-size="13" text-anchor="middle">1</text>
+                  <line x1="88" y1="25" x2="105" y2="25" stroke="#87CBCC" stroke-width="1.2"/>
+                  <text x="96" y="39" fill="#87CBCC" font-family="'Cambria Math', 'Times New Roman', serif" font-size="12" font-style="italic" text-anchor="middle">K <tspan font-style="normal">&minus; 1</tspan></text>
+                  <!-- Summation symbol -->
+                  <text x="122" y="32" fill="#87CBCC" font-family="'Cambria Math', 'Times New Roman', serif" font-size="22" font-weight="300" text-anchor="middle">&sum;</text>
+                  <text x="122" y="15" fill="#87CBCC" font-family="'Cambria Math', 'Times New Roman', serif" font-size="9" font-style="italic" text-anchor="middle">K</text>
+                  <text x="122" y="44" fill="#87CBCC" font-family="'Cambria Math', 'Times New Roman', serif" font-size="9" font-style="italic" text-anchor="middle">k<tspan font-style="normal">=1</tspan></text>
+                  <!-- (X_ik - X_bar_i)^2 -->
+                  <text x="140" y="30" fill="#87CBCC" font-family="'Cambria Math', 'Times New Roman', serif" font-size="16" font-style="italic">(X<tspan font-size="11" dy="4">ik</tspan><tspan font-size="16" dy="-4" font-style="normal"> &minus; </tspan>X̄<tspan font-size="11" dy="4">i</tspan><tspan font-size="16" dy="-4">)</tspan><tspan font-size="11" dy="-7" font-style="normal">2</tspan></text>
+                </svg>
+              </div>
+              <div class="math-desc">Intra-individual standard deviation across <i>K</i> homogeneous scale items</div>
+            </div>
+            <p>
+              Values of IRV = 0 indicate complete invariant straightlining; unusually large IRVs indicate extreme alternating noise.
+            </p>
+            <p>
+              <strong>Mahalanobis Distance (<i class="math-var">D</i><sup>2</sup>):</strong> Measures multivariate distance from the centroid, accounting for scale covariances:
+            </p>
+            <div class="math-block">
+              <div class="math-formula">
+                <i class="math-var">D</i><sub><i class="math-var">i</i></sub><sup>2</sup> = (<b>x</b><sub><i class="math-var">i</i></sub> &minus; <b>x̄</b>)<sup>T</sup> <b>S</b><sup>&minus;1</sup> (<b>x</b><sub><i class="math-var">i</i></sub> &minus; <b>x̄</b>)
+              </div>
+            </div>
+            <p>
+              High <i class="math-var">D</i><sup>2</sup> values identify multivariate outliers exhibiting bizarre or statistically improbable response combinations.
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Statistical Detection Gauges
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:1rem;">
+              Simulate individual response patterns across a 25-item 5-point Likert scale:
+            </p>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Long String (LS) Count:</span>
+                <span class="slider-val-badge" id="val-s10-ls">6 Items</span>
+              </div>
+              <input type="range" id="slider-s10-ls" min="2" max="25" step="1" value="6" oninput="updateGaugesSim()">
+            </div>
+
+            <div class="slider-control-group">
+              <div class="slider-label-row">
+                <span>Intra-individual Variability (IRV):</span>
+                <span class="slider-val-badge" id="val-s10-irv">0.82</span>
+              </div>
+              <input type="range" id="slider-s10-irv" min="0.00" max="2.00" step="0.05" value="0.82" oninput="updateGaugesSim()">
+            </div>
+
+            <div class="simulation-output-panel">
+              <div>
+                <div class="sim-metric-val" id="disp-s10-class" style="color:var(--teal-400)">NORMAL</div>
+                <div class="sim-metric-label">Classification Status</div>
+              </div>
+              <div>
+                <div class="sim-metric-val" id="disp-s10-risk">LOW</div>
+                <div class="sim-metric-label">Satisficing Probability</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 11
+           ==================================================================== -->
+      <article class="module-card" id="slide-10" data-index="10">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 11 / 15</span>
+            <span class="module-category">Advanced Detection Methods</span>
+          </div>
+          <h2 class="module-title">Algorithmic Pattern Recognition: Transition Probability Matrices and Markov-Chain Based Detection (The Laz.R Index)</h2>
+          <p class="module-abstract">Transcending uniformity metrics to intercept structured oscillatory satisficing patterns.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              A major vulnerability of classical indices like Long String is that they are <strong>completely blind to structured oscillatory satisficing</strong> (<span class="cite" data-cite="biemann2025">Biemann et al., 2025</span>).
+            </p>
+            <p>
+              Consider a participant executing an alternating sequence across 20 items: [1, 5, 1, 5, 1, 5, &hellip;]. Because no two identical numbers appear consecutively, the Long String is LS = 1. Traditional algorithms classify this respondent as exceptionally attentive, despite the data being 100% careless artifact!
+            </p>
+            <p>
+              To eliminate this blind spot, <span class="cite" data-cite="biemann2025">Biemann, Koch-Bayram, Meier-Barthold, and Aguinis (2025)</span> developed the <strong>Laz.R Index</strong> utilizing first-order Markov chains:
+            </p>
+            <div class="math-block">
+              <div class="math-formula">
+                <i>P</i>(<i class="math-var">X<sub>k</sub></i> = <i class="math-var">j</i> | <i class="math-var">X</i><sub><i class="math-var">k</i>&minus;1</sub> = <i class="math-var">i</i>) = <sup><i class="math-var">n<sub>ij</sub></i></sup> &frasl; <sub>&sum;<sub><i class="math-var">m</i></sub> <i class="math-var">n<sub>im</sub></i></sub>
+              </div>
+            </div>
+            <p>
+              The Laz.R framework evaluates the transition probability matrix of consecutive item responses. When transitions exhibit deterministic repetitive shifts (such as <i>P</i>(5|1) = 1.0 and <i>P</i>(1|5) = 1.0), the transition entropy collapses, producing an elevated Laz.R score (0.0 &le; Laz.R &le; 1.0). Scores exceeding 0.60 flag complex, non-random careless patterns that evade every classical metric.
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+              Markov Transition & Laz.R Sequence Tester
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:0.75rem;">
+              Input custom response sequences to evaluate how classical Long String vs. Markov Laz.R responds:
+            </p>
+
+            <div class="pattern-input-row">
+              <input type="text" id="pattern-input" class="pattern-input" value="1, 5, 1, 5, 1, 5, 1, 5" placeholder="Enter comma-separated values (1-5)">
+              <button class="nav-arrow-btn primary" onclick="analyzeCustomPattern()" style="padding:0.4rem 0.8rem; font-size:0.75rem;">Analyze</button>
+            </div>
+
+            <div class="pattern-presets">
+              <span class="preset-chip" onclick="setPatternPreset('1,5,1,5,1,5,1,5')">Alternating [1,5,1,5]</span>
+              <span class="preset-chip" onclick="setPatternPreset('5,5,5,5,5,5,5,5')">Straightlining [5,5,5,5]</span>
+              <span class="preset-chip" onclick="setPatternPreset('1,2,3,4,5,1,2,3')">Staircase [1,2,3,4,5]</span>
+              <span class="preset-chip" onclick="setPatternPreset('3,3,3,3,3,3,3,3')">Midpoint [3,3,3,3]</span>
+              <span class="preset-chip" onclick="setPatternPreset('4,3,5,2,4,4,3,5')">Attentive Realistic</span>
+            </div>
+
+            <div class="simulation-output-panel" style="grid-template-columns:repeat(3, 1fr);">
+              <div>
+                <div class="sim-metric-val" id="disp-s11-ls">1</div>
+                <div class="sim-metric-label">Long String (LS)</div>
+              </div>
+              <div>
+                <div class="sim-metric-val" id="disp-s11-irv">2.14</div>
+                <div class="sim-metric-label">IRV (Std Dev)</div>
+              </div>
+              <div>
+                <div class="sim-metric-val" id="disp-s11-lazr" style="color:var(--orange-400)">0.92</div>
+                <div class="sim-metric-label">Laz.R Markov Score</div>
+              </div>
+            </div>
+
+            <div id="disp-s11-verdict" style="background:var(--navy-950); padding:0.75rem; border-radius:var(--radius-sm); border-left:3px solid var(--orange-500); font-size:0.8rem; color:var(--text-sub); margin-top:0.75rem;">
+              <strong>Algorithm Verdict:</strong> Severe deterministic oscillation detected! Blind to LS, intercepted by Laz.R Markov transitions.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 12
+           ==================================================================== -->
+      <article class="module-card" id="slide-11" data-index="11">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 12 / 15</span>
+            <span class="module-category">Latent Variable Modeling</span>
+          </div>
+          <h2 class="module-title">Latent Mixture Modeling and Response Time Integration: Probabilistic Latent Class Separation and Continuous Weighting</h2>
+          <p class="module-abstract">Replacing arbitrary deterministic cutoff thresholds with joint latent class and response time models.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              A fundamental flaw in classical C/IER practice is the reliance on <em>arbitrary deterministic cutoff thresholds</em> (e.g., "delete all participants in the top 5% of Long String"). As demonstrated by <span class="cite" data-cite="ulitzsch2022">Ulitzsch et al. (2022, 2024)</span>, dichotomous deletion ignores classification uncertainty and discards conscientious respondents who happen to exhibit low variability.
+            </p>
+            <p>
+              Modern psychometrics replaces heuristic cutoffs with <strong>Latent Mixture Models with Response Times (RT)</strong>:
+            </p>
+            <ul style="padding-left:1.25rem; display:flex; flex-direction:column; gap:0.5rem;">
+              <li>
+                <strong>Attentive Latent Class:</strong> Response choices are governed by substantive latent traits (<i class="math-var">&theta;<sub>i</sub></i>) via standard Item Response Theory (IRT), and response times follow a log-normal cognitive deliberation distribution (<i class="math-var">T<sub>ik</sub></i> ~ LogNormal(<i class="math-var">&mu;<sub>k</sub></i>, <i class="math-var">&sigma;<sub>k</sub></i><sup>2</sup>)).
+              </li>
+              <li>
+                <strong>Careless Latent Class:</strong> Response choices follow non-informative multinomial probabilities, and response times follow a shifted fast-response distribution capturing superficial clicking.
+              </li>
+            </ul>
+            <p>
+              Rather than hard-deleting cases, mixture models estimate a continuous <strong>posterior probability of C/IER</strong> (<i class="math-var">&pi;</i><sub><i class="math-var">i</i>,CIER</sub> &isin; [0, 1]). In large-scale surveys (<span class="cite" data-cite="ulitzsch2024">Ulitzsch, Shin, & Lüdtke, 2024</span>), this probability forms the basis of a <strong>screen-time-based weighting procedure</strong> (<i class="math-var">w<sub>i</sub></i> = 1 &minus; <i class="math-var">&pi;</i><sub><i class="math-var">i</i>,CIER</sub>), neutralizing bias while preserving sample size and statistical power.
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3v12"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="m18 9-9 6"/></svg>
+              Latent Class Bifurcation Model
+            </div>
+            
+            <div style="background:var(--navy-950); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-subtle); margin-bottom:1rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <span style="font-size:0.85rem; font-weight:700; color:var(--teal-400);">Attentive Latent State (<i>C</i><sub>1</sub>)</span>
+                <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--teal-400);">P = 88%</span>
+              </div>
+              <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.4;">
+                • Item Responses: Driven by substantive trait <i class="math-var">&theta;<sub>i</sub></i><br>
+                • Response Times: Log-normal deliberation (<i class="math-var">&mu;</i><sub>RT</sub> = 4.8 s)
+              </div>
+            </div>
+
+            <div style="background:var(--navy-950); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border-orange); margin-bottom:1rem;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+                <span style="font-size:0.85rem; font-weight:700; color:var(--orange-400);">Careless Latent State (<i>C</i><sub>2</sub>)</span>
+                <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--orange-400);">P = 12%</span>
+              </div>
+              <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.4;">
+                • Item Responses: Uniform random or midpoint satisficing<br>
+                • Response Times: Accelerated motor click (<i class="math-var">&mu;</i><sub>RT</sub> = 0.9 s)
+              </div>
+            </div>
+
+            <div style="background:var(--navy-850); border:1px solid var(--border-subtle); padding:0.85rem; border-radius:var(--radius-sm); font-size:0.8rem; color:var(--text-sub);">
+              <strong style="color:var(--text-main);">Analytical Advantage:</strong> Downweighting participants using <i class="math-var">w<sub>i</sub></i> = 1 &minus; <i class="math-var">&pi;</i><sub><i class="math-var">i</i>,CIER</sub> avoids artificial truncation of variance while eliminating spurious correlation inflation.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 13
+           ==================================================================== -->
+      <article class="module-card" id="slide-12" data-index="12">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 13 / 15</span>
+            <span class="module-category">Longitudinal Psychometrics</span>
+          </div>
+          <h2 class="module-title">Dynamic Modeling in Intensive Longitudinal Designs: State-Transition and Latent Markov Approaches in Ecological Momentary Assessment (EMA)</h2>
+          <p class="module-abstract">Modeling C/IER as a time-varying dynamic state rather than an invariant person-level trait.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              In intensive longitudinal data (e.g., <strong>Ecological Momentary Assessment [EMA]</strong> with 6&ndash;10 notifications daily over weeks), treating C/IER as a fixed, person-level trait produces severe methodological distortions (<span class="cite" data-cite="vogelsmeier2024">Vogelsmeier et al., 2024</span>; <span class="cite" data-cite="roman2024">Roman et al., 2024</span>).
+            </p>
+            <p>
+              A participant may provide conscientious, highly reliable data on Tuesday morning, but slip into careless satisficing on Thursday evening due to acute fatigue, situational alcohol consumption, or survey notification timing.
+            </p>
+            <div class="callout-box">
+              <div class="callout-title">The Fallacy of Person-Level Deletion in EMA</div>
+              <div class="callout-content">
+                Deleting an entire participant because they produced careless data on 3 out of 50 measurement occasions discards 47 valid, high-fidelity assessments. Furthermore, if inattention episodes correlate with substantive states (e.g., high momentary stress or depressive fatigue), casewise deletion induces severe <strong>Missing Not At Random (MNAR)</strong> selection bias.
+              </div>
+            </div>
+            <p>
+              The solution is <strong>Latent Markov Factor Analysis (LMFA)</strong> (<span class="cite" data-cite="vogelsmeier2024">Vogelsmeier et al., 2024</span>), which models <em>momentary state transitions</em> across time points <i class="math-var">t</i> = 1, &hellip;, <i class="math-var">T</i>:
+            </p>
+            <div class="math-block">
+              <div class="math-formula">
+                <i>P</i>(<i class="math-var">S<sub>t</sub></i> = Inattentive | <i class="math-var">S</i><sub><i class="math-var">t</i>&minus;1</sub> = Attentive, <b>Z</b><sub><i class="math-var">t</i></sub>)
+              </div>
+            </div>
+            <p>
+              Situational covariates (<b>Z</b><sub><i class="math-var">t</i></sub>, such as time of day or prompt delay) explain transient shifts, isolating corrupted moments while preserving clean longitudinal observations.
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              EMA 12-Hour State Trajectory Simulation
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:1rem;">
+              Simulated probability of a respondent entering an inattentive state as daily fatigue and prompt frequency accumulate:
+            </p>
+
+            <div class="viz-canvas-container" style="height:auto; padding:0.85rem;">
+              <svg width="100%" height="160" viewBox="0 0 480 160" style="display:block; overflow:visible;" xmlns="http://www.w3.org/2000/svg">
+                <!-- Shaded evening fatigue danger zone (19:00 - 22:00) -->
+                <rect x="340" y="15" width="120" height="115" fill="rgba(241, 140, 34, 0.08)" rx="4" />
+                <text x="400" y="28" fill="#F7A54C" font-size="9.5" font-weight="700" text-anchor="middle" letter-spacing="0.05em">ACUTE FATIGUE WINDOW</text>
+
+                <!-- Grid lines & Y Axis -->
+                <line x1="45" y1="20" x2="460" y2="20" stroke="rgba(135, 203, 204, 0.12)" stroke-dasharray="3 3"/>
+                <text x="38" y="24" fill="#94A3B8" font-size="9" text-anchor="end" font-family="'JetBrains Mono', monospace">100%</text>
+
+                <line x1="45" y1="57" x2="460" y2="57" stroke="rgba(135, 203, 204, 0.12)" stroke-dasharray="3 3"/>
+                <text x="38" y="61" fill="#94A3B8" font-size="9" text-anchor="end" font-family="'JetBrains Mono', monospace">75%</text>
+
+                <line x1="45" y1="95" x2="460" y2="95" stroke="rgba(135, 203, 204, 0.12)" stroke-dasharray="3 3"/>
+                <text x="38" y="99" fill="#94A3B8" font-size="9" text-anchor="end" font-family="'JetBrains Mono', monospace">50%</text>
+
+                <line x1="45" y1="130" x2="460" y2="130" stroke="rgba(135, 203, 204, 0.25)"/>
+                <text x="38" y="134" fill="#94A3B8" font-size="9" text-anchor="end" font-family="'JetBrains Mono', monospace">0%</text>
+
+                <!-- X Axis Time Ticks -->
+                <text x="50" y="146" fill="#CBD5E1" font-size="10" font-family="'JetBrains Mono', monospace">08:00</text>
+                <text x="130" y="146" fill="#CBD5E1" font-size="10" font-family="'JetBrains Mono', monospace">11:00</text>
+                <text x="210" y="146" fill="#CBD5E1" font-size="10" font-family="'JetBrains Mono', monospace">14:00</text>
+                <text x="290" y="146" fill="#CBD5E1" font-size="10" font-family="'JetBrains Mono', monospace">17:00</text>
+                <text x="370" y="146" fill="#CBD5E1" font-size="10" font-family="'JetBrains Mono', monospace">20:00</text>
+                <text x="450" y="146" fill="#CBD5E1" font-size="10" font-family="'JetBrains Mono', monospace">22:00</text>
+
+                <!-- Attentive State Trajectory (Green Curve P_Att) -->
+                <!-- Path: (50, 25) -> (130, 28) -> (210, 35) -> (290, 48) -> (370, 72) -> (450, 85) -->
+                <path d="M 50 25 C 130 27, 210 32, 290 48 S 390 75, 450 85" fill="none" stroke="#87CBCC" stroke-width="2.6" stroke-linecap="round"/>
+                <circle cx="50" cy="25" r="4" fill="#87CBCC"/>
+                <text x="50" y="17" fill="#87CBCC" font-size="9.5" font-weight="700" text-anchor="middle">95%</text>
+                <circle cx="450" cy="85" r="4" fill="#87CBCC"/>
+                <text x="450" y="78" fill="#87CBCC" font-size="9.5" font-weight="700" text-anchor="middle">62%</text>
+
+                <!-- Inattentive State Trajectory (Orange Curve P_Inatt) -->
+                <!-- Path: (50, 125) -> (130, 122) -> (210, 115) -> (290, 102) -> (370, 78) -> (450, 65) -->
+                <path d="M 50 125 C 130 123, 210 118, 290 102 S 390 75, 450 65" fill="none" stroke="#F18C22" stroke-width="2.6" stroke-linecap="round"/>
+                <circle cx="50" cy="125" r="4" fill="#F18C22"/>
+                <text x="50" y="120" fill="#F18C22" font-size="9.5" font-weight="700" text-anchor="middle">5%</text>
+                <circle cx="450" cy="65" r="4" fill="#F18C22"/>
+                <text x="450" y="58" fill="#F18C22" font-size="9.5" font-weight="700" text-anchor="middle">38%</text>
+
+                <!-- Curve Labels / Legend -->
+                <rect x="55" y="42" width="115" height="18" fill="rgba(13, 35, 44, 0.85)" rx="3" stroke="rgba(135, 203, 204, 0.3)"/>
+                <circle cx="65" cy="51" r="3.5" fill="#87CBCC"/>
+                <text x="74" y="54" fill="#87CBCC" font-size="9" font-weight="700">Attentive (P_Att)</text>
+
+                <rect x="235" y="112" width="125" height="18" fill="rgba(13, 35, 44, 0.85)" rx="3" stroke="rgba(241, 140, 34, 0.3)"/>
+                <circle cx="245" cy="121" r="3.5" fill="#F18C22"/>
+                <text x="254" y="124" fill="#F18C22" font-size="9" font-weight="700">Inattentive (P_Inatt)</text>
+              </svg>
+            </div>
+
+            <div style="font-size:0.8rem; color:var(--text-sub); line-height:1.45; margin-top:0.75rem;">
+              <span style="color:var(--teal-400); font-weight:700;">Morning Prompts (08:00 - 12:00):</span> Attentive state dominates (<i>P</i><sub>Att</sub> &gt; .95).<br>
+              <span style="color:var(--orange-400); font-weight:700;">Evening Fatigue Spike (20:00 - 22:00):</span> Inattention probability surges to 35%, requiring occasion-level filtering rather than person-level deletion.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 14
+           ==================================================================== -->
+      <article class="module-card" id="slide-13" data-index="13">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 14 / 15</span>
+            <span class="module-category">Applied Triage Protocol</span>
+          </div>
+          <h2 class="module-title">A Multi-Hurdle Data Triage Protocol for Cross-Sectional Survey Research</h2>
+          <p class="module-abstract">A standardized, reproducible three-stage workflow for screening and treating careless survey responses.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              To synthesize theoretical insights into empirical practice, <span class="cite" data-cite="curran2016">Curran (2016)</span>, <span class="cite" data-cite="ward2023">Ward &amp; Meade (2023)</span>, and <span class="cite" data-cite="huang2026">Huang et al. (2026)</span> recommend a sequential <strong>Three-Stage Multi-Hurdle Protocol</strong>:
+            </p>
+            <div class="flow-steps-grid" style="grid-template-columns:1fr; gap:0.6rem;">
+              <div class="flow-card">
+                <div class="flow-card-header">STAGE 1: GROSS SCREENING (BIOLOGICAL & PROCEDURAL IMPOSSIBILITIES)</div>
+                <div class="flow-card-title">Clear Biological & Procedural Outliers</div>
+                <div class="flow-card-desc">
+                  Immediately exclude cases with mean item completion duration &lt;1.0 s/item. Exclude participants failing &ge; 2 embedded IMCs.
+                </div>
+              </div>
+              <div class="flow-card">
+                <div class="flow-card-header">STAGE 2: MULTI-HURDLE CONVERGENCE SCREENING</div>
+                <div class="flow-card-title">Inter-Metric Outlier Triangulation</div>
+                <div class="flow-card-desc">
+                  Compute 2&ndash;3 non-overlapping post hoc metrics (e.g., Long String + IRV + Laz.R). Flag only participants falling into extreme outlier quantiles across multiple indices simultaneously.
+                </div>
+              </div>
+              <div class="flow-card">
+                <div class="flow-card-header">STAGE 3: ANALYTICAL TREATMENT & SENSITIVITY PROFILING</div>
+                <div class="flow-card-title">Model Comparison & Latent Method Covariation</div>
+                <div class="flow-card-desc">
+                  Report transparent sensitivity analyses comparing full vs. screened samples. For smaller <i class="math-var">N</i>, model a continuous C/IER factor as an explicit latent covariate in SEM.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+              Multi-Hurdle Triage Funnel
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:1rem;">
+              Simulated funnel progression for a typical crowdsourced survey sample (<i class="math-var">N</i> = 1,000):
+            </p>
+
+            <div style="display:flex; flex-direction:column; gap:0.6rem;">
+              <div style="background:var(--navy-950); padding:0.75rem 1rem; border-radius:var(--radius-sm); border-left:4px solid var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.82rem;">Raw Collected Sample</span>
+                <span style="font-family:var(--font-mono); font-weight:700;"><i class="math-var">N</i> = 1,000 (100%)</span>
+              </div>
+              <div style="text-align:center; color:var(--orange-400); font-size:0.75rem;">▼ Stage 1: Speeders (&lt;1.0 s) & IMC Fails (-42)</div>
+              <div style="background:var(--navy-950); padding:0.75rem 1rem; border-radius:var(--radius-sm); border-left:4px solid var(--orange-500); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.82rem;">Post-Gross Screening</span>
+                <span style="font-family:var(--font-mono); font-weight:700;"><i class="math-var">N</i> = 958 (95.8%)</span>
+              </div>
+              <div style="text-align:center; color:var(--teal-400); font-size:0.75rem;">▼ Stage 2: Multi-Hurdle Outliers (-28)</div>
+              <div style="background:var(--navy-950); padding:0.75rem 1rem; border-radius:var(--radius-sm); border-left:4px solid var(--teal-500); display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.82rem; font-weight:700; color:var(--teal-400);">Final High-Fidelity Analytic Sample</span>
+                <span style="font-family:var(--font-mono); font-weight:800; color:var(--teal-400);"><i class="math-var">N</i> = 930 (93.0%)</span>
+              </div>
+            </div>
+
+            <div style="margin-top:1rem; font-size:0.8rem; color:var(--text-sub); line-height:1.45;">
+              <strong style="color:var(--text-main);">Sensitivity Requirement:</strong> Journal reviewers require proof that substantive findings hold across both <i class="math-var">N</i> = 1,000 and <i class="math-var">N</i> = 930 cohorts.
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ====================================================================
+           MODULE 15
+           ==================================================================== -->
+      <article class="module-card" id="slide-14" data-index="14">
+        <div class="module-header">
+          <div class="module-meta-bar">
+            <span class="module-number-badge">MODULE 15 / 15</span>
+            <span class="module-category">Synthesis & Standards</span>
+          </div>
+          <h2 class="module-title">Methodological Synthesis: Paradigm Transition from Casewise Deletion to Latent Method Factor Modeling and Sensitivity Analysis</h2>
+          <p class="module-abstract">Establishing modern standards of transparency, reproducibility, and method factor modeling in survey research.</p>
+        </div>
+
+        <div class="grid-2col">
+          <div class="text-column">
+            <p>
+              In their authoritative reviews, <span class="cite" data-cite="ward2023">Ward &amp; Meade (2023)</span> and <span class="cite" data-cite="huang2026">Huang, Wang, Huang, Wu, and Shi (2026)</span> documented that while academic awareness of C/IER has grown exponentially, reporting standards remain deeply fragmented and non-standardized.
+            </p>
+            <p>
+              To align with contemporary open science and reproducibility criteria, researchers must adopt four fundamental pillars:
+            </p>
+            <ol style="padding-left:1.25rem; display:flex; flex-direction:column; gap:0.5rem;">
+              <li><strong>Ex Ante Design Prudence:</strong> Treat respondent cognitive ergonomics as an empirical priority rather than an afterthought.</li>
+              <li><strong>Multi-Metric Triangulation:</strong> Reject arbitrary single-metric deletion in favor of conservative multi-hurdle convergence.</li>
+              <li><strong>Dynamic Modeling:</strong> In longitudinal and VAS topologies, isolate transient inattentive states without discarding valid observations.</li>
+              <li><strong>Exemplary Transparency:</strong> Explicitly disclose screening indices, cutoff rationales, sample retention rates, and full sensitivity analyses comparing raw versus treated models.</li>
+            </ol>
+            <p>
+              By treating C/IER not as garbage to be surreptitiously deleted, but as an explicit source of Method Variance to be modeled and neutralized, empirical behavioral science secures genuine replicability.
+            </p>
+          </div>
+
+          <div class="interactive-column">
+            <div class="widget-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+              Transparency Reporting Statement Generator
+            </div>
+            <p style="font-size:0.84rem; color:var(--text-sub); margin-bottom:0.75rem;">
+              Click below to generate a standardized methodological transparency statement for manuscript submission:
+            </p>
+
+            <div class="statement-box" id="reporting-statement">
+              "Data hygiene protocols followed a multi-hurdle screening procedure (Huang et al., 2015; Curran, 2016; Ward &amp; Meade, 2023). Participants completing the survey below 1.0 s/item or failing &ge; 2 instructional manipulation checks were excluded (n = 42). Multi-metric post hoc screening combining Long String (LS &gt; 12) and the Laz.R Markov index identified an additional 28 multivariate outliers. Sensitivity analyses confirmed structural path invariance between uncleaned (N = 1,000) and cleaned (N = 930) samples."
+              <button class="copy-btn" onclick="copyStatement()">Copy APA Statement</button>
+            </div>
+
+            <div style="margin-top:1rem; display:flex; gap:0.5rem; justify-content:center;">
+              <button class="ref-btn" onclick="openRefModal()" style="width:100%; justify-content:center;">
+                View Complete Scholarly Bibliography (22 Sources)
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+  <!-- ========================================================================
+       STICKY BOTTOM STEPPER FOOTER (Stepper Mode)
+       ======================================================================== -->
+  <footer id="stepper-footer" class="slide-stepper-footer">
+    <div class="stepper-info">
+      <span class="stepper-counter" id="stepper-counter">SLIDE 01 / 15</span>
+      <span class="stepper-hint">Use Keyboard Arrows [ &larr; / &rarr; ] or Spacebar to navigate</span>
+    </div>
+    <div class="stepper-nav-btns">
+      <button id="btn-prev" class="nav-arrow-btn" onclick="prevSlide()" disabled>
+        &larr; Previous
+      </button>
+      <button id="btn-next" class="nav-arrow-btn primary" onclick="nextSlide()">
+        Next Slide &rarr;
+      </button>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       MODAL: SCHOLARLY REFERENCES (APA 7th)
+       ======================================================================== -->
+  <div id="ref-modal" class="modal-backdrop" onclick="closeRefModal(event)">
+    <div class="modal-dialog" onclick="event.stopPropagation()">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Scholarly References & Primary Foundations (APA 7th Edition)
+        </div>
+        <button class="modal-close-btn" onclick="closeRefModal()">&times;</button>
+      </div>
+      <div class="modal-body" id="ref-modal-body">
+      </div>
+    </div>
+  </div>
+
+  <div id="cite-popover" class="cite-popover"></div>
+
+  <!-- ========================================================================
+       EMBEDDED CLIENT SCRIPTS & INTERACTION ENGINE
+       ======================================================================== -->
+  <script>
+    const REFERENCES = {
+      "huang2015": {
+        key: "@huang2015",
+        short: "Huang, Liu, & Bowling (2015)",
+        full: "Huang, J. L., Liu, M., & Bowling, N. A. (2015). Insufficient effort responding: Examining an insidious confound in survey data. <em>Journal of Applied Psychology</em>, 100(3), 828&ndash;845.",
+        doi: "https://doi.org/10.1037/a0038510",
+        note: "Core theoretical proof establishing C/IER as a source of Common Method Variance (CMV) and mathematically deriving the midpoint attraction mechanism that inflates bivariate correlations."
+      },
+      "huang2015a": {
+        key: "@huang2015a",
+        short: "Huang, Bowling, Liu, & Li (2015)",
+        full: "Huang, J. L., Bowling, N. A., Liu, M., & Li, Y. (2015). Detecting insufficient effort responding with an infrequency scale: Evaluating validity and participant reactions. <em>Journal of Business and Psychology</em>, 30(2), 299&ndash;311.",
+        doi: "https://doi.org/10.1007/s10869-014-9357-6",
+        note: "Empirical validation of infrequency scales demonstrating their discriminant validity against cognitive ability and participant acceptability."
+      },
+      "huang2012": {
+        key: "@huang2012",
+        short: "Huang, Curran, Keeney, Poposki, & DeShon (2012)",
+        full: "Huang, J. L., Curran, P. G., Keeney, J., Poposki, E. M., & DeShon, R. P. (2012). Detecting and deterring insufficient effort responding to surveys. <em>Journal of Business and Psychology</em>, 27(1), 99&ndash;114.",
+        doi: "https://doi.org/10.1007/s10869-011-9231-8",
+        note: "Pioneering investigation introducing proactive deterrence warnings and establishing foundational response-time and infrequency screening protocols."
+      },
+      "huang2026": {
+        key: "@huang2026",
+        short: "Huang, Wang, Huang, Wu, & Shi (2026)",
+        full: "Huang, J. L., Wang, Z., Huang, R., Wu, D., & Shi, H. (2026). Insufficient effort responding in management research: A critical review and future directions. <em>Journal of Management</em>, 52(1), 32&ndash;64.",
+        doi: "https://doi.org/10.1177/01492063251330268",
+        note: "Authoritative systematic review across 17 top management journals evaluating reporting standards, multi-hurdle protocols, and sensitivity analysis."
+      },
+      "curran2016": {
+        key: "@curran2016",
+        short: "Curran (2016)",
+        full: "Curran, P. G. (2016). Methods for the detection of carelessly invalid responses in survey data. <em>Journal of Experimental Social Psychology</em>, 66, 4&ndash;19.",
+        doi: "https://doi.org/10.1016/j.jesp.2015.07.006",
+        note: "Foundational taxonomy of non-parametric detection metrics including Long String, Intra-individual Response Variability (IRV), and psychometric synonyms/antonyms."
+      },
+      "alarcon2022": {
+        key: "@alarcon2022",
+        short: "Alarcon & Lee (2022)",
+        full: "Alarcon, G. M., & Lee, M. A. (2022). The relationship of insufficient effort responding and response styles: An online experiment. <em>Frontiers in Psychology</em>, 12, Article 784375.",
+        doi: "https://doi.org/10.3389/fpsyg.2021.784375",
+        note: "Utilizes IRTree models to establish discriminant empirical boundaries between C/IER (task disengagement) and motivated response styles (social desirability, acquiescence)."
+      },
+      "hong2020": {
+        key: "@hong2020",
+        short: "Hong, Steedle, & Cheng (2020)",
+        full: "Hong, M., Steedle, J. T., & Cheng, Y. (2020). Methods of detecting insufficient effort responding: Comparisons and practical recommendations. <em>Educational and Psychological Measurement</em>, 80(2), 312&ndash;345.",
+        doi: "https://doi.org/10.1177/0013164419865316",
+        note: "Extensive comparative evaluation of post-hoc indices (Mahalanobis D², LongString, IRV, lz person fit) across varying survey lengths and sample conditions."
+      },
+      "biemann2025": {
+        key: "@biemann2025",
+        short: "Biemann, Koch-Bayram, Meier-Barthold, & Aguinis (2025)",
+        full: "Biemann, T., Koch-Bayram, I. F., Meier-Barthold, M., & Aguinis, H. (2025). Using Markov chains to detect careless responding in survey research. <em>Organizational Research Methods</em>, 28(4), 543&ndash;568.",
+        doi: "https://doi.org/10.1177/10944281251334778",
+        note: "Introduces first-order Markov chain transition matrices and the Laz.R index for algorithmic detection of deterministic patterned responding (e.g., alternating, diagonal)."
+      },
+      "ulitzsch2022": {
+        key: "@ulitzsch2022",
+        short: "Ulitzsch, Pohl, Khorramdel, Kroehne, & von Davier (2022)",
+        full: "Ulitzsch, E., Pohl, S., Khorramdel, L., Kroehne, U., & von Davier, M. (2022). A response-time-based latent response mixture model for identifying and modeling careless and insufficient effort responding in survey data. <em>Psychometrika</em>, 87(2), 593&ndash;619.",
+        doi: "https://doi.org/10.1007/s11336-021-09817-7",
+        note: "Hierarchical mixture item response theory model integrating item-level response times and the distance-difficulty hypothesis to separate latent careless classes."
+      },
+      "ulitzsch2024": {
+        key: "@ulitzsch2024",
+        short: "Ulitzsch, Shin, & Lüdtke (2024)",
+        full: "Ulitzsch, E., Shin, H. J., & Lüdtke, O. (2024). Accounting for careless and insufficient effort responding in large-scale survey data&mdash;Development, evaluation, and application of a screen-time-based weighting procedure. <em>Behavior Research Methods</em>, 56(2), 804&ndash;825.",
+        doi: "https://doi.org/10.3758/s13428-022-02053-6",
+        note: "Continuous probability-based downweighting framework utilizing posterior latent class probabilities from log screen-time mixture distributions instead of binary deletion."
+      },
+      "vogelsmeier2024": {
+        key: "@vogelsmeier2024",
+        short: "Vogelsmeier, Uglanova, Rein, & Ulitzsch (2024)",
+        full: "Vogelsmeier, L. V. D. E., Uglanova, I., Rein, M. T., & Ulitzsch, E. (2024). Investigating dynamics in attentive and inattentive responding together with their contextual correlates using a novel mixture IRT model for intensive longitudinal data. <em>British Journal of Mathematical and Statistical Psychology</em>, Advance online publication, bmsp.12373.",
+        doi: "https://doi.org/10.1111/bmsp.12373",
+        note: "Formulates mixture IRT combined with latent Markov factor analysis to model dynamic intra-individual transitions between attentive and inattentive states in EMA designs."
+      },
+      "zhang2025": {
+        key: "@zhang2025",
+        short: "Zhang, Domingue, Vogelsmeier, & Ulitzsch (2025)",
+        full: "Zhang, L., Domingue, B. W., Vogelsmeier, L. V. D. E., & Ulitzsch, E. (2025). A beta mixture model for careless respondent detection in visual analogue scale data. <em>Psychometrika</em>, 90(4), 1558&ndash;1581.",
+        doi: "https://doi.org/10.1017/psy.2025.10041",
+        note: "Extends mixture modeling to bounded continuous visual analogue scales (VAS) via beta distributions, revealing heightened C/IER prevalence on continuous response scales."
+      },
+      "bowling2021": {
+        key: "@bowling2021",
+        short: "Bowling, Gibson, Houpt, & Brower (2021)",
+        full: "Bowling, N. A., Gibson, A. M., Houpt, J. W., & Brower, C. K. (2021). Will the questions ever end? Person-level increases in careless responding during questionnaire completion. <em>Organizational Research Methods</em>, 24(4), 718&ndash;738.",
+        doi: "https://doi.org/10.1177/1094428120947794",
+        note: "Empirical demonstration that C/IER increases systematically as survey length increases due to cognitive depletion, with steeper slopes in unproctored online settings."
+      },
+      "meade2012": {
+        key: "@meade2012",
+        short: "Meade & Craig (2012)",
+        full: "Meade, A. W., & Craig, S. B. (2012). Identifying careless responses in survey data. <em>Psychological Methods</em>, 17(3), 437&ndash;455.",
+        doi: "https://doi.org/10.1037/a0028085",
+        note: "Landmark methodological investigation comparing multiple careless responding indices, introducing Mahalanobis D² screening and assessing the impact of data screening on factor structures."
+      },
+      "dunn2018a": {
+        key: "@dunn2018a",
+        short: "Dunn, Heggestad, Shanock, & Theilgard (2018)",
+        full: "Dunn, A. M., Heggestad, E. D., Shanock, L. R., & Theilgard, N. (2018). Intra-individual response variability as an indicator of insufficient effort responding: Comparison to other indicators and relationships with individual differences. <em>Journal of Business and Psychology</em>, 33(1), 105&ndash;121.",
+        doi: "https://doi.org/10.1007/s10869-016-9479-0",
+        note: "Seminal paper establishing Intra-individual Response Variability (IRV) as an effective indicator of C/IER and evaluating its relationship with respondent conscientiousness and cognitive effort."
+      },
+      "ward2023": {
+        key: "@ward2023",
+        short: "Ward & Meade (2023)",
+        full: "Ward, M. K., & Meade, A. W. (2023). Dealing with careless responding in survey data: Prevention, identification, and recommended best practices. <em>Annual Review of Psychology</em>, 74, 577&ndash;596.",
+        doi: "https://doi.org/10.1146/annurev-psych-040422-045007",
+        note: "Comprehensive state-of-the-art consensus review synthesizing prevention, identification, multi-indicator screening, and transparent reporting standards."
+      },
+      "podsakoff2003": {
+        key: "@podsakoff2003",
+        short: "Podsakoff, MacKenzie, Lee, & Podsakoff (2003)",
+        full: "Podsakoff, P. M., MacKenzie, S. B., Lee, J. Y., & Podsakoff, N. P. (2003). Common method biases in behavioral research: A critical review of the literature and recommended remedies. <em>Journal of Applied Psychology</em>, 88(5), 879&ndash;903.",
+        doi: "https://doi.org/10.1037/0021-9010.88.5.879",
+        note: "Seminal framework differentiating Common Method Variance (CMV) and Common Method Bias (CMB), categorizing procedural and statistical remedies."
+      },
+      "podsakoff2012": {
+        key: "@podsakoff2012",
+        short: "Podsakoff, MacKenzie, & Podsakoff (2012)",
+        full: "Podsakoff, P. M., MacKenzie, S. B., & Podsakoff, N. P. (2012). Sources of method bias in social science research and recommendations on how to control it. <em>Annual Review of Psychology</em>, 63, 539&ndash;569.",
+        doi: "https://doi.org/10.1146/annurev-psych-120710-100452",
+        note: "Critical synthesis on response styles, context effects, and measurement artifact controls in organizational and behavioral science."
+      },
+      "spector2006": {
+        key: "@spector2006",
+        short: "Spector (2006)",
+        full: "Spector, P. E. (2006). Method variance in organizational research: Truth or urban legend? <em>Organizational Research Methods</em>, 9(2), 221&ndash;232.",
+        doi: "https://doi.org/10.1177/1094428105284955",
+        note: "Theoretical critique clarifying that method variance does not uniformly bias all correlations, highlighting the necessity of demonstrating specific biasing mechanisms."
+      },
+      "oppenheimer2009": {
+        key: "@oppenheimer2009",
+        short: "Oppenheimer, Meyvis, & Davidenko (2009)",
+        full: "Oppenheimer, D. M., Meyvis, T., & Davidenko, N. (2009). Instructional manipulation checks: Detecting satisficing to increase statistical power. <em>Journal of Experimental Social Psychology</em>, 45(4), 867&ndash;872.",
+        doi: "https://doi.org/10.1016/j.jesp.2009.03.009",
+        note: "Pioneered the Instructional Manipulation Check (IMC) / trap question paradigm for identifying participant satisficing and boosting statistical power."
+      },
+      "steedle2018": {
+        key: "@steedle2018",
+        short: "Steedle (2018)",
+        full: "Steedle, J. T. (2018). <em>Detecting inattentive responding on a psychosocial measure of college readiness</em> (Research Report 2018-5). ACT, Inc. ERIC Document ED592756.",
+        doi: "https://files.eric.ed.gov/fulltext/ED592756.pdf",
+        note: "Large-scale empirical assessment comparing screening criteria and evaluating the extent of parameter shifts, internal consistency changes, and factor structure robustness."
+      },
+      "roman2024": {
+        key: "@roman2024",
+        short: "Roman, Schmidt, Miller, & Brandt (2024)",
+        full: "Roman, Z. J., Schmidt, P., Miller, J. M., & Brandt, H. (2024). Identifying dynamic shifts to careless and insufficient effort behavior in questionnaire responses: A novel approach and experimental validation. <em>Structural Equation Modeling: A Multidisciplinary Journal</em>, 31(5), 775&ndash;793.",
+        doi: "https://doi.org/10.1080/10705511.2024.2304816",
+        note: "Proposes Bayesian Dynamic Latent Class SEM (DLCSEM) to estimate structural equations while adjusting for item-level state transitions from diligence to C/IER."
+      }
+    };
+
+    let currentSlide = 0;
+    const totalSlides = 15;
+    let currentMode = "stepper";
+
+    function initNavigation() {
+      const tocList = document.getElementById("toc-list");
+      tocList.innerHTML = "";
+
+      const titles = [
+        "01: Conceptual Foundations & Framework",
+        "02: Measurement Error Paradigms",
+        "03: Comparative Psychometrics (SDR & ARS)",
+        "04: Catalyst–Carrier–Consequence Model",
+        "05: Etiological Vectors & Interactions",
+        "06: Midpoint Attraction Mechanism",
+        "07: Methodological Vulnerabilities",
+        "08: Dual-Front Data Quality Framework",
+        "09: Ex Ante Procedural Controls",
+        "10: Post Hoc Statistical Diagnostics",
+        "11: Markov Transition Detection (Laz.R)",
+        "12: Latent Mixture & Response Time",
+        "13: Intensive Longitudinal Dynamics (EMA)",
+        "14: Cross-Sectional Triage Funnel",
+        "15: Synthesis & Reporting Standards"
+      ];
+
+      titles.forEach((title, i) => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.className = "toc-link" + (i === 0 ? " active" : "");
+        a.id = `toc-link-${i}`;
+        a.href = `#slide-${i}`;
+        a.textContent = title;
+        a.onclick = (e) => {
+          e.preventDefault();
+          jumpToModule(i);
+        };
+        li.appendChild(a);
+        tocList.appendChild(li);
+      });
+
+      const refModalBody = document.getElementById("ref-modal-body");
+      refModalBody.innerHTML = "";
+      Object.keys(REFERENCES).sort().forEach(k => {
+        const item = REFERENCES[k];
+        const div = document.createElement("div");
+        div.className = "bib-entry";
+        div.innerHTML = `
+          <div class="bib-entry-key">${item.key}</div>
+          <div class="bib-entry-text">${item.full}</div>
+          <div class="bib-doi"><a href="${item.doi}" target="_blank" style="color:var(--orange-400); text-decoration:none;">${item.doi}</a></div>
+          <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.35rem;"><em>Methodological significance:</em> ${item.note}</div>
+        `;
+        refModalBody.appendChild(div);
+      });
+
+      window.addEventListener("keydown", (e) => {
+        if (currentMode === "stepper") {
+          if (e.key === "ArrowRight" || e.key === " ") {
+            e.preventDefault();
+            nextSlide();
+          } else if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            prevSlide();
+          }
+        }
+      });
+
+      setupCitations();
+      renderSlide1Canvas();
+      updateSlide2Sim(0.00);
+      updateMidpointSim();
+      updateTripwireSim();
+      updateGaugesSim();
+      analyzeCustomPattern();
+      renderSlide13Canvas();
+      updateEtiologySim();
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      const body = document.body;
+      const btnStepper = document.getElementById("btn-stepper");
+      const btnDoc = document.getElementById("btn-doc");
+      const footer = document.getElementById("stepper-footer");
+      const sidebar = document.getElementById("toc-sidebar");
+      const htmlEl = document.documentElement;
+
+      if (mode === "stepper") {
+        body.classList.remove("document-mode");
+        body.classList.add("stepper-mode");
+        htmlEl.classList.remove("document-mode");
+        htmlEl.classList.add("stepper-mode");
+        btnStepper.classList.add("active");
+        btnDoc.classList.remove("active");
+        footer.style.display = "flex";
+        sidebar.style.display = "none";
+        showSlide(currentSlide);
+      } else {
+        body.classList.remove("stepper-mode");
+        body.classList.add("document-mode");
+        htmlEl.classList.remove("stepper-mode");
+        htmlEl.classList.add("document-mode");
+        btnDoc.classList.add("active");
+        btnStepper.classList.remove("active");
+        footer.style.display = "none";
+        sidebar.style.display = "block";
+        document.querySelectorAll(".module-card").forEach(c => c.style.display = "block");
+        if (currentSlide > 0) {
+          const target = document.getElementById(`slide-${currentSlide}`);
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }
+
+    function showSlide(index) {
+      if (index < 0 || index >= totalSlides) return;
+      currentSlide = index;
+
+      if (currentMode === "stepper") {
+        document.querySelectorAll(".module-card").forEach((card, i) => {
+          if (i === index) {
+            card.classList.add("active-slide");
+            card.style.display = "block";
+          } else {
+            card.classList.remove("active-slide");
+            card.style.display = "none";
+          }
+        });
+        const wrapper = document.querySelector(".main-wrapper");
+        if (wrapper) wrapper.scrollTo({ top: 0, behavior: "instant" });
+        window.scrollTo({ top: 0, behavior: "instant" });
+      } else {
+        const target = document.getElementById(`slide-${index}`);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+
+      document.getElementById("stepper-counter").innerText = `SLIDE ${String(index + 1).padStart(2, "0")} / 15`;
+      document.getElementById("jump-select").value = index;
+      document.getElementById("btn-prev").disabled = (index === 0);
+      document.getElementById("btn-next").disabled = (index === totalSlides - 1);
+      
+      const pct = ((index + 1) / totalSlides) * 100;
+      document.getElementById("progress-bar").style.width = pct + "%";
+
+      document.querySelectorAll(".toc-link").forEach((link, i) => {
+        if (i === index) link.classList.add("active");
+        else link.classList.remove("active");
+      });
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) showSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) showSlide(currentSlide - 1);
+    }
+
+    function jumpToModule(index) {
+      const idx = parseInt(index, 10);
+      currentSlide = idx;
+      if (currentMode === "stepper") {
+        showSlide(idx);
+      } else {
+        document.querySelectorAll(".toc-link").forEach((link, i) => {
+          if (i === idx) link.classList.add("active");
+          else link.classList.remove("active");
+        });
+        const select = document.getElementById("jump-select");
+        if (select) select.value = idx;
+        const target = document.getElementById(`slide-${idx}`);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    }
+
+    function setupCitations() {
+      const popover = document.getElementById("cite-popover");
+      document.querySelectorAll(".cite").forEach(el => {
+        el.addEventListener("mouseenter", (e) => {
+          const citeKey = el.getAttribute("data-cite");
+          const ref = REFERENCES[citeKey];
+          if (!ref) return;
+
+          popover.innerHTML = `
+            <div style="font-weight:700; color:var(--teal-400); margin-bottom:0.2rem;">${ref.short}</div>
+            <div style="font-size:0.75rem; color:var(--text-main); margin-bottom:0.4rem;">${ref.full}</div>
+            <div style="font-size:0.72rem; color:var(--orange-400); font-family:var(--font-mono);">${ref.doi}</div>
+          `;
+          popover.classList.add("visible");
+          const rect = el.getBoundingClientRect();
+          popover.style.left = `${Math.min(window.innerWidth - 340, Math.max(10, rect.left + window.scrollX - 50))}px`;
+          popover.style.top = `${rect.bottom + window.scrollY + 8}px`;
+        });
+
+        el.addEventListener("mouseleave", () => {
+          popover.classList.remove("visible");
+        });
+
+        el.addEventListener("click", () => {
+          openRefModal();
+        });
+      });
+    }
+
+    function openRefModal() {
+      document.getElementById("ref-modal").classList.add("active");
+    }
+
+    function closeRefModal(e) {
+      if (!e || e.target.id === "ref-modal" || e.target.classList.contains("modal-close-btn")) {
+        document.getElementById("ref-modal").classList.remove("active");
+      }
+    }
+
+    function renderSlide1Canvas() {
+      const canvas = document.getElementById("canvas-slide-1");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.parentElement.clientWidth;
+      const h = 180;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = "rgba(135, 203, 204, 0.1)";
+      ctx.lineWidth = 1;
+      for (let y = 30; y < h; y += 30) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(w, y);
+        ctx.stroke();
+      }
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#87CBCC";
+      ctx.lineWidth = 2.5;
+      for (let x = 0; x < w * 0.55; x++) {
+        const y = 90 + Math.sin(x * 0.05) * 35 + Math.sin(x * 0.12) * 12;
+        if (x === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      const transX = w * 0.55;
+      ctx.fillStyle = "#F18C22";
+      ctx.beginPath();
+      ctx.arc(transX, 90 + Math.sin(transX * 0.05) * 35, 5, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#F18C22";
+      ctx.lineWidth = 2.5;
+      ctx.moveTo(transX, 90 + Math.sin(transX * 0.05) * 35);
+      for (let x = transX; x < w; x++) {
+        const y = 90 + ((x % 30 < 3) ? -25 : 0) + ((x % 60 < 2) ? 30 : 0);
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    function updateSlide2Sim(val) {
+      val = parseFloat(val);
+      document.getElementById("val-s2-cov").innerText = val.toFixed(2);
+      
+      const r_obs = val / (1.0 + 0.1);
+      document.getElementById("disp-s2-r").innerText = r_obs.toFixed(2);
+      
+      const z = r_obs / 0.0577;
+      let p_val = 0.05;
+      if (z > 3.29) p_val = 99.9;
+      else if (z > 2.58) p_val = 85.0;
+      else if (z > 1.96) p_val = 62.0;
+      else if (z > 1.0) p_val = 22.0;
+      else p_val = 5.0;
+      
+      document.getElementById("disp-s2-type1").innerText = p_val.toFixed(1) + "%";
+      
+      const canvas = document.getElementById("canvas-slide-2");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.parentElement.clientWidth;
+      const h = 120;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.fillStyle = "rgba(135, 203, 204, 0.3)";
+      ctx.fillRect(w * 0.2, h - 30, w * 0.25, 2);
+      ctx.fillStyle = "#87CBCC";
+      ctx.font = "11px sans-serif";
+      ctx.fillText("True rho = 0.00", w * 0.2, h - 10);
+
+      const barH = Math.min(80, r_obs * 180);
+      ctx.fillStyle = "#F18C22";
+      ctx.fillRect(w * 0.55, h - 30 - barH, w * 0.25, barH);
+      ctx.fillText(`Obs r = ${r_obs.toFixed(2)}`, w * 0.55, h - 10);
+    }
+
+    function switchDiagTab(tabId) {
+      document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll(".tab-panel").forEach(p => p.classList.remove("active"));
+      event.target.classList.add("active");
+      document.getElementById(tabId).classList.add("active");
+    }
+
+    function inspectFlowStep(step) {
+      const p = document.getElementById("flow-details-panel");
+      if (step === "catalyst") {
+        p.innerHTML = `<strong style="color:var(--orange-400);">Stage 1 (Catalyst):</strong> Behavioral satisficing. The participant adopts an automated motor strategy (speed-reading, midpoint clustering, or straightlining) to minimize cognitive effort.`;
+      } else if (step === "carrier") {
+        p.innerHTML = `<strong style="color:var(--teal-400);">Stage 2 (Carrier / CMV):</strong> Common Method Variance. Because the same behavioral satisficing pattern operates across Scale <i>X</i> and Scale <i>Y</i>, item residual errors correlate: <i>Cov</i>(<i>e<sub>xi</sub></i>, <i>e<sub>yj</sub></i>) &gt; 0.`;
+      } else if (step === "consequence") {
+        p.innerHTML = `<strong style="color:var(--orange-400);">Stage 3 (Consequence / CMB):</strong> Common Method Bias. Structural model parameters distort. Latent factor correlations inflate by &Delta;<i>r</i> = <i>p</i>(1 &minus; <i>p</i>)(<i>&mu;<sub>X</sub></i> &minus; <i>M</i>)(<i>&mu;<sub>Y</sub></i> &minus; <i>M</i>), inducing Type I errors in hypothesis testing.`;
+      }
+    }
+
+    function updateEtiologySim() {
+      const len = parseInt(document.getElementById("slider-s5-len").value, 10);
+      const grid = parseInt(document.getElementById("slider-s5-grid").value, 10);
+      const pool = parseInt(document.getElementById("slider-s5-pool").value, 10);
+
+      document.getElementById("val-s5-len").innerText = `${len} min`;
+      document.getElementById("val-s5-grid").innerText = `${grid} Grids`;
+      document.getElementById("val-s5-pool").innerText = pool === 1 ? "Employee Proctored" : pool === 2 ? "Academic Panel" : "MTurk Anonymous";
+
+      const baseRisk = (len * 0.35) + (grid * 0.8) + (pool * 3.5);
+      const riskVal = Math.min(32.0, Math.max(2.5, baseRisk));
+      document.getElementById("disp-s5-risk").innerText = riskVal.toFixed(1) + "%";
+
+      const statusEl = document.getElementById("disp-s5-status");
+      if (riskVal > 15.0) {
+        statusEl.innerText = "CRITICAL RISK";
+        statusEl.style.color = "var(--orange-500)";
+      } else if (riskVal > 8.0) {
+        statusEl.innerText = "MODERATE";
+        statusEl.style.color = "var(--orange-400)";
+      } else {
+        statusEl.innerText = "SAFE DESIGN";
+        statusEl.style.color = "var(--teal-400)";
+      }
+    }
+
+    function updateMidpointSim() {
+      const mu = parseFloat(document.getElementById("slider-s6-mu").value);
+      const p = parseFloat(document.getElementById("slider-s6-p").value);
+      const M = 3.0;
+
+      document.getElementById("val-s6-mu").innerText = mu.toFixed(2);
+      document.getElementById("val-s6-p").innerText = (p * 100).toFixed(1) + "%";
+
+      const diffX = mu - M;
+      const diffY = Math.max(0, mu - 0.2 - M);
+      const spuriousCov = p * (1 - p) * diffX * diffY;
+      
+      const varPooled = 0.64 + p * (1 - p) * diffX * diffX;
+      const r_spurious = varPooled > 0 ? (spuriousCov / varPooled) : 0;
+
+      document.getElementById("disp-s6-r").innerText = r_spurious.toFixed(2);
+
+      const t_stat = r_spurious * Math.sqrt(298) / Math.sqrt(Math.max(0.001, 1 - r_spurious * r_spurious));
+      const pValEl = document.getElementById("disp-s6-pvalue");
+      if (t_stat > 2.58) {
+        pValEl.innerText = "p < .01 (Severe Spurious)";
+        pValEl.style.color = "var(--orange-500)";
+      } else if (t_stat > 1.96) {
+        pValEl.innerText = "p < .05 (Spurious Bias)";
+        pValEl.style.color = "var(--orange-400)";
+      } else {
+        pValEl.innerText = "p > .05 (Non-Sig)";
+        pValEl.style.color = "var(--teal-400)";
+      }
+
+      const canvas = document.getElementById("canvas-slide-6");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.parentElement.clientWidth;
+      const h = 130;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = "rgba(135, 203, 204, 0.25)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(30, h - 25);
+      ctx.lineTo(w - 30, h - 25);
+      ctx.stroke();
+
+      for (let i = 1; i <= 5; i++) {
+        const x = 30 + (i - 1) * ((w - 60) / 4);
+        ctx.fillStyle = "rgba(203, 213, 225, 0.6)";
+        ctx.font = "10px monospace";
+        ctx.fillText(i, x - 3, h - 10);
+      }
+
+      const midX = 30 + (3 - 1) * ((w - 60) / 4);
+      ctx.beginPath();
+      ctx.strokeStyle = "#F18C22";
+      ctx.lineWidth = 2;
+      for (let x = 30; x <= w - 30; x++) {
+        const z = (x - midX) / 18;
+        const y = (h - 25) - Math.exp(-0.5 * z * z) * (p * 220 + 5);
+        if (x === 30) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      const attX = 30 + (mu - 1) * ((w - 60) / 4);
+      ctx.beginPath();
+      ctx.strokeStyle = "#87CBCC";
+      ctx.lineWidth = 2;
+      for (let x = 30; x <= w - 30; x++) {
+        const z = (x - attX) / 28;
+        const y = (h - 25) - Math.exp(-0.5 * z * z) * (1 - p) * 65;
+        if (x === 30) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    function updateTripwireSim() {
+      const checks = parseInt(document.getElementById("slider-s9-checks").value, 10);
+      const thresh = parseInt(document.getElementById("slider-s9-thresh").value, 10);
+
+      document.getElementById("val-s9-checks").innerText = `${checks} Check${checks > 1 ? "s" : ""}`;
+      document.getElementById("val-s9-thresh").innerText = `Fail >= ${thresh} Check${thresh > 1 ? "s" : ""}`;
+
+      const p_careless_fail = Math.pow(0.85, thresh);
+      const p_attentive_fail = (thresh === 1) ? (checks * 0.04) : (checks * 0.04 * 0.04 * 10);
+
+      const attrition = (0.08 * p_careless_fail + 0.92 * p_attentive_fail) * 100;
+      const validLoss = p_attentive_fail * 100;
+
+      document.getElementById("disp-s9-attrition").innerText = attrition.toFixed(1) + "%";
+      document.getElementById("disp-s9-type1").innerText = validLoss.toFixed(1) + "%";
+      
+      const lossEl = document.getElementById("disp-s9-type1");
+      if (validLoss > 5.0) {
+        lossEl.style.color = "var(--orange-500)";
+      } else {
+        lossEl.style.color = "var(--teal-400)";
+      }
+    }
+
+    function updateGaugesSim() {
+      const ls = parseInt(document.getElementById("slider-s10-ls").value, 10);
+      const irv = parseFloat(document.getElementById("slider-s10-irv").value);
+
+      document.getElementById("val-s10-ls").innerText = `${ls} Items`;
+      document.getElementById("val-s10-irv").innerText = irv.toFixed(2);
+
+      const classEl = document.getElementById("disp-s10-class");
+      const riskEl = document.getElementById("disp-s10-risk");
+
+      if (ls >= 14 || irv <= 0.15) {
+        classEl.innerText = "STRAIGHTLINING";
+        classEl.style.color = "var(--orange-500)";
+        riskEl.innerText = "SEVERE OUTLIER";
+      } else if (ls >= 9 || irv < 0.40) {
+        classEl.innerText = "SUSPECT";
+        classEl.style.color = "var(--orange-400)";
+        riskEl.innerText = "MODERATE RISK";
+      } else if (irv > 1.70) {
+        classEl.innerText = "ERRATIC NOISE";
+        classEl.style.color = "var(--orange-400)";
+        riskEl.innerText = "HIGH VARIABILITY";
+      } else {
+        classEl.innerText = "NORMAL";
+        classEl.style.color = "var(--teal-400)";
+        riskEl.innerText = "LOW RISK";
+      }
+    }
+
+    function setPatternPreset(str) {
+      document.getElementById("pattern-input").value = str;
+      analyzeCustomPattern();
+    }
+
+    function analyzeCustomPattern() {
+      const inputStr = document.getElementById("pattern-input").value;
+      const arr = inputStr.split(/[\s,]+/).map(Number).filter(n => !isNaN(n) && n >= 1 && n <= 5);
+
+      if (arr.length < 3) return;
+
+      let maxLs = 1;
+      let curLs = 1;
+      for (let i = 1; i < arr.length; i++) {
+        if (arr[i] === arr[i - 1]) {
+          curLs++;
+          if (curLs > maxLs) maxLs = curLs;
+        } else {
+          curLs = 1;
+        }
+      }
+
+      const mean = arr.reduce((a, b) => a + b, 0) / arr.length;
+      const variance = arr.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / (arr.length - 1);
+      const irv = Math.sqrt(variance);
+
+      const transitions = {};
+      for (let i = 1; i < arr.length; i++) {
+        const key = `${arr[i-1]}->${arr[i]}`;
+        transitions[key] = (transitions[key] || 0) + 1;
+      }
+      let maxTrans = 0;
+      for (let k in transitions) {
+        if (transitions[k] > maxTrans) maxTrans = transitions[k];
+      }
+      const transRatio = maxTrans / (arr.length - 1);
+
+      let alternations = 0;
+      for (let i = 2; i < arr.length; i++) {
+        if (arr[i] === arr[i - 2] && arr[i] !== arr[i - 1]) alternations++;
+      }
+      const altRatio = alternations / (arr.length - 2);
+
+      let lazr = Math.min(1.0, Math.max(0.1, (transRatio * 0.45) + (altRatio * 0.55)));
+      if (maxLs > 4) lazr = Math.max(lazr, 0.85);
+
+      document.getElementById("disp-s11-ls").innerText = maxLs;
+      document.getElementById("disp-s11-irv").innerText = irv.toFixed(2);
+      document.getElementById("disp-s11-lazr").innerText = lazr.toFixed(2);
+
+      const verdictEl = document.getElementById("disp-s11-verdict");
+      if (lazr >= 0.70) {
+        verdictEl.innerHTML = `<strong style="color:var(--orange-400);">Markov Alert:</strong> Deterministic repetition pattern detected (Laz.R = ${lazr.toFixed(2)}). Even if Long String is low (${maxLs}), the sequence is non-substantive satisficing!`;
+        verdictEl.style.borderLeftColor = "var(--orange-500)";
+      } else if (maxLs >= 6) {
+        verdictEl.innerHTML = `<strong style="color:var(--orange-400);">Straightlining Alert:</strong> Extreme identical response run (LS = ${maxLs}).`;
+        verdictEl.style.borderLeftColor = "var(--orange-500)";
+      } else {
+        verdictEl.innerHTML = `<strong style="color:var(--teal-400);">Normal Pattern:</strong> High entropy transition distribution. Consistent with cognitive engagement.`;
+        verdictEl.style.borderLeftColor = "var(--teal-500)";
+      }
+    }
+
+    function renderSlide13Canvas() {
+      const canvas = document.getElementById("canvas-slide-13");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.parentElement.clientWidth;
+      const h = 150;
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, w, h);
+
+      ctx.strokeStyle = "rgba(135, 203, 204, 0.25)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(35, h - 25);
+      ctx.lineTo(w - 20, h - 25);
+      ctx.stroke();
+
+      const hours = ["08:00", "11:00", "14:00", "17:00", "20:00", "22:00"];
+      hours.forEach((hr, i) => {
+        const x = 35 + i * ((w - 55) / (hours.length - 1));
+        ctx.fillStyle = "rgba(203, 213, 225, 0.6)";
+        ctx.font = "9px monospace";
+        ctx.fillText(hr, x - 12, h - 10);
+      });
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#87CBCC";
+      ctx.lineWidth = 2.5;
+      for (let x = 35; x <= w - 20; x++) {
+        const t = (x - 35) / (w - 55);
+        const prob = 0.95 - Math.pow(t, 2) * 0.35;
+        const y = (h - 25) - prob * 95;
+        if (x === 35) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "#F18C22";
+      ctx.lineWidth = 2.5;
+      for (let x = 35; x <= w - 20; x++) {
+        const t = (x - 35) / (w - 55);
+        const prob = 0.05 + Math.pow(t, 2) * 0.35;
+        const y = (h - 25) - prob * 95;
+        if (x === 35) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+
+    function copyStatement() {
+      const text = document.getElementById("reporting-statement").innerText.replace("Copy APA Statement", "").trim();
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Methodological transparency statement copied to clipboard!");
+      });
+    }    window.addEventListener("DOMContentLoaded", () => {
+      initNavigation();
+      showSlide(0);
+    });
+
+    window.addEventListener("resize", () => {
+      renderSlide1Canvas();
+      renderSlide13Canvas();
+      updateMidpointSim();
+      updateSlide2Sim(document.getElementById("slider-s2-cov").value);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+    <meta charset="utf-8">
+    <meta name="generator" content="quarto-1.9.37">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+    <meta name="author" content="Pablo Rogers">
+
+    <title>Pedagogical Resources and Multimedia Companion</title>
+    <style>
+      /* Default styles provided by pandoc.
+      ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+      */
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      ul.task-list{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+        vertical-align: middle;
+      }
+      /* CSS for citations */
+      div.csl-bib-body { }
+      div.csl-entry {
+        clear: both;
+        margin-bottom: 0em;
+      }
+      .hanging-indent div.csl-entry {
+        margin-left:2em;
+        text-indent:-2em;
+      }
+      div.csl-left-margin {
+        min-width:2em;
+        float:left;
+      }
+      div.csl-right-inline {
+        margin-left:2em;
+        padding-left:1em;
+      }
+      div.csl-indent {
+        margin-left: 2em;
+      }    </style>
+
+    <style>
+      body.hypothesis-enabled #quarto-embed-header {
+        padding-right: 36px;
+      }
+
+      #quarto-embed-header {
+        height: 3em;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: solid 1px;
+      }
+
+      #quarto-embed-header h6 {
+        font-size: 1.1em;
+        padding-top: 0.6em;
+        margin-left: 1em;
+        margin-right: 1em;
+        font-weight: 400;
+      }
+
+      #quarto-embed-header a.quarto-back-link,
+      #quarto-embed-header a.quarto-download-embed {
+        font-size: 0.8em;
+        margin-top: 1em;
+        margin-bottom: 1em;
+        margin-left: 1em;
+        margin-right: 1em;
+      }
+
+      .quarto-back-container {
+        padding-left: 0.5em;
+        display: flex;
+      }
+
+      .headroom {
+          will-change: transform;
+          transition: transform 200ms linear;
+      }
+
+      .headroom--pinned {
+          transform: translateY(0%);
+      }
+
+      .headroom--unpinned {
+          transform: translateY(-100%);
+      }      
+    </style>
+
+    <script>
+    window.document.addEventListener("DOMContentLoaded", function () {
+
+      var header = window.document.querySelector("#quarto-embed-header");
+      const titleBannerEl = window.document.querySelector("body > #title-block-header");
+      if (titleBannerEl) {
+        titleBannerEl.style.paddingTop = header.clientHeight + "px";
+      }
+      const contentEl = window.document.getElementById('quarto-content');
+      for (const child of contentEl.children) {
+        child.style.paddingTop = header.clientHeight + "px";
+        child.style.marginTop = "1em";
+      }
+
+      // Use the article root if the `back` call doesn't work. This isn't perfect
+      // but should typically work
+      window.quartoBackToArticle = () => {
+        var currentUrl = window.location.href;
+        window.history.back();
+        setTimeout(() => {
+            // if location was not changed in 100 ms, then there is no history back
+            if(currentUrl === window.location.href){              
+                // redirect to site root
+                window.location.href = ".....html";
+            }
+        }, 100);
+      }
+
+      const headroom = new window.Headroom(header, {
+        tolerance: 5,
+        onPin: function () {
+        },
+        onUnpin: function () {
+        },
+      });
+      headroom.init();
+    });
+    </script>
+
+    
+<script src="../../site_libs/manuscript-notebook/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-df715b4811ca13bc07639e5bce24b6cd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+     <script async="" src="https://hypothes.is/embed.js"></script>
+<script>
+  window.document.addEventListener("DOMContentLoaded", function (_event) {
+    document.body.classList.add('hypothesis-enabled');
+  });
+</script>   <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script> 
+        <link rel="stylesheet" href="../../custom.css">
+      </head>
+
+  <body class="quarto-notebook quarto-light">
+    <div id="quarto-embed-header" class="headroom fixed-top bg-primary">
+      
+      <a onclick="window.quartoBackToArticle(); return false;" class="btn btn-primary quarto-back-link" href=""><i class="bi bi-caret-left"></i> Back to Article</a>
+      <h6><i class="bi bi-journal-code"></i> Pedagogical Resources and Multimedia Companion</h6>
+
+            <a href="../../Scripts/DataAppendixScripts/03_resources.qmd" class="btn btn-primary quarto-download-embed" download="03_resources.qmd">Download Source</a>
+          </div>
+
+     <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Pedagogical Resources and Multimedia Companion</h1>
+          </div>
+
+    
+    <div class="quarto-title-meta-container">
+      <div class="quarto-title-meta-column-start">
+        
+        <div class="quarto-title-meta">
+
+                <div>
+            <div class="quarto-title-meta-heading">Author</div>
+            <div class="quarto-title-meta-contents">
+                        <p>Pablo Rogers </p>
+                      </div>
+          </div>
+                
+          
+                
+              </div>
+      </div>
+      <div class="quarto-title-meta-column-end quarto-other-formats-target">
+      </div>
+    </div>
+
+
+
+    <div class="quarto-other-links-text-target">
+    </div>  </div>
+</header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#overview-the-tutorial-companion-paradigm" id="toc-overview-the-tutorial-companion-paradigm" class="nav-link active" data-scroll-target="#overview-the-tutorial-companion-paradigm">Overview &amp; The Tutorial Companion Paradigm</a></li>
+  <li><a href="#conceptual-roadmap-master-presentation-visual-slide-deck" id="toc-conceptual-roadmap-master-presentation-visual-slide-deck" class="nav-link" data-scroll-target="#conceptual-roadmap-master-presentation-visual-slide-deck">1. Conceptual Roadmap: Master Presentation &amp; Visual Slide Deck</a></li>
+  <li><a href="#guided-demonstration-video-lecture-methodological-walkthrough" id="toc-guided-demonstration-video-lecture-methodological-walkthrough" class="nav-link" data-scroll-target="#guided-demonstration-video-lecture-methodological-walkthrough">2. Guided Demonstration: Video Lecture &amp; Methodological Walkthrough</a>
+  <ul class="collapse">
+  <li><a href="#key-lecture-highlights" id="toc-key-lecture-highlights" class="nav-link" data-scroll-target="#key-lecture-highlights">Key Lecture Highlights</a></li>
+  </ul></li>
+  <li><a href="#intuition-engines-interactive-simulations-algorithmic-sandboxes" id="toc-intuition-engines-interactive-simulations-algorithmic-sandboxes" class="nav-link" data-scroll-target="#intuition-engines-interactive-simulations-algorithmic-sandboxes">3. Intuition Engines: Interactive Simulations &amp; Algorithmic Sandboxes</a></li>
+  <li><a href="#living-scientific-memory-the-curated-zotero-group-library" id="toc-living-scientific-memory-the-curated-zotero-group-library" class="nav-link" data-scroll-target="#living-scientific-memory-the-curated-zotero-group-library">4. Living Scientific Memory: The Curated Zotero Group Library</a></li>
+  <li><a href="#epilogue-a-call-to-action-for-tutorial-authors" id="toc-epilogue-a-call-to-action-for-tutorial-authors" class="nav-link" data-scroll-target="#epilogue-a-call-to-action-for-tutorial-authors">5. Epilogue: A Call to Action for Tutorial Authors</a>
+  <ul class="collapse">
+  <li><a href="#join-the-movement-the-author-as-curator-blueprint" id="toc-join-the-movement-the-author-as-curator-blueprint" class="nav-link" data-scroll-target="#join-the-movement-the-author-as-curator-blueprint">Join the Movement: The Author-as-Curator Blueprint</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content quarto-banner-title-block" id="quarto-document-content">      
+
+       <section id="overview-the-tutorial-companion-paradigm" class="level2">
+<h2 class="anchored" data-anchor-id="overview-the-tutorial-companion-paradigm">Overview &amp; The Tutorial Companion Paradigm</h2>
+<p>Traditional academic manuscripts necessarily operate under medium-induced constraints: complex mathematical algorithms, dynamic data-cleaning workflows, and psychometric heuristics are flattened into static prose and static two-dimensional figures.</p>
+<p>This companion notebook serves as an <strong>interactive pedagogical hub</strong>, designed to provide multimodal access to the detection of <strong>Careless and Insufficient Effort Responding (C/IER)</strong>. Rather than isolating educational assets in disconnected external repositories, this hub anchors visual slides, recorded lectures, algorithmic simulators, and open bibliographic databases directly within the reproducible manuscript architecture.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Co-Creation with AI: The “Author-as-Curator” Model
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>All multimedia artifacts featured in this companion hub — including the standalone interactive HTML simulators, the comprehensive HTML master presentation, and the automated asset pipeline — were co-developed with generative AI assistance (<strong>Gemini Notebook, Gemini 3.8 Flash, Antigravity</strong>).</p>
+<p>We present this notebook as a <strong>reproducible blueprint for modern computational tutorial papers</strong>: 1. <strong>Generative AI as an Accelerator:</strong> Generative AI drastically lowers the programming and design overhead required to craft sophisticated, interactive web widgets, animations, and educational media. 2. <strong>The Author as Faithful Curator:</strong> The domain expert (the researcher) provides theoretical guidance, mathematical verification, empirical validation, and pedagogical curation.</p>
+<p>We warmly invite authors, educators, and psychometricians who master their respective methodological domains to adopt this paradigm: expand your future tutorial articles with rich companion hubs, turning static papers into living learning platforms.</p>
+</div>
+</div>
+<hr>
+</section>
+<section id="conceptual-roadmap-master-presentation-visual-slide-deck" class="level2">
+<h2 class="anchored" data-anchor-id="conceptual-roadmap-master-presentation-visual-slide-deck">1. Conceptual Roadmap: Master Presentation &amp; Visual Slide Deck</h2>
+<p>Before exploring algorithmic formulas or running command scripts, learners benefit from establishing a structured mental model of the C/IER problem space. The materials in this section synthesize:</p>
+<ul>
+<li>The psychometric foundations of inattention and how it systematically biases factor loadings, correlations, and reliability estimates.</li>
+<li>The sequential dual-tier screening architecture: <strong>Level 1 (Procedural exclusions: dropouts, timing, attention checks)</strong> versus <strong>Level 2 (Diagnostic post-hoc indicators: Laz.R, Longstring, Mahalanobis Distance, IRV)</strong>.</li>
+<li>Objective cut-off point determination via elbow/curvature identification.</li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">Master Presentation</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Slide Deck Gallery</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>The comprehensive HTML master presentation is engineered as an interactive seminar deck featuring slide transitions, high-resolution psychometric telemetry diagrams, live mathematical simulations, and full-screen controls across 15 structured modules.</p>
+<p>Below is an interactive live preview scaled to the manuscript reading width. While readers can preview the deck directly within this viewport, we recommend launching it in a dedicated fullscreen tab for full keyboard navigation and uncompressed widescreen legibility.</p>
+<div class="presentation-embed-wrapper border rounded-3 overflow-hidden shadow-sm my-4" style="background: #ffffff; border: 1px solid #ced4da !important;">
+  <!-- Header Action Bar (Light Mode) -->
+  <div class="d-flex justify-content-between align-items-center px-3 py-2 flex-wrap gap-2" style="background: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge text-bg-warning px-2 py-1" style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;">
+        LIVE PREVIEW
+      </span>
+      <span class="text-dark small fw-bold">16:9 Master Presentation Deck</span>
+    </div>
+    <a href="../../Resources/Media/cier_presentation.html" target="_blank" rel="noopener" class="btn btn-sm px-3 py-1" style="background: #F18C22; color: #ffffff; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 8px rgba(241, 140, 34, 0.35);">
+      <i class="bi bi-box-arrow-up-right me-1"></i> Launch Fullscreen Presentation
+    </a>
+  </div>
+
+  <!-- Scaled Viewport Container (Dark Presentation Canvas) -->
+  <div id="master-pres-viewport" style="position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; background: #071318;">
+    <iframe id="master-pres-iframe" src="../../Resources/Media/cier_presentation.html" title="C/IER Master Presentation Interactive Deck" style="position: absolute; top: 0; left: 0; width: 1280px; height: 800px; border: none; transform-origin: top left;" loading="lazy" allowfullscreen="">
+    </iframe>
+  </div>
+
+  <!-- Footer Info Bar (Light Mode) -->
+  <div class="px-3 py-2 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background: #f8f9fa; border-top: 1px solid #dee2e6; font-size: 0.82rem;">
+    <span class="text-muted">
+      <i class="bi bi-info-circle me-1 text-primary"></i> Scaled preview. Click buttons or tabs inside to preview, or use the fullscreen link for full-resolution presentation mode.
+    </span>
+    <a href="../../Resources/Media/cier_presentation.html" target="_blank" class="fw-bold text-decoration-none" style="color: #16777a;">
+      Open in new tab <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
+</div>
+
+<script>
+(function() {
+  function adjustPresScale() {
+    var viewport = document.getElementById('master-pres-viewport');
+    var iframe = document.getElementById('master-pres-iframe');
+    if (!viewport || !iframe) return;
+    var baseW = 1280;
+    var baseH = 800;
+    var currentW = viewport.clientWidth;
+    if (currentW <= 0) return;
+    var scale = currentW / baseW;
+    iframe.style.transform = 'scale(' + scale + ')';
+    viewport.style.height = Math.round(baseH * scale) + 'px';
+  }
+  
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', adjustPresScale);
+  } else {
+    adjustPresScale();
+  }
+  
+  window.addEventListener('resize', adjustPresScale);
+  document.querySelectorAll('button[data-bs-toggle="tab"], a[data-bs-toggle="tab"]').forEach(function(tab) {
+    tab.addEventListener('shown.bs.tab', adjustPresScale);
+  });
+  setTimeout(adjustPresScale, 300);
+  setTimeout(adjustPresScale, 1000);
+})();
+</script>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Browse the 15 slides for a quick preview or download the <strong>PDF file</strong> for the full presentation. This version is more concise than the <strong>Master Presentation</strong> alongside it.</p>
+<div class="slides-embed-wrapper border rounded-3 overflow-hidden shadow-sm my-4" style="background: #ffffff; border: 1px solid #ced4da !important;">
+  <!-- Header Action Bar (Light Mode) -->
+  <div class="d-flex justify-content-between align-items-center px-3 py-2 flex-wrap gap-2" style="background: #f8f9fa; border-bottom: 1px solid #dee2e6;">
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge text-bg-warning px-2 py-1" style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;">
+        SLIDE DECK
+      </span>
+      <span class="text-dark small fw-bold">15-Slide Lecture Visual Gallery</span>
+    </div>
+    <a href="../../Resources/Media/cier_slides.pdf" download="cier_slides.pdf" onclick="downloadSlidesPdf(event)" class="btn btn-sm px-3 py-1" style="background: #F18C22; color: #ffffff; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 8px rgba(241, 140, 34, 0.35);">
+      <i class="bi bi-file-earmark-pdf-fill me-1"></i> Download Deck (PDF)
+    </a>
+  </div>
+
+  <!-- Carousel Viewport (Dark Slide Canvas) -->
+  <div id="slideshowCarousel" class="carousel slide bg-dark" data-bs-ride="false" style="width: 100%; margin: 0 auto;">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="6" aria-label="Slide 7"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="7" aria-label="Slide 8"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="8" aria-label="Slide 9"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="9" aria-label="Slide 10"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="10" aria-label="Slide 11"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="11" aria-label="Slide 12"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="12" aria-label="Slide 13"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="13" aria-label="Slide 14"></button>
+    <button type="button" data-bs-target="#slideshowCarousel" data-bs-slide-to="14" aria-label="Slide 15"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active text-center p-2">
+      <img src="../../Resources/Slides/slide1.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 1" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 1 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide2.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 2" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 2 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide3.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 3" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 3 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide4.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 4" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 4 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide5.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 5" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 5 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide6.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 6" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 6 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide7.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 7" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 7 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide8.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 8" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 8 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide9.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 9" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 9 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide10.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 10" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 10 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide11.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 11" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 11 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide12.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 12" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 12 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide13.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 13" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 13 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide14.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 14" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 14 of 15</div>
+    </div>
+    <div class="carousel-item text-center p-2">
+      <img src="../../Resources/Slides/slide15.jpg" class="d-block w-100 img-fluid rounded" alt="Slide 15" style="max-height: 580px; object-fit: contain; margin: 0 auto;">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded px-2 py-1 mt-2">Slide 15 of 15</div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#slideshowCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#slideshowCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+  </div>
+
+  <!-- Footer Info Bar (Light Mode) -->
+  <div class="px-3 py-2 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background: #f8f9fa; border-top: 1px solid #dee2e6; font-size: 0.82rem;">
+    <span class="text-muted">
+      <i class="bi bi-info-circle me-1 text-primary"></i> 15 visual lecture slides. Use arrows to browse or download the complete slide deck for offline presentations.
+    </span>
+    <a href="../../Resources/Media/cier_slides.pdf" download="cier_slides.pdf" onclick="downloadSlidesPdf(event)" class="fw-bold text-decoration-none" style="color: #16777a;">
+      Download cier_slides.pdf (1.3 MB) <i class="bi bi-download ms-1"></i>
+    </a>
+  </div>
+</div>
+
+<script>
+async function downloadSlidesPdf(e) {
+  if (e) e.preventDefault();
+  var pdfUrl = '../../Resources/Media/cier_slides.pdf';
+  var fileName = 'cier_slides.pdf';
+
+  // 1. Try modern File System Access API (native Windows Save As folder selection dialog)
+  if (window.showSaveFilePicker) {
+    try {
+      const res = await fetch(pdfUrl);
+      if (!res.ok) throw new Error('Fetch failed');
+      const blob = await res.blob();
+      const handle = await window.showSaveFilePicker({
+        suggestedName: fileName,
+        types: [{
+          description: 'PDF Document (*.pdf)',
+          accept: { 'application/pdf': ['.pdf'] }
+        }]
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      return;
+    } catch (err) {
+      if (err.name === 'AbortError') return; // User cancelled the save dialog
+    }
+  }
+
+  // 2. Blob URL download (forces download in modern browsers without navigating the tab)
+  try {
+    const res = await fetch(pdfUrl);
+    if (!res.ok) throw new Error('Fetch failed');
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = blobUrl;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function() {
+      URL.revokeObjectURL(blobUrl);
+      document.body.removeChild(a);
+    }, 400);
+  } catch (err) {
+    // 3. Fallback: programmatic anchor click in separate target
+    const a = document.createElement('a');
+    a.href = pdfUrl;
+    a.download = fileName;
+    a.target = '_blank';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+}
+</script>
+</div>
+</div>
+</div>
+<hr>
+</section>
+<section id="guided-demonstration-video-lecture-methodological-walkthrough" class="level2">
+<h2 class="anchored" data-anchor-id="guided-demonstration-video-lecture-methodological-walkthrough">2. Guided Demonstration: Video Lecture &amp; Methodological Walkthrough</h2>
+<p>Audio-visual demonstrations provide pedagogical pacing and practical nuance that static text alone cannot replicate. This lecture examines the pervasive threat of <strong>Insufficient Effort Responding (IER)</strong> in survey-based psychometric research, explaining why careless responding systematically distorts empirical findings and outlining actionable frameworks for detection, prevention, and statistical mitigation.</p>
+<section id="key-lecture-highlights" class="level3">
+<h3 class="anchored" data-anchor-id="key-lecture-highlights">Key Lecture Highlights</h3>
+<ul>
+<li><strong>Conceptual Foundations of IER</strong> <code>(0:00 – 0:13)</code>: Operationalizing how participant inattention manifests through arbitrary option picking, repetitive response trajectories, and cognitive satisficing.</li>
+<li><strong>Substantive Statistical Distortion &amp; Type I Errors</strong> <code>(1:00 – 1:52)</code>: Clarifying why IER is fundamentally distinct from classical random error. While true random noise merely attenuates effect sizes, inattentive response patterns introduce systematic method variance that can spuriously inflate bivariate correlations and lead to false-positive conclusions (Type I errors).</li>
+<li><strong>Vulnerable Survey Architectures</strong> <code>(3:35 – 4:45)</code>: Identifying high-risk data-collection protocols—such as lengthy questionnaire batteries, cognitively demanding scale items, and high-frequency longitudinal designs (e.g., Ecological Momentary Assessment, EMA) — where respondent fatigue escalates rapidly.</li>
+<li><strong>Diagnostic Screening Methods</strong> <code>(5:03 – 6:15)</code>: Reviewing classical post-hoc heuristic indicators, including <strong>Longstring</strong> (detecting invariant sequential responding) and <strong>Intra-individual Response Variability (IRV)</strong>, alongside modern psychometric formulations like <strong>latent response mixture models</strong>.</li>
+<li><strong>Design Prevention &amp; Analytical Mitigation</strong> <code>(6:28 – 8:05)</code>: Formulating proactive design safeguards (e.g., limiting problematic reverse-coded items and leveraging planned missingness architectures) as well as analytical treatments, such as weighting cases by mixture posterior probabilities rather than relying solely on blunt listwise deletion.</li>
+</ul>
+<div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/13r9lVSdmuE" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<hr>
+</section>
+</section>
+<section id="intuition-engines-interactive-simulations-algorithmic-sandboxes" class="level2">
+<h2 class="anchored" data-anchor-id="intuition-engines-interactive-simulations-algorithmic-sandboxes">3. Intuition Engines: Interactive Simulations &amp; Algorithmic Sandboxes</h2>
+<p>Mathematical formulations often mask intuitive geometry. The three standalone interactive web tools below enable learners to explore parameter spaces, inspect transition probability matrices, and visualize curvature geometry dynamically in the browser.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Laz.R Explorer</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Kneedle: Simulated</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Kneedle: Empirical</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<p>The <strong>Laz.R (Lazy Respondent)</strong> index <span class="citation" data-cites="biemann2025">(<a href="#ref-biemann2025" role="doc-biblioref">Biemann et al., 2025</a>)</span> leverages first-order Markov chains to capture subtle, alternating, or diagonal response patterns that completely bypass traditional frequency- or length-based metrics (such as Longstring).</p>
+<ul>
+<li><strong>How to use:</strong> Alter response patterns, observe how the transition matrix <span class="math inline">\(P_{ij}\)</span> updates, and inspect the resulting Laz.R score relative to random and attentive benchmarks.</li>
+</ul>
+<div class="interactive-embed-wrapper border rounded-3 overflow-hidden shadow-sm my-3" style="background: #153743; border-color: rgba(22, 119, 122, 0.35) !important;">
+  <!-- Header Action Bar -->
+  <div class="d-flex justify-content-between align-items-center px-3 py-2 flex-wrap gap-2" style="background: #153743; border-bottom: 1px solid rgba(22, 119, 122, 0.25);">
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge rounded-pill text-bg-warning px-2 py-1" style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;">
+        LIVE PREVIEW
+      </span>
+      <span class="text-white small fw-bold">Laz.R Index Interactive Explorer</span>
+    </div>
+    <a href="../../Resources/Interactive/lazyR.html" target="_blank" rel="noopener" class="btn btn-sm px-3 py-1" style="background: #e98226; color: #ffffff; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 8px rgba(233, 130, 38, 0.35);">
+      <i class="bi bi-box-arrow-up-right me-1"></i> Launch in New Tab
+    </a>
+  </div>
+
+  <!-- Scaled Viewport Container -->
+  <div class="interactive-preview-viewport" data-base-w="1200" data-base-h="820" style="position: relative; width: 100%; overflow: hidden; background: #f7f4ec;">
+    <iframe class="interactive-preview-iframe" src="../../Resources/Interactive/lazyR.html" title="Laz.R Index Interactive Explorer" style="position: absolute; top: 0; left: 0; width: 1200px; height: 820px; border: none; transform-origin: top left;" loading="lazy" allowfullscreen="">
+    </iframe>
+  </div>
+
+  <!-- Footer Info Bar (Dark Mode - matching topbar) -->
+  <div class="px-3 py-2 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background: #153743; border-top: 1px solid rgba(22, 119, 122, 0.25); font-size: 0.82rem;">
+    <span style="color: #a2d8d9;">
+      <i class="bi bi-info-circle me-1" style="color: #f7a54c;"></i> Scaled preview. For full interactive calculation, step-by-step presets, and report printing, launch in a dedicated tab.
+    </span>
+    <a href="../../Resources/Interactive/lazyR.html" target="_blank" class="fw-bold text-decoration-none" style="color: #f7a54c;">
+      Open in new tab <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Rather than relying on arbitrary rules of thumb (e.g., sample standard deviations or rigid percentiles), the <strong>Kneedle algorithm</strong> <span class="citation" data-cites="biemann2025">(<a href="#ref-biemann2025" role="doc-biblioref">Biemann et al., 2025</a>)</span> mathematically locates the point of maximum curvature — the “knee” or “elbow” — along an ordered indicator curve.</p>
+<ul>
+<li><strong>How to use:</strong> Advance through the sequential steps by clicking Next → (or the numbered step tabs) to observe how the algorithm normalizes the coordinate space, projects the diagonal chord, computes the difference vector, and isolates the mathematical point of maximum curvature.</li>
+</ul>
+<div class="interactive-embed-wrapper border rounded-3 overflow-hidden shadow-sm my-3" style="background: #153743; border-color: rgba(22, 119, 122, 0.35) !important;">
+  <!-- Header Action Bar -->
+  <div class="d-flex justify-content-between align-items-center px-3 py-2 flex-wrap gap-2" style="background: #153743; border-bottom: 1px solid rgba(22, 119, 122, 0.25);">
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge rounded-pill text-bg-warning px-2 py-1" style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;">
+        LIVE PREVIEW
+      </span>
+      <span class="text-white small fw-bold">Kneedle Algorithm — Simulated Geometry Sandbox</span>
+    </div>
+    <a href="../../Resources/Interactive/kneedle_sim.html" target="_blank" rel="noopener" class="btn btn-sm px-3 py-1" style="background: #e98226; color: #ffffff; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 8px rgba(233, 130, 38, 0.35);">
+      <i class="bi bi-box-arrow-up-right me-1"></i> Launch in New Tab
+    </a>
+  </div>
+
+  <!-- Scaled Viewport Container -->
+  <div class="interactive-preview-viewport" data-base-w="1200" data-base-h="820" style="position: relative; width: 100%; overflow: hidden; background: #f7f4ec;">
+    <iframe class="interactive-preview-iframe" src="../../Resources/Interactive/kneedle_sim.html" title="Kneedle Algorithm - Simulated Data" style="position: absolute; top: 0; left: 0; width: 1200px; height: 820px; border: none; transform-origin: top left;" loading="lazy" allowfullscreen="">
+    </iframe>
+  </div>
+
+  <!-- Footer Info Bar (Dark Mode - matching topbar) -->
+  <div class="px-3 py-2 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background: #153743; border-top: 1px solid rgba(22, 119, 122, 0.25); font-size: 0.82rem;">
+    <span style="color: #a2d8d9;">
+      <i class="bi bi-info-circle me-1" style="color: #f7a54c;"></i> Scaled preview. For parameter tuning, dynamic noise simulations, and step-by-step mathematical walkthroughs, launch in a dedicated tab.
+    </span>
+    <a href="../../Resources/Interactive/kneedle_sim.html" target="_blank" class="fw-bold text-decoration-none" style="color: #f7a54c;">
+      Open in new tab <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p>Explore the Kneedle algorithm applied directly to the empirical research sample (<span class="math inline">\(n = 1,295\)</span>, WHOQOL dataset) analyzed in this tutorial.</p>
+<ul>
+<li><strong>How to use:</strong> Advance through the guided walkthrough using Next → (or the numbered step indicators) to observe how the algorithm locates the empirical inflection point on the tutorial sample (<span class="math inline">\(n = 1,295\)</span>) and separates attentive respondents from careless outliers.</li>
+</ul>
+<div class="interactive-embed-wrapper border rounded-3 overflow-hidden shadow-sm my-3" style="background: #153743; border-color: rgba(22, 119, 122, 0.35) !important;">
+  <!-- Header Action Bar -->
+  <div class="d-flex justify-content-between align-items-center px-3 py-2 flex-wrap gap-2" style="background: #153743; border-bottom: 1px solid rgba(22, 119, 122, 0.25);">
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge rounded-pill text-bg-warning px-2 py-1" style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;">
+        LIVE PREVIEW
+      </span>
+      <span class="text-white small fw-bold">Kneedle Algorithm — Empirical Dataset Sandbox (n = 1,546)</span>
+    </div>
+    <a href="../../Resources/Interactive/kneedle_real.html" target="_blank" rel="noopener" class="btn btn-sm px-3 py-1" style="background: #e98226; color: #ffffff; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 8px rgba(233, 130, 38, 0.35);">
+      <i class="bi bi-box-arrow-up-right me-1"></i> Launch in New Tab
+    </a>
+  </div>
+
+  <!-- Scaled Viewport Container -->
+  <div class="interactive-preview-viewport" data-base-w="1200" data-base-h="820" style="position: relative; width: 100%; overflow: hidden; background: #f7f4ec;">
+    <iframe class="interactive-preview-iframe" src="../../Resources/Interactive/kneedle_real.html" title="Kneedle Algorithm - Empirical Dataset" style="position: absolute; top: 0; left: 0; width: 1200px; height: 820px; border: none; transform-origin: top left;" loading="lazy" allowfullscreen="">
+    </iframe>
+  </div>
+
+  <!-- Footer Info Bar (Dark Mode - matching topbar) -->
+  <div class="px-3 py-2 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background: #153743; border-top: 1px solid rgba(22, 119, 122, 0.25); font-size: 0.82rem;">
+    <span style="color: #a2d8d9;">
+      <i class="bi bi-info-circle me-1" style="color: #f7a54c;"></i> Scaled preview. For full indicator inspection across all four metrics and respondent-level classification, launch in a dedicated tab.
+    </span>
+    <a href="../../Resources/Interactive/kneedle_real.html" target="_blank" class="fw-bold text-decoration-none" style="color: #f7a54c;">
+      Open in new tab <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+  function adjustInteractiveScale() {
+    document.querySelectorAll('.interactive-preview-viewport').forEach(function(vp) {
+      var iframe = vp.querySelector('.interactive-preview-iframe');
+      if (!iframe) return;
+      var baseW = parseFloat(vp.getAttribute('data-base-w')) || 1200;
+      var baseH = parseFloat(vp.getAttribute('data-base-h')) || 820;
+      var w = vp.clientWidth;
+      if (w > 0) {
+        var scale = w / baseW;
+        iframe.style.transform = 'scale(' + scale + ')';
+        vp.style.height = Math.round(baseH * scale) + 'px';
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', adjustInteractiveScale);
+  } else {
+    adjustInteractiveScale();
+  }
+
+  window.addEventListener('resize', adjustInteractiveScale);
+  
+  document.querySelectorAll('button[data-bs-toggle="tab"], a[data-bs-toggle="tab"]').forEach(function(tab) {
+    tab.addEventListener('shown.bs.tab', function() {
+      setTimeout(adjustInteractiveScale, 60);
+    });
+  });
+
+  setTimeout(adjustInteractiveScale, 200);
+  setTimeout(adjustInteractiveScale, 800);
+})();
+</script>
+<hr>
+</section>
+<section id="living-scientific-memory-the-curated-zotero-group-library" class="level2">
+<h2 class="anchored" data-anchor-id="living-scientific-memory-the-curated-zotero-group-library">4. Living Scientific Memory: The Curated Zotero Group Library</h2>
+<p>The scientific literature on survey inattention spans psychological measurement, organizational behavior, marketing, and psychometrics. To provide an open and continuously maintained bibliographic repository that outlives any single publication date, we curate a dedicated public <strong>Zotero Group Library</strong>.</p>
+<div class="card my-4 border-0 shadow-sm overflow-hidden" style="border-radius: 12px; border: 1px solid rgba(22, 119, 122, 0.25) !important; background: #ffffff;">
+  <!-- Card Header -->
+  <div class="px-4 py-3 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background: linear-gradient(135deg, #153743 0%, #1c4453 100%);">
+    <div class="d-flex align-items-center gap-2">
+      <span class="badge rounded-pill text-bg-warning px-2 py-1" style="font-size: 0.75rem; font-weight: 700; letter-spacing: 0.04em;">
+        OPEN ACCESS REPOSITORY
+      </span>
+      <span class="text-white fw-bold">Zotero Group Library</span>
+    </div>
+    <a href="https://www.zotero.org/groups/6646768/ier_references/library" target="_blank" rel="noopener" class="btn btn-sm px-3 py-1" style="background: #e98226; color: #ffffff; font-weight: 700; border-radius: 6px; box-shadow: 0 2px 8px rgba(233, 130, 38, 0.35);">
+      <i class="bi bi-box-arrow-up-right me-1"></i> Access Zotero Library
+    </a>
+  </div>
+
+  <!-- Card Body -->
+  <div class="p-4" style="background: #fdfcf9;">
+    <div class="row g-4 align-items-center">
+      <div class="col-lg-8">
+        <h4 class="fw-bold mb-2 anchored" style="color: #10252d;">
+          Curated Bibliographic Memory: <code style="color: #16777a; font-size: 1.05rem;">ier_references</code>
+        </h4>
+        <p class="text-muted mb-3" style="line-height: 1.6; font-size: 0.95rem;">
+          The scientific literature on survey inattention spans psychological measurement, organizational behavior, marketing, and psychometrics. This public Zotero Group repository maintains an updated, living corpus of foundational methodology, recent algorithmic breakthroughs, and person-fit detection benchmarks.
+        </p>
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <span class="badge border text-dark" style="background: #ffffff; border-color: #d7d2c5 !important;">
+            <i class="bi bi-tag-fill me-1 text-primary"></i> Markov Chains &amp; Laz.R
+          </span>
+          <span class="badge border text-dark" style="background: #ffffff; border-color: #d7d2c5 !important;">
+            <i class="bi bi-tag-fill me-1 text-primary"></i> Curvature &amp; Kneedle
+          </span>
+          <span class="badge border text-dark" style="background: #ffffff; border-color: #d7d2c5 !important;">
+            <i class="bi bi-tag-fill me-1 text-primary"></i> Mahalanobis &amp; Distance
+          </span>
+          <span class="badge border text-dark" style="background: #ffffff; border-color: #d7d2c5 !important;">
+            <i class="bi bi-tag-fill me-1 text-primary"></i> Procedural Controls
+          </span>
+        </div>
+      </div>
+      <div class="col-lg-4 text-center text-lg-end">
+        <div class="p-3 rounded-3 border" style="background: #ffffff; border-color: #e9ecef !important; display: inline-block; text-align: left; width: 100%; max-width: 280px; box-shadow: 0 4px 12px rgba(0,0,0,0.04);">
+          <div class="small text-muted fw-bold mb-1 text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.05em;">Repository Details</div>
+          <div class="mb-1"><strong class="small text-dark">Group Name:</strong> <code class="small text-primary">ier_references</code></div>
+          <div class="mb-1"><strong class="small text-dark">Type:</strong> <span class="badge text-bg-success" style="font-size: 0.7rem;">Public Open Group</span></div>
+          <div class="mb-2"><strong class="small text-dark">Access:</strong> <span class="small text-muted">Free, Instant Sync</span></div>
+          <a href="https://www.zotero.org/groups/6646768/ier_references/library" target="_blank" class="btn btn-outline-dark btn-sm w-100 fw-bold" style="border-color: #153743; color: #153743;">
+            <i class="bi bi-collection me-1"></i> Open Collection
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card Footer (Dark Mode - matching topbar) -->
+  <div class="px-4 py-2 d-flex justify-content-between align-items-center flex-wrap gap-2" style="background: #153743; border-top: 1px solid rgba(22, 119, 122, 0.25); font-size: 0.82rem;">
+    <span style="color: #a2d8d9;">
+      <i class="bi bi-cloud-arrow-down me-1" style="color: #f7a54c;"></i> Seamlessly synchronizes with personal Zotero, Mendeley, or EndNote reference managers.
+    </span>
+    <a href="https://www.zotero.org/groups/6646768/ier_references/library" target="_blank" class="fw-bold text-decoration-none" style="color: #f7a54c;">
+      zotero.org/groups/6646768/ier_references <i class="bi bi-box-arrow-up-right ms-1"></i>
+    </a>
+  </div>
+</div>
+<hr>
+</section>
+<section id="epilogue-a-call-to-action-for-tutorial-authors" class="level2">
+<h2 class="anchored" data-anchor-id="epilogue-a-call-to-action-for-tutorial-authors">5. Epilogue: A Call to Action for Tutorial Authors</h2>
+<p>This tutorial project represents an intentional departure from traditional static publication models. By coupling…</p>
+<ol type="1">
+<li><strong>The Scientific Paper (<code>index.qmd</code>):</strong> Formal psychometric theory, empirical methodology, and peer-reviewed rigor;</li>
+<li><strong>Computational Reproducibility (TIER Protocol 4.0 + Quarto Manuscript + <code>renv</code>):</strong> Transparent scripts, frozen analytical environments, and auditable pipelines;</li>
+<li><strong>The Pedagogical Companion Hub (<code>03_resources.qmd</code>):</strong> Multimodal media, interactive simulators, recorded lectures, and living bibliographic repositories;</li>
+</ol>
+<p>… we establish a comprehensive, accessible learning experience.</p>
+<section id="join-the-movement-the-author-as-curator-blueprint" class="level3">
+<h3 class="anchored" data-anchor-id="join-the-movement-the-author-as-curator-blueprint">Join the Movement: The Author-as-Curator Blueprint</h3>
+<p>The rapid evolution of Generative AI tools has profoundly shifted the economics of educational content creation. Tasks that once required specialized front-end engineering teams—building responsive interactive mathematical sandboxes, crafting tailored slide presentation applications, and developing automated asset synchronizers—can now be generated collaboratively in hours.</p>
+<p>The irreplaceable ingredient remains <strong>human domain expertise</strong>: the conceptual vision, the pedagogical judgment, and the scientific curation.</p>
+<p>We invite authors and researchers developing tutorials across all computational and empirical disciplines: <strong>do not stop at the PDF</strong>. Equip your next paper with an interactive companion hub. Turn your methods into intuition, your code into exploration, and your scholarship into an open classroom.</p>
+</section>
+</section>
+<section id="references" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
+<div id="ref-biemann2025" class="csl-entry" role="listitem">
+Biemann, T., Koch-Bayram, I. F., Meier-Barthold, M., &amp; Aguinis, H. (2025). Using <span>Markov Chains</span> to <span>Detect Careless Responding</span> in <span>Survey Research</span>. <em>Organ. Res. Methods</em>, <em>28</em>(4), 543–568. <a href="https://doi.org/10.1177/10944281251334778">https://doi.org/10.1177/10944281251334778</a>
+</div>
+</div>
+</section>
+     </main>
+<!-- /main column -->  <script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>  </div> <!-- /content --> 
+  
+</body></html>
