@@ -16,7 +16,7 @@ If you use or adapt this compendium, code, or methodology in your research, plea
 > Rogers, P. (2026). *Careless/Insufficient Effort Responding (C/IER) Detection* (Version v1.0) [Computer software]. Zenodo. https://doi.org/10.5281/zenodo.23002392
 
 ```bibtex
-@software{rogers2026_cier,
+@software{rogers2026cier,
   author       = {Rogers, Pablo},
   title        = {{Careless/Insufficient Effort Responding (C/IER) Detection}},
   year         = {2026},
@@ -95,10 +95,14 @@ items (`Q3`, `Q4`, and `Q26`) recoded in the final analysis dataset.
 ├── Scripts/
 │   ├── ProcessingScripts/    # companion notebooks (01_procedural.qmd, 02_posthoc.qmd)
 │   ├── AnalysisScripts/      # destination for prospective substantive analyses
-│   └── DataAppendixScripts/  # automated pre-render and post-render hooks (.R)
+│   └── DataAppendixScripts/  # companion hub (03_resources.qmd) and automated lifecycle hooks (.R)
 ├── Output/
 │   ├── Results/              # published canonical tables (tbl-*.csv) and figures (fig-*.png)
 │   └── DataAppendixOutput/   # procedural audit logs (exclusion_log.csv, posthoc-exclusion-log.csv)
+├── Resources/                # pedagogical companion assets (interactive HTML widgets, media presentation, slides)
+│   ├── Interactive/          # standalone interactive HTML explorers (lazyR, kneedle_sim, kneedle_real)
+│   ├── Media/                # HTML master presentation (cier_presentation.html)
+│   └── Slides/               # visual slide deck image gallery (*.jpg)
 ├── index.qmd                 # main Quarto Manuscript article
 ├── _quarto.yml               # Quarto manuscript configuration and lifecycle hooks
 ├── references.bib            # bibliographic references

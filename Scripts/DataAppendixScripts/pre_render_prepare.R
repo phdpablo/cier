@@ -35,7 +35,10 @@ required_dirs <- c(
   file.path(root_dir, "Output", "Results", "Figures"),
   file.path(root_dir, "Output", "Results", "Tables"),
   file.path(root_dir, "Output", "DataAppendixOutput", "Tables"),
-  file.path(root_dir, "Output", "DataAppendixOutput", "Figures")
+  file.path(root_dir, "Output", "DataAppendixOutput", "Figures"),
+  file.path(root_dir, "Resources", "Slides"),
+  file.path(root_dir, "Resources", "Interactive"),
+  file.path(root_dir, "Resources", "Media")
 )
 
 created_dirs <- character(0)

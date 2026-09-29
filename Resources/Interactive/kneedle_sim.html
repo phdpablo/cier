@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Visual and interactive explanation of the Kneedle algorithm.">
+  <title>Kneedle — visual interactive explanation</title>
+  <style>
+    :root {
+      --ink: #10252d;
+      --muted: #5b6c72;
+      --paper: #f7f4ec;
+      --surface: #fffdf7;
+      --line: #d7d2c5;
+      --teal: #16777a;
+      --teal-soft: #dcefee;
+      --orange: #e98226;
+      --orange-soft: #f9e5d2;
+      --navy: #153743;
+      --white: #ffffff;
+      --shadow: 0 18px 48px rgba(16, 37, 45, 0.13);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background:
+        radial-gradient(circle at 12% 15%, rgba(22,119,122,.09), transparent 28rem),
+        radial-gradient(circle at 88% 85%, rgba(233,130,38,.08), transparent 30rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+    button { font: inherit; cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      padding: 22px clamp(18px, 4vw, 58px) 24px;
+      gap: 16px;
+    }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .mark {
+      width: 42px; height: 42px; border-radius: 13px;
+      display: grid; place-items: center;
+      background: var(--navy); color: var(--white);
+      font-weight: 850; letter-spacing: -.04em;
+      box-shadow: 0 8px 24px rgba(21,55,67,.2);
+    }
+    .brand-text strong { display: block; font-size: 1.05rem; }
+    .brand-text span { color: var(--muted); font-size: .82rem; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-button, .nav-button {
+      border: 1px solid var(--line); background: rgba(255,255,255,.65); color: var(--ink);
+      border-radius: 12px; transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+    .icon-button:hover, .nav-button:hover { transform: translateY(-1px); border-color: var(--teal); background: var(--white); }
+    .icon-button { width: 42px; height: 42px; display: grid; place-items: center; }
+    .icon-button svg { width: 20px; height: 20px; }
+
+    .stepper { display: grid; grid-template-columns: repeat(8, minmax(0,1fr)); gap: 4px; position: relative; }
+    .stepper::before {
+      content: ""; position: absolute; left: 5%; right: 5%; top: 17px;
+      height: 2px; background: var(--line); z-index: 0;
+    }
+    .step-tab {
+      position: relative; z-index: 1; border: 0; background: transparent; color: var(--muted);
+      display: grid; justify-items: center; gap: 5px; padding: 0 2px; min-width: 0;
+    }
+    .step-tab .number {
+      width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+      background: var(--surface); border: 2px solid var(--line); font-weight: 800; transition: .2s ease;
+    }
+    .step-tab .label { font-size: .69rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; }
+    .step-tab.done .number { background: var(--teal-soft); border-color: var(--teal); color: var(--teal); }
+    .step-tab.active { color: var(--ink); }
+    .step-tab.active .number {
+      background: var(--orange); border-color: var(--orange); color: var(--white);
+      transform: scale(1.08); box-shadow: 0 7px 20px rgba(233,130,38,.28);
+    }
+
+    .stage {
+      position: relative; min-height: 548px;
+      background: rgba(255,253,247,.88); border: 1px solid rgba(215,210,197,.85);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      display: grid; grid-template-columns: minmax(265px,.76fr) minmax(520px,1.55fr);
+      overflow: hidden;
+    }
+    .explanation {
+      padding: clamp(28px,4vw,58px);
+      background: linear-gradient(145deg,rgba(220,239,238,.74),rgba(255,253,247,.4));
+      border-right: 1px solid var(--line);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .eyebrow { color: var(--teal); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 12px 0 16px; font-size: clamp(2rem,3.7vw,3.8rem); line-height: .98; letter-spacing: -.055em; }
+    .lead { margin: 0; color: var(--muted); font-size: clamp(1rem,1.35vw,1.2rem); line-height: 1.58; }
+    .insight { margin-top: 27px; padding-left: 16px; border-left: 4px solid var(--orange); font-weight: 700; line-height: 1.45; }
+    .visual {
+      min-width: 0; padding: clamp(22px,3.2vw,46px);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .visual-content { width: 100%; max-width: 940px; }
+    .chart-shell { width: 100%; position: relative; }
+    .chart-title { margin: 0 0 4px; font-size: .88rem; font-weight: 800; }
+    .chart-subtitle { margin: 0 0 8px; color: var(--muted); font-size: .76rem; }
+    .chart { width: 100%; height: auto; display: block; overflow: visible; }
+    .chart text { font-family: inherit; fill: var(--muted); font-size: 11px; }
+    .chart .axis-title { fill: var(--ink); font-weight: 750; }
+    .chart .grid { stroke: var(--line); stroke-width: 1; opacity: .65; }
+    .chart .axis { stroke: #9f988b; stroke-width: 1.2; }
+    .chart .curve { fill: none; stroke: var(--teal); stroke-width: 3; stroke-linejoin: round; }
+    .chart .raw-line { fill: none; stroke: var(--line); stroke-width: 1.2; opacity: .8; }
+    .chart .point { fill: var(--teal); stroke: var(--surface); stroke-width: 1.5; }
+    .chart .point-muted { fill: #9bb3b3; stroke: var(--surface); stroke-width: 1.2; }
+    .chart .point-tail { fill: var(--orange); stroke: var(--surface); stroke-width: 1.8; }
+    .chart .chord { stroke: var(--navy); stroke-width: 2.5; }
+    .chart .distance { stroke: var(--orange); stroke-width: 2; stroke-dasharray: 5 4; }
+    .chart .distance-faint { stroke: var(--orange); stroke-width: 1.2; opacity: .22; }
+    .chart .cutoff { stroke: var(--orange); stroke-width: 2.5; stroke-dasharray: 7 5; }
+    .chart .tail-zone { fill: var(--orange-soft); opacity: .72; }
+    .chart .side-zone { fill: var(--teal-soft); opacity: .64; }
+    .chart .knee-ring { fill: var(--surface); stroke: var(--orange); stroke-width: 4; }
+    .chart .annotation { fill: var(--ink); font-weight: 800; }
+    .chart .annotation-orange { fill: #a95413; font-weight: 800; }
+    .chart .brace { fill: none; stroke: var(--orange); stroke-width: 2.5; }
+    .chart .mini-frame { fill: rgba(255,255,255,.45); stroke: var(--line); }
+
+    .metric-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-top: 9px; }
+    .metric { padding: 11px 13px; border-top: 3px solid var(--teal); background: rgba(220,239,238,.35); }
+    .metric.orange { border-top-color: var(--orange); background: rgba(249,229,210,.45); }
+    .metric span { display: block; color: var(--muted); font-size: .69rem; font-weight: 750; text-transform: uppercase; letter-spacing: .07em; }
+    .metric strong { display: block; margin-top: 4px; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+    .distance-readout {
+      display: flex; justify-content: center; gap: 22px; flex-wrap: wrap;
+      margin-top: 8px; color: var(--muted); font-size: .77rem;
+    }
+    .distance-readout strong { color: var(--ink); }
+    .formula {
+      margin-top: 10px; text-align: center; color: var(--muted); font-size: .78rem;
+    }
+    .formula code { color: var(--ink); background: var(--orange-soft); padding: 4px 8px; border-radius: 8px; }
+
+    .footer { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; }
+    .progress-copy { color: var(--muted); font-size: .8rem; }
+    .nav-actions { display: flex; gap: 10px; }
+    .nav-button { padding: 11px 18px; font-weight: 800; }
+    .nav-button.next { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .keyboard-tip { justify-self: end; color: var(--muted); font-size: .75rem; }
+    .final-quote {
+      display: none; width: min(92%,780px); margin: 24px auto 0;
+      text-align: center; color: var(--navy); font-weight: 800;
+    }
+    .step-8 .final-quote { display: block; }
+    .step-8 .metric-row { margin-top: 18px; }
+
+    @media (max-width: 1050px) {
+      .stage { grid-template-columns: 1fr; }
+      .explanation { border-right: 0; border-bottom: 1px solid var(--line); padding: 27px; }
+      h1 { font-size: 2.55rem; }
+      .visual { padding: 25px; }
+      .final-quote { width: auto; margin: 22px 28px 4px; }
+    }
+    @media (max-width: 730px) {
+      .app { padding: 14px; gap: 12px; }
+      .brand-text span, .keyboard-tip, .step-tab .label { display: none; }
+      .stepper::before { left: 5%; right: 5%; top: 15px; }
+      .step-tab .number { width: 30px; height: 30px; font-size: .78rem; }
+      .stage { min-height: 0; border-radius: 17px; }
+      .explanation, .visual { padding: 21px; }
+      h1 { font-size: 2.05rem; }
+      .lead { font-size: .95rem; }
+      .metric-row { grid-template-columns: 1fr; }
+      .metric { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .metric strong { margin-top: 0; }
+      .footer { grid-template-columns: 1fr auto; }
+      .progress-copy { display: none; }
+      .nav-actions { grid-column: 2; }
+    }
+    @media (max-width: 440px) {
+      .topbar { align-items: flex-start; }
+      .icon-button { width: 38px; height: 38px; }
+      .stepper { gap: 0; }
+      .stepper::before { left: 6%; right: 6%; }
+      .step-tab .number { width: 27px; height: 27px; border-width: 1.5px; }
+      .nav-button { padding: 10px 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+    @media print {
+      body { background: white; }
+      .app { padding: 0; display: block; }
+      .top-actions,.stepper,.footer { display: none !important; }
+      .topbar { margin-bottom: 16px; }
+      .stage { box-shadow: none; min-height: 90vh; border: 1px solid #bbb; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">K</div>
+        <div class="brand-text">
+          <strong>Kneedle in eight steps</strong>
+          <span>A visual lab for finding the knee of the curve</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-button" id="printButton" type="button" aria-label="Print or save as PDF" title="Print or save as PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        </button>
+        <button class="icon-button" id="fullscreenButton" type="button" aria-label="Toggle full screen" title="Full screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <nav class="stepper" id="stepper" aria-label="Explanation steps"></nav>
+
+    <section class="stage" id="stage" aria-live="polite">
+      <article class="explanation">
+        <div class="eyebrow" id="eyebrow">Step 1 of 8</div>
+        <h1 id="stepTitle"></h1>
+        <p class="lead" id="stepDescription"></p>
+        <div class="insight" id="stepInsight"></div>
+      </article>
+      <div class="visual">
+        <div class="visual-content" id="visualContent"></div>
+        <div class="final-quote">Kneedle finds the geometric boundary between the extreme tail and the predominant behavior of the distribution.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="progress-copy" id="progressCopy">Step 1 of 8</div>
+      <div class="nav-actions">
+        <button class="nav-button" id="previousButton" type="button">← Previous</button>
+        <button class="nav-button next" id="nextButton" type="button">Next →</button>
+      </div>
+      <div class="keyboard-tip">Use ← → or Spacebar</div>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const steps = [
+        { tab:"Sort", title:"Sort the values", description:"We begin with a simulated sample of 60 indicators. The algorithm rearranges everything from highest to lowest.", insight:"Sorting makes the upper tail appear at the beginning of the sequence." },
+        { tab:"Points", title:"Transform into points", description:"Each sorted value is assigned a rank. The observation becomes a point with coordinates (position, value).", insight:"The dataset ceases to be just a list and forms a curve." },
+        { tab:"Line", title:"Connect the endpoints", description:"A reference line connects the first and last points of the sorted curve.", insight:"The line represents a steady decrease, without a sharp change in behavior." },
+        { tab:"Distance", title:"Measure the distances", description:"For each point, we calculate the perpendicular distance to the reference line.", insight:"The greater the distance, the more that point reveals an inflection or bend in the curve." },
+        { tab:"Side", title:"Set the relevant side", description:"In this example we look only for the upper tail. Therefore, the code uses sign = −1 and focuses on the corresponding curvature.", insight:"The sign does not measure magnitude: it merely specifies which side of the line to search." },
+        { tab:"Knee", title:"Find the maximum distance", description:"The algorithm compares all distances and selects the maximum. This point is the knee of the curve.", insight:"Here, the maximum distance occurs at position 10." },
+        { tab:"Percentage", title:"Convert to percentage", description:"The knee position is divided by the number of observations, yielding the cumulative sample proportion.", insight:"10 ÷ 60 = 16.7%: this is the estimated extent of the extreme region." },
+        { tab:"Cutoff", title:"Obtain the cutoff point", description:"The percentage is converted into a quantile. The resulting value separates the upper tail from the rest of the distribution.", insight:"In this example, values equal to or greater than 0.496 are flagged." }
+      ];
+
+      const sortedValues = [
+        .950,.900,.850,.800,.750,.700,.650,.600,.550,
+        .500,.4952,.4904,.4856,.4808,.4760,.4712,.4664,.4616,.4568,.4520,
+        .4472,.4424,.4376,.4328,.4280,.4232,.4184,.4136,.4088,.4040,
+        .3992,.3944,.3896,.3848,.3800,.3752,.3704,.3656,.3608,.3560,
+        .3512,.3464,.3416,.3368,.3320,.3272,.3224,.3176,.3128,.3080,
+        .3032,.2984,.2936,.2888,.2840,.2792,.2744,.2696,.2648,.2600
+      ];
+      const rawValues = sortedValues.map((_, index) => sortedValues[(index * 17) % sortedValues.length]);
+      const n = sortedValues.length;
+      const sign = -1;
+      let currentStep = 0;
+
+      function dist2d(point, start, end) {
+        const v1 = [start[0] - end[0], start[1] - end[1]];
+        const v2 = [point[0] - start[0], point[1] - start[1]];
+        const determinant = v1[0] * v2[1] - v2[0] * v1[1];
+        return determinant / Math.sqrt(v1[0] ** 2 + v1[1] ** 2);
+      }
+      const start = [1, sortedValues[0]];
+      const end = [n, sortedValues[n - 1]];
+      const distances = sortedValues.map((value,index) => dist2d([index + 1,value],start,end));
+      const scores = distances.map(distance => sign * -1 * distance);
+      const kneeZero = scores.indexOf(Math.max(...scores));
+      const kneePosition = kneeZero + 1;
+      const pct = kneePosition / n;
+
+      function quantileType7(values,q) {
+        const ascending = [...values].sort((a,b) => a-b);
+        const h = (ascending.length - 1) * q;
+        const lo = Math.floor(h); const hi = Math.ceil(h);
+        return ascending[lo] + (h-lo) * (ascending[hi]-ascending[lo]);
+      }
+      const cutoff = quantileType7(sortedValues,1-pct);
+      const flagged = sortedValues.filter(value => value >= cutoff).length;
+
+      const app = document.getElementById("app");
+      const stage = document.getElementById("stage");
+      const stepper = document.getElementById("stepper");
+      const visualContent = document.getElementById("visualContent");
+      const previousButton = document.getElementById("previousButton");
+      const nextButton = document.getElementById("nextButton");
+      const fmt = value => value.toLocaleString("en-US",{minimumFractionDigits:3,maximumFractionDigits:3});
+      const pctFmt = value => value.toLocaleString("en-US",{style:"percent",minimumFractionDigits:1,maximumFractionDigits:1});
+
+      const W=820,H=430,M={l:66,r:30,t:28,b:58};
+      const x = position => M.l + (position-1)/(n-1)*(W-M.l-M.r);
+      const y = value => M.t + (1-value)/(1-.2)*(H-M.t-M.b);
+      const lineY = position => start[1] + (position-1)/(n-1)*(end[1]-start[1]);
+
+      function axes() {
+        const yTicks=[.2,.4,.6,.8,1];
+        const xTicks=[1,10,20,30,40,50,60];
+        return `${yTicks.map(t=>`<line class="grid" x1="${M.l}" y1="${y(t)}" x2="${W-M.r}" y2="${y(t)}"/><text x="${M.l-10}" y="${y(t)+4}" text-anchor="end">${t.toFixed(1)}</text>`).join('')}
+          ${xTicks.map(t=>`<text x="${x(t)}" y="${H-M.b+24}" text-anchor="middle">${t}</text>`).join('')}
+          <line class="axis" x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${H-M.b}"/>
+          <line class="axis" x1="${M.l}" y1="${H-M.b}" x2="${W-M.r}" y2="${H-M.b}"/>
+          <text class="axis-title" x="${(M.l+W-M.r)/2}" y="${H-9}" text-anchor="middle">Position in descending order</text>
+          <text class="axis-title" transform="translate(17 ${(M.t+H-M.b)/2}) rotate(-90)" text-anchor="middle">Indicator value</text>`;
+      }
+      function pathFor(values) { return values.map((value,index)=>`${index===0?'M':'L'} ${x(index+1).toFixed(2)} ${y(value).toFixed(2)}`).join(' '); }
+      function points(values,classes) {
+        return values.map((value,index)=>`<circle class="${typeof classes==='function'?classes(index,value):classes}" cx="${x(index+1)}" cy="${y(value)}" r="${index===kneeZero?5.3:3.8}"/>`).join('');
+      }
+      function chord() { return `<line class="chord" x1="${x(1)}" y1="${y(start[1])}" x2="${x(n)}" y2="${y(end[1])}"/>`; }
+      function projection(position,value) {
+        const ax=x(1), ay=y(start[1]), bx=x(n), by=y(end[1]), px=x(position), py=y(value);
+        const dx=bx-ax,dy=by-ay;
+        const t=((px-ax)*dx+(py-ay)*dy)/(dx*dx+dy*dy);
+        return {x:ax+t*dx,y:ay+t*dy};
+      }
+      function svgFrame(content,label) {
+        return `<div class="chart-shell"><svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}">${content}</svg></div>`;
+      }
+
+      function renderOrdering() {
+        const miniW=350,miniH=280,left=20,right=450,top=60,bottom=305;
+        const sx=(i,base)=>base+i/(n-1)*miniW;
+        const sy=v=>top+(1-v)/(1-.2)*(bottom-top);
+        visualContent.innerHTML=`<p class="chart-title">The same sample, before and after sorting</p><p class="chart-subtitle">60 simulated values; the upper tail was created for educational purposes only.</p>
+          <svg class="chart" viewBox="0 0 820 370" role="img" aria-label="Simulated values before and after descending sort">
+            <rect class="mini-frame" x="10" y="36" width="365" height="286" rx="16"/><rect class="mini-frame" x="445" y="36" width="365" height="286" rx="16"/>
+            <text class="annotation" x="25" y="24">Before: collection order</text><text class="annotation" x="460" y="24">After: highest → lowest</text>
+            <path class="raw-line" d="${rawValues.map((v,i)=>`${i?'L':'M'} ${sx(i,left)} ${sy(v)}`).join(' ')}"/>
+            ${rawValues.map((v,i)=>`<circle class="point-muted" cx="${sx(i,left)}" cy="${sy(v)}" r="3.2"/>`).join('')}
+            <text x="410" y="184" text-anchor="middle" class="annotation-orange" style="font-size:26px">→</text>
+            <path class="curve" d="${sortedValues.map((v,i)=>`${i?'L':'M'} ${sx(i,right)} ${sy(v)}`).join(' ')}"/>
+            ${sortedValues.map((v,i)=>`<circle class="${i<kneePosition?'point-tail':'point'}" cx="${sx(i,right)}" cy="${sy(v)}" r="3.5"/>`).join('')}
+            <text x="195" y="346" text-anchor="middle">Observations</text><text x="625" y="346" text-anchor="middle">Sorted positions</text>
+          </svg>`;
+      }
+      function renderPoints() {
+        visualContent.innerHTML=`<p class="chart-title">Sorted values curve</p><p class="chart-subtitle">Each point is identified by position and value.</p>${svgFrame(`${axes()}<path class="curve" d="${pathFor(sortedValues)}"/>${points(sortedValues,'point')}<line class="distance" x1="${x(6)}" y1="${y(sortedValues[5])}" x2="${x(6)}" y2="${H-M.b}"/><text class="annotation" x="${x(6)+8}" y="${y(sortedValues[5])-10}">(6, ${fmt(sortedValues[5])})</text>`,`Sorted curve with example coordinates of a point`)}`;
+      }
+      function renderChord() {
+        visualContent.innerHTML=`<p class="chart-title">Reference line between endpoints</p><p class="chart-subtitle">It connects S = (1, ${fmt(start[1])}) to E = (${n}, ${fmt(end[1])}).</p>${svgFrame(`${axes()}<path class="curve" d="${pathFor(sortedValues)}"/>${chord()}${points(sortedValues,'point')}<text class="annotation" x="${x(1)+10}" y="${y(start[1])+24}">S</text><text class="annotation" x="${x(n)-8}" y="${y(end[1])-13}">E</text>`,`Sorted curve and reference line connecting first and last points`)}`;
+      }
+      function renderDistances(all=false,side=false,knee=false) {
+        const selected=all?Array.from({length:n-2},(_,i)=>i+1):[4,9,18,32,47];
+        let fills='';
+        if(side){
+          const curvePts=sortedValues.map((v,i)=>`${x(i+1)},${y(v)}`).join(' ');
+          const chordPts=`${x(n)},${y(end[1])} ${x(1)},${y(start[1])}`;
+          fills=`<polygon class="side-zone" points="${curvePts} ${chordPts}"/>`;
+        }
+        const segments=selected.map(i=>{const p=projection(i+1,sortedValues[i]);return `<line class="${all?'distance-faint':'distance'}" x1="${x(i+1)}" y1="${y(sortedValues[i])}" x2="${p.x}" y2="${p.y}"/>`;}).join('');
+        const kneeP=projection(kneePosition,sortedValues[kneeZero]);
+        const kneeMark=knee?`<line class="distance" x1="${x(kneePosition)}" y1="${y(sortedValues[kneeZero])}" x2="${kneeP.x}" y2="${kneeP.y}"/><circle class="knee-ring" cx="${x(kneePosition)}" cy="${y(sortedValues[kneeZero])}" r="10"/><circle class="point-tail" cx="${x(kneePosition)}" cy="${y(sortedValues[kneeZero])}" r="4.6"/><text class="annotation-orange" x="${x(kneePosition)+16}" y="${y(sortedValues[kneeZero])+24}">Knee: position ${kneePosition}</text>`:'';
+        visualContent.innerHTML=`<p class="chart-title">${knee?'The maximum distance reveals the knee':side?'Selected side for the upper tail':'Perpendicular distances to the line'}</p><p class="chart-subtitle">${side?'With sign = −1, this curvature yields positive scores.':'The distance is measured by the determinant divided by the line length.'}</p>${svgFrame(`${axes()}${fills}<path class="curve" d="${pathFor(sortedValues)}"/>${chord()}${segments}${points(sortedValues,i=>i===kneeZero&&knee?'point-tail':'point')}${kneeMark}`,knee?'Knee of the curve highlighted at position ten':'Distances between the curve and reference line')}${side?'<div class="formula"><code>score = sign × −1 × distance</code> &nbsp; with &nbsp; <strong>sign = −1</strong></div>':'<div class="distance-readout"><span>Point close to line → <strong>small distance</strong></span><span>Point at the bend → <strong>large distance</strong></span></div>'}`;
+      }
+      function renderPercent() {
+        const xK=x(kneePosition);
+        visualContent.innerHTML=`<p class="chart-title">The position becomes a cumulative proportion</p><p class="chart-subtitle">The first ${kneePosition} points account for ${pctFmt(pct)} of the sorted sample.</p>${svgFrame(`${axes()}<rect class="tail-zone" x="${M.l}" y="${M.t}" width="${xK-M.l+6}" height="${H-M.t-M.b}"/><path class="curve" d="${pathFor(sortedValues)}"/>${points(sortedValues,i=>i<kneePosition?'point-tail':'point')}<path class="brace" d="M ${M.l} ${H-M.b+36} Q ${(M.l+xK)/2} ${H-M.b+50} ${xK} ${H-M.b+36}"/><text class="annotation-orange" x="${(M.l+xK)/2}" y="${H-1}" text-anchor="middle">${kneePosition} of ${n}</text>`,`First ten points highlighted as ten out of sixty observations`)}<div class="metric-row"><div class="metric"><span>Position</span><strong>${kneePosition}</strong></div><div class="metric"><span>Sample size</span><strong>${n}</strong></div><div class="metric orange"><span>Cumulative percentage</span><strong>${pctFmt(pct)}</strong></div></div>`;
+      }
+      function renderCutoff() {
+        const cutoffY=y(cutoff);
+        visualContent.innerHTML=`<p class="chart-title">The quantile transforms the position into a cutoff point</p><p class="chart-subtitle">Quantile 1 − ${pctFmt(pct)} = ${pctFmt(1-pct)}.</p>${svgFrame(`${axes()}<rect class="tail-zone" x="${M.l}" y="${M.t}" width="${W-M.l-M.r}" height="${cutoffY-M.t}"/><path class="curve" d="${pathFor(sortedValues)}"/><line class="cutoff" x1="${M.l}" y1="${cutoffY}" x2="${W-M.r}" y2="${cutoffY}"/>${points(sortedValues,(i,v)=>v>=cutoff?'point-tail':'point')}<text class="annotation-orange" x="${W-M.r-5}" y="${cutoffY-10}" text-anchor="end">Cutoff = ${fmt(cutoff)}</text><text class="annotation-orange" x="${x(3)}" y="${M.t+22}">${flagged} cases in the upper tail</text>`,`Cutoff point at ${fmt(cutoff)} with upper tail highlighted`)}<div class="metric-row"><div class="metric"><span>Quantile used</span><strong>${pctFmt(1-pct)}</strong></div><div class="metric orange"><span>Cutoff point</span><strong>${fmt(cutoff)}</strong></div><div class="metric"><span>Flagged</span><strong>${flagged} (${pctFmt(flagged/n)})</strong></div></div>`;
+      }
+
+      const renderers=[renderOrdering,renderPoints,renderChord,()=>renderDistances(false,false,false),()=>renderDistances(true,true,false),()=>renderDistances(true,false,true),renderPercent,renderCutoff];
+      function render(){
+        const step=steps[currentStep];
+        document.getElementById('eyebrow').textContent=`Step ${currentStep+1} of 8`;
+        document.getElementById('stepTitle').textContent=step.title;
+        document.getElementById('stepDescription').textContent=step.description;
+        document.getElementById('stepInsight').textContent=step.insight;
+        document.getElementById('progressCopy').textContent=`Step ${currentStep+1} of 8`;
+        stage.className=`stage step-${currentStep+1}`;
+        previousButton.disabled=currentStep===0;
+        previousButton.style.opacity=currentStep===0?'.4':'1';
+        nextButton.textContent=currentStep===steps.length-1?'Restart ↺':'Next →';
+        stepper.innerHTML=steps.map((item,index)=>`<button class="step-tab ${index<currentStep?'done':''} ${index===currentStep?'active':''}" type="button" data-step="${index}" aria-current="${index===currentStep?'step':'false'}" aria-label="Step ${index+1}: ${item.title}"><span class="number">${index+1}</span><span class="label">${item.tab}</span></button>`).join('');
+        stepper.querySelectorAll('[data-step]').forEach(button=>button.addEventListener('click',()=>{currentStep=Number(button.dataset.step);render();}));
+        renderers[currentStep]();
+      }
+      function move(delta){
+        if(delta>0&&currentStep===steps.length-1)currentStep=0;
+        else currentStep=Math.max(0,Math.min(steps.length-1,currentStep+delta));
+        render();
+      }
+      previousButton.addEventListener('click',()=>move(-1));
+      nextButton.addEventListener('click',()=>move(1));
+      document.getElementById('printButton').addEventListener('click',()=>window.print());
+      document.getElementById('fullscreenButton').addEventListener('click',async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();}catch(_){}});
+      document.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key===' '){event.preventDefault();move(1);}if(event.key==='ArrowLeft'){event.preventDefault();move(-1);}});
+      render();
+    })();
+  </script>
+</body>
+</html>

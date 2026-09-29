@@ -2,6 +2,10 @@ project: # https://quarto.org/docs/manuscripts/
   type: manuscript # Specifies this project is a manuscript format.
   execute-dir: project # Resolve R execution from the project root.
   output-dir: docs # Directory where the rendered output files will be placed.
+  resources:
+    - "Resources/**"
+    - "Output/Results/Figures/**"
+    - "Output/Results/Tables/**"
   pre-render:
     - Rscript --vanilla Scripts/DataAppendixScripts/pre_render_prepare.R
   post-render:
@@ -22,13 +26,15 @@ execute: # https://quarto.org/docs/computations/execution-options.html
 manuscript: # https://quarto.org/docs/manuscripts/authoring/rstudio.html
   article: index.qmd # Main manuscript file.
   meca-bundle: false # Generate MECA bundle for journal submission.
-  resources:
-    - Output/Results/Figures/ # Include persistent manuscript figures in previews.
+  #resources:
+  #  - Output/ # Include persistent manuscript outputs.
   notebooks:
     - notebook: Scripts/ProcessingScripts/01_procedural.qmd
       title: "1. Procedural Exclusions"
     - notebook: Scripts/ProcessingScripts/02_posthoc.qmd
       title: "2. Post-hoc C/IER Indicators"
+    - notebook: Scripts/DataAppendixScripts/03_resources.qmd
+      title: "3. Pedagogical Resources"
 
 bibliography: references.bib # https://quarto.org/docs/authoring/citations.html
 # File containing the bibliographic references in BibTeX format.

@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Visual and interactive explanation of the Kneedle algorithm.">
+  <title>Kneedle — visual interactive explanation</title>
+  <style>
+    :root {
+      --ink: #10252d;
+      --muted: #5b6c72;
+      --paper: #f7f4ec;
+      --surface: #fffdf7;
+      --line: #d7d2c5;
+      --teal: #16777a;
+      --teal-soft: #dcefee;
+      --orange: #e98226;
+      --orange-soft: #f9e5d2;
+      --navy: #153743;
+      --white: #ffffff;
+      --shadow: 0 18px 48px rgba(16, 37, 45, 0.13);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      background:
+        radial-gradient(circle at 12% 15%, rgba(22,119,122,.09), transparent 28rem),
+        radial-gradient(circle at 88% 85%, rgba(233,130,38,.08), transparent 30rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+    button { font: inherit; cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      padding: 22px clamp(18px, 4vw, 58px) 24px;
+      gap: 16px;
+    }
+    .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .mark {
+      width: 42px; height: 42px; border-radius: 13px;
+      display: grid; place-items: center;
+      background: var(--navy); color: var(--white);
+      font-weight: 850; letter-spacing: -.04em;
+      box-shadow: 0 8px 24px rgba(21,55,67,.2);
+    }
+    .brand-text strong { display: block; font-size: 1.05rem; }
+    .brand-text span { color: var(--muted); font-size: .82rem; }
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-button, .nav-button {
+      border: 1px solid var(--line); background: rgba(255,255,255,.65); color: var(--ink);
+      border-radius: 12px; transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+    .icon-button:hover, .nav-button:hover { transform: translateY(-1px); border-color: var(--teal); background: var(--white); }
+    .icon-button { width: 42px; height: 42px; display: grid; place-items: center; }
+    .icon-button svg { width: 20px; height: 20px; }
+
+    .stepper { display: grid; grid-template-columns: repeat(8, minmax(0,1fr)); gap: 4px; position: relative; }
+    .stepper::before {
+      content: ""; position: absolute; left: 5%; right: 5%; top: 17px;
+      height: 2px; background: var(--line); z-index: 0;
+    }
+    .step-tab {
+      position: relative; z-index: 1; border: 0; background: transparent; color: var(--muted);
+      display: grid; justify-items: center; gap: 5px; padding: 0 2px; min-width: 0;
+    }
+    .step-tab .number {
+      width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center;
+      background: var(--surface); border: 2px solid var(--line); font-weight: 800; transition: .2s ease;
+    }
+    .step-tab .label { font-size: .69rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 90px; }
+    .step-tab.done .number { background: var(--teal-soft); border-color: var(--teal); color: var(--teal); }
+    .step-tab.active { color: var(--ink); }
+    .step-tab.active .number {
+      background: var(--orange); border-color: var(--orange); color: var(--white);
+      transform: scale(1.08); box-shadow: 0 7px 20px rgba(233,130,38,.28);
+    }
+
+    .stage {
+      position: relative; min-height: 548px;
+      background: rgba(255,253,247,.88); border: 1px solid rgba(215,210,197,.85);
+      border-radius: var(--radius); box-shadow: var(--shadow);
+      display: grid; grid-template-columns: minmax(265px,.76fr) minmax(520px,1.55fr);
+      overflow: hidden;
+    }
+    .explanation {
+      padding: clamp(28px,4vw,58px);
+      background: linear-gradient(145deg,rgba(220,239,238,.74),rgba(255,253,247,.4));
+      border-right: 1px solid var(--line);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .eyebrow { color: var(--teal); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 12px 0 16px; font-size: clamp(2rem,3.7vw,3.8rem); line-height: .98; letter-spacing: -.055em; }
+    .lead { margin: 0; color: var(--muted); font-size: clamp(1rem,1.35vw,1.2rem); line-height: 1.58; }
+    .insight { margin-top: 27px; padding-left: 16px; border-left: 4px solid var(--orange); font-weight: 700; line-height: 1.45; }
+    .visual { min-width: 0; padding: clamp(22px,3.2vw,46px); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .visual-content { width: 100%; max-width: 940px; }
+    .chart-shell { width: 100%; position: relative; }
+    .chart-title { margin: 0 0 4px; font-size: .88rem; font-weight: 800; }
+    .chart-subtitle { margin: 0 0 8px; color: var(--muted); font-size: .76rem; }
+    .chart { width: 100%; height: auto; display: block; overflow: visible; }
+    .chart text { font-family: inherit; fill: var(--muted); font-size: 11px; }
+    .chart .axis-title { fill: var(--ink); font-weight: 750; }
+    .chart .grid { stroke: var(--line); stroke-width: 1; opacity: .65; }
+    .chart .axis { stroke: #9f988b; stroke-width: 1.2; }
+    .chart .curve { fill: none; stroke: var(--teal); stroke-width: 3; stroke-linejoin: round; }
+    .chart .curve-tail { fill: none; stroke: var(--orange); stroke-width: 3; stroke-linejoin: round; }
+    .chart .raw-line { fill: none; stroke: var(--line); stroke-width: 1.2; opacity: .8; }
+    .chart .point { fill: var(--teal); stroke: none; }
+    .chart .point-muted { fill: #789697; stroke: none; }
+    .chart .point-tail { fill: var(--orange); stroke: none; }
+    .chart .chord { stroke: var(--navy); stroke-width: 2.5; }
+    .chart .distance { stroke: var(--orange); stroke-width: 2; stroke-dasharray: 5 4; }
+    .chart .distance-faint { stroke: var(--orange); stroke-width: 1.2; opacity: .22; }
+    .chart .cutoff { stroke: var(--orange); stroke-width: 2.5; stroke-dasharray: 7 5; }
+    .chart .tail-zone { fill: var(--orange-soft); opacity: .72; }
+    .chart .side-zone { fill: var(--teal-soft); opacity: .64; }
+    .chart .knee-ring { fill: var(--surface); stroke: var(--orange); stroke-width: 4; }
+    .chart .annotation { fill: var(--ink); font-weight: 800; }
+    .chart .annotation-orange { fill: #a95413; font-weight: 800; }
+    .chart .brace { fill: none; stroke: var(--orange); stroke-width: 2.5; }
+    .chart .mini-frame { fill: rgba(255,255,255,.45); stroke: var(--line); }
+
+    .metric-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin-top: 9px; }
+    .step-8 .metric-row { margin-top: 18px; }
+    .metric { padding: 11px 13px; border-top: 3px solid var(--teal); background: rgba(220,239,238,.35); }
+    .metric.orange { border-top-color: var(--orange); background: rgba(249,229,210,.45); }
+    .metric span { display: block; color: var(--muted); font-size: .69rem; font-weight: 750; text-transform: uppercase; letter-spacing: .07em; }
+    .metric strong { display: block; margin-top: 4px; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
+    .distance-readout {
+      display: flex; justify-content: center; gap: 22px; flex-wrap: wrap;
+      margin-top: 8px; color: var(--muted); font-size: .77rem;
+    }
+    .distance-readout strong { color: var(--ink); }
+    .formula {
+      margin-top: 10px; text-align: center; color: var(--muted); font-size: .78rem;
+    }
+    .formula code { color: var(--ink); background: var(--orange-soft); padding: 4px 8px; border-radius: 8px; }
+
+    .footer { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; }
+    .progress-copy { color: var(--muted); font-size: .8rem; }
+    .nav-actions { display: flex; gap: 10px; }
+    .nav-button { padding: 11px 18px; font-weight: 800; }
+    .nav-button.next { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .keyboard-tip { justify-self: end; color: var(--muted); font-size: .75rem; }
+    .final-quote {
+      display: none; width: min(92%,780px); margin: 24px auto 0;
+      text-align: center; color: var(--navy); font-weight: 800;
+    }
+    .step-8 .final-quote { display: block; }
+
+    @media (max-width: 1050px) {
+      .stage { grid-template-columns: 1fr; }
+      .explanation { border-right: 0; border-bottom: 1px solid var(--line); padding: 27px; }
+      h1 { font-size: 2.55rem; }
+      .visual { padding: 25px; }
+      .final-quote { width: auto; margin: 22px 28px 4px; }
+    }
+    @media (max-width: 730px) {
+      .app { padding: 14px; gap: 12px; }
+      .brand-text span, .keyboard-tip, .step-tab .label { display: none; }
+      .stepper::before { left: 5%; right: 5%; top: 15px; }
+      .step-tab .number { width: 30px; height: 30px; font-size: .78rem; }
+      .stage { min-height: 0; border-radius: 17px; }
+      .explanation, .visual { padding: 21px; }
+      h1 { font-size: 2.05rem; }
+      .lead { font-size: .95rem; }
+      .metric-row { grid-template-columns: 1fr; }
+      .metric { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .metric strong { margin-top: 0; }
+      .footer { grid-template-columns: 1fr auto; }
+      .progress-copy { display: none; }
+      .nav-actions { grid-column: 2; }
+    }
+    @media (max-width: 440px) {
+      .topbar { align-items: flex-start; }
+      .icon-button { width: 38px; height: 38px; }
+      .stepper { gap: 0; }
+      .stepper::before { left: 6%; right: 6%; }
+      .step-tab .number { width: 27px; height: 27px; border-width: 1.5px; }
+      .nav-button { padding: 10px 12px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+    @media print {
+      body { background: white; }
+      .app { padding: 0; display: block; }
+      .top-actions,.stepper,.footer { display: none !important; }
+      .topbar { margin-bottom: 16px; }
+      .stage { box-shadow: none; min-height: 90vh; border: 1px solid #bbb; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">K</div>
+        <div class="brand-text">
+          <strong>Kneedle in eight steps</strong>
+          <span>A visual lab for finding the knee of the curve</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-button" id="printButton" type="button" aria-label="Print or save as PDF" title="Print or save as PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        </button>
+        <button class="icon-button" id="fullscreenButton" type="button" aria-label="Toggle full screen" title="Full screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <nav class="stepper" id="stepper" aria-label="Explanation steps"></nav>
+
+    <section class="stage" id="stage" aria-live="polite">
+      <article class="explanation">
+        <div class="eyebrow" id="eyebrow">Step 1 of 8</div>
+        <h1 id="stepTitle"></h1>
+        <p class="lead" id="stepDescription"></p>
+        <div class="insight" id="stepInsight"></div>
+      </article>
+      <div class="visual">
+        <div class="visual-content" id="visualContent"></div>
+        <div class="final-quote">Kneedle finds the geometric boundary between the extreme tail and the predominant behavior of the distribution.</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="progress-copy" id="progressCopy">Step 1 of 8</div>
+      <div class="nav-actions">
+        <button class="nav-button" id="previousButton" type="button">← Previous</button>
+        <button class="nav-button next" id="nextButton" type="button">Next →</button>
+      </div>
+      <div class="keyboard-tip">Use ← → or Spacebar</div>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const steps = [
+        { tab:"Sort", title:"Sort the values", description:"We begin with the 1,295 real values of the LazR column, after screening. The algorithm rearranges everything from highest to lowest.", insight:"Sorting makes the upper tail appear at the beginning of the sequence." },
+        { tab:"Points", title:"Transform into points", description:"Each sorted value is assigned a rank. The observation becomes a point with coordinates (position, value).", insight:"The dataset ceases to be just a list and forms a curve." },
+        { tab:"Line", title:"Connect the endpoints", description:"A reference line connects the first and last points of the sorted curve.", insight:"The line represents a steady decrease, without a sharp change in behavior." },
+        { tab:"Distance", title:"Measure the distances", description:"For each point, we calculate the perpendicular distance to the reference line.", insight:"The greater the distance, the more that point reveals an inflection or bend in the curve." },
+        { tab:"Side", title:"Set the relevant side", description:"In this example we look only for the upper tail. Therefore, the code uses sign = −1 and focuses on the corresponding curvature.", insight:"The sign does not measure magnitude: it merely specifies which side of the line to search." },
+        { tab:"Knee", title:"Find the maximum distance", description:"The algorithm compares all distances and selects the maximum. This point is the knee of the curve.", insight:"In the real data, the maximum distance occurs at position 88." },
+        { tab:"Percentage", title:"Convert to percentage", description:"The knee position is divided by the number of observations, yielding the cumulative sample proportion.", insight:"88 ÷ 1,295 = 6.8%: this is the estimated extent of the extreme region." },
+        { tab:"Cutoff", title:"Obtain the cutoff point", description:"The percentage is converted into a quantile. The resulting value separates the upper tail from the rest of the distribution.", insight:"The cutoff is 0.600. Due to four ties at this value, 91 cases are flagged." }
+      ];
+
+      const rawValues = [
+        0.388,0.493,0.493,0.569,0.454,0.647,0.444,0.382,0.410,0.479,0.372,0.482,0.481,0.338,0.422,0.538,0.491,0.420,0.394,0.505,0.432,0.441,0.396,0.436,0.462,0.486,0.567,0.480,0.448,0.495,0.487,0.402,0.343,0.479,0.455,0.407,0.383,0.504,0.299,0.444,0.427,0.545,0.604,0.468,0.450,0.379,0.439,0.384,0.384,0.389,0.509,0.548,0.483,0.452,0.373,0.376,0.322,0.491,0.417,0.544,0.548,0.416,0.390,0.396,0.684,0.814,0.407,0.444,0.382,0.373,0.644,0.568,0.416,0.525,0.474,0.444,0.364,0.396,0.349,0.568,0.464,0.350,0.353,0.423,0.397,0.522,0.437,0.383,0.408,0.440,0.589,0.432,0.493,0.346,0.371,0.798,0.501,0.354,0.478,0.668,0.352,0.354,0.507,0.532,0.466,0.347,0.629,0.429,0.353,0.423,0.417,0.400,0.407,0.346,0.439,0.351,0.430,0.413,0.500,0.551,0.644,0.450,0.422,0.476,0.402,0.555,0.517,0.581,0.396,0.407,0.360,0.471,0.411,0.394,0.357,0.467,0.382,0.425,0.501,0.485,0.383,0.452,0.448,0.854,0.411,0.480,0.359,0.358,0.585,0.421,0.598,0.333,0.527,0.365,0.387,0.490,0.437,0.450,0.380,0.383,0.387,0.608,0.439,0.490,0.330,0.397,0.374,0.600,0.364,0.335,0.568,0.811,0.423,0.393,0.410,0.372,0.379,0.578,0.532,0.411,0.410,0.335,0.379,0.730,0.445,0.488,0.504,0.475,0.432,0.441,0.521,0.473,0.445,0.453,0.452,0.613,0.456,0.392,0.379,0.468,0.387,0.507,0.596,0.376,0.537,0.495,0.445,0.420,0.406,0.433,0.576,0.405,0.543,0.373,0.468,0.366,0.635,0.430,0.445,0.483,0.412,0.415,0.538,0.539,0.463,0.389,0.432,0.386,0.631,0.403,0.423,0.449,0.407,0.389,0.462,0.620,0.515,0.358,0.592,0.454,0.422,0.440,0.452,0.492,0.387,0.583,0.620,0.355,0.326,0.529,0.378,0.386,0.605,0.356,0.455,0.414,0.469,0.604,0.392,0.576,0.426,0.480,0.434,0.477,0.469,0.580,0.415,0.387,0.377,0.336,0.302,0.423,0.443,0.455,0.465,0.381,0.439,0.367,0.404,0.385,0.356,0.472,0.529,0.446,0.473,0.680,0.406,0.432,0.531,0.594,0.418,0.464,0.527,0.397,0.520,0.373,0.636,0.407,0.443,0.454,0.551,0.356,0.553,0.336,0.416,0.447,0.485,0.410,0.418,0.539,0.511,0.739,0.364,0.387,0.451,0.511,0.386,0.356,0.441,0.370,0.533,0.322,0.433,0.397,0.442,0.292,0.436,0.560,0.442,0.548,0.443,0.340,0.429,0.406,0.539,0.468,0.504,0.472,0.679,0.473,0.381,0.372,0.438,0.458,0.509,0.438,0.373,0.690,0.357,0.397,0.383,0.480,0.533,0.417,0.492,0.581,0.424,0.401,0.486,0.388,0.587,0.536,0.508,0.451,0.591,0.463,0.527,0.571,0.458,0.487,0.353,0.575,0.358,0.517,0.371,0.423,0.573,0.331,0.415,0.413,0.441,0.553,0.495,0.489,0.420,0.443,0.501,0.336,0.591,0.584,0.372,0.411,0.331,0.463,0.454,0.361,0.594,0.682,0.457,0.448,0.403,0.380,0.348,0.375,0.547,0.462,0.463,0.388,0.392,0.360,0.366,0.461,0.359,0.386,0.316,0.589,0.375,0.438,0.480,0.538,0.526,0.702,0.463,0.406,0.444,0.446,0.461,0.318,0.402,0.580,0.396,0.388,0.398,0.400,0.561,0.460,0.525,0.489,0.539,0.468,0.466,0.445,0.529,0.491,0.406,0.564,0.532,0.471,0.378,0.512,0.509,0.593,0.379,0.398,0.627,0.382,0.425,0.727,0.487,0.464,0.473,0.520,0.331,0.434,0.351,0.407,0.439,0.589,0.470,0.441,0.380,0.369,0.393,0.676,0.545,0.508,0.503,0.469,0.504,0.647,0.485,0.417,0.466,0.397,0.372,0.574,0.539,0.628,0.390,0.387,0.505,0.383,0.393,0.396,0.678,0.466,0.356,0.404,0.385,0.382,0.495,0.490,0.393,0.377,0.334,0.624,0.347,0.438,0.501,0.356,0.581,0.582,0.592,0.579,0.466,0.370,0.567,0.495,0.347,0.691,0.406,0.428,0.489,0.359,0.326,0.341,0.815,0.590,0.620,0.617,0.695,0.460,0.364,0.396,0.553,0.366,0.367,0.361,0.488,0.346,0.429,0.470,0.431,0.387,0.426,0.457,0.436,0.447,0.421,0.438,0.559,0.464,0.465,0.458,0.460,0.477,0.513,0.375,0.479,0.611,0.644,0.403,0.477,0.455,0.632,0.354,0.564,0.398,0.325,0.616,0.552,0.450,0.515,0.449,0.429,0.394,0.417,0.448,0.433,0.457,0.616,0.401,0.447,0.402,0.387,0.544,0.391,0.407,0.460,0.440,0.512,0.464,0.341,0.429,0.411,0.814,0.472,0.443,0.470,0.383,0.447,0.436,0.631,0.441,0.454,0.407,0.383,0.347,0.458,0.334,0.525,0.468,0.325,0.451,0.487,0.359,0.387,0.396,0.509,0.344,0.541,0.461,0.628,0.512,0.549,0.431,0.693,0.379,0.391,0.620,0.448,0.380,0.363,0.531,0.409,0.357,0.434,0.604,0.493,0.428,0.484,0.541,0.419,0.369,0.456,0.413,0.414,0.377,0.358,0.572,0.472,0.468,0.370,0.377,0.511,0.469,0.600,0.538,0.480,0.497,0.444,0.412,0.598,0.487,0.512,0.449,0.345,0.414,0.389,0.368,0.477,0.575,0.550,0.375,0.533,0.450,0.399,0.496,0.426,0.401,0.442,0.416,0.744,0.570,0.366,0.539,0.444,0.290,0.578,0.442,0.388,0.398,0.671,0.402,0.739,0.369,0.507,0.408,0.378,0.485,0.539,0.443,0.576,0.592,0.413,0.463,0.453,0.497,0.372,0.395,0.317,0.632,0.416,0.576,0.383,0.624,0.426,0.430,0.438,0.446,0.479,0.332,0.416,0.472,0.388,0.493,0.441,0.515,0.406,0.430,0.517,0.439,0.499,0.463,0.392,0.511,0.473,0.397,0.423,0.443,0.664,0.457,0.427,0.509,0.528,0.537,0.420,0.507,0.582,0.401,0.374,0.402,0.373,0.582,0.560,0.502,0.518,0.349,0.399,0.437,0.420,1.000,0.492,0.498,0.572,0.508,0.468,0.487,0.592,0.426,0.469,0.574,0.437,0.351,0.596,0.501,0.500,0.439,0.471,0.463,0.442,0.377,0.397,0.496,0.414,0.688,0.393,0.536,0.380,0.383,0.556,0.416,0.407,0.479,0.380,0.358,0.585,0.404,0.436,0.409,0.473,0.451,0.460,0.394,0.318,0.501,0.437,0.544,0.461,0.413,0.490,0.472,0.380,0.504,0.744,0.424,0.368,0.632,0.395,0.428,0.365,0.385,0.420,0.422,0.351,0.454,0.424,0.470,0.590,0.407,0.333,0.381,0.384,0.631,0.391,0.503,0.403,0.427,0.390,0.394,0.557,0.504,0.443,0.445,0.420,0.404,0.450,0.416,0.417,0.450,0.391,0.451,0.428,0.416,0.539,0.465,0.459,0.528,0.402,0.516,0.438,0.400,0.509,0.439,0.468,0.412,0.388,0.458,0.385,0.438,0.443,0.399,0.488,0.614,0.437,0.425,0.352,0.370,0.308,0.422,0.377,0.500,0.437,0.484,0.538,0.397,0.600,0.440,0.465,0.641,0.355,0.518,0.406,0.452,0.587,0.462,0.455,0.543,0.403,0.413,0.367,0.728,0.416,0.422,0.397,0.447,0.498,0.533,0.404,0.410,0.569,0.443,0.364,0.504,0.437,0.528,0.380,0.691,0.407,0.460,0.320,0.543,0.420,0.571,0.508,0.531,0.449,0.462,0.637,0.456,0.445,0.339,0.407,0.498,0.466,0.422,0.600,0.367,0.468,0.370,0.467,0.350,0.380,0.460,0.419,0.311,0.448,0.403,0.433,0.440,0.417,0.488,0.446,0.580,0.398,0.442,0.397,0.499,0.420,0.359,0.507,0.495,0.491,0.379,0.741,0.438,0.613,0.759,0.490,0.431,0.341,0.536,0.373,0.526,0.445,0.556,0.497,0.585,0.427,0.514,0.505,0.430,0.414,0.483,0.346,0.393,0.451,0.358,0.479,0.376,0.400,0.437,0.360,0.379,0.490,0.496,0.627,0.528,0.383,0.414,0.596,0.427,0.371,0.413,0.384,0.562,0.397,0.472,0.473,0.443,0.441,0.340,0.492,0.444,0.354,0.422,0.504,0.811,0.565,0.535,0.355,0.432,0.447,0.426,0.475,0.487,0.403,0.442,0.425,0.552,0.429,0.463,0.484,0.403,0.492,0.340,0.493,0.355,0.411,0.513,0.470,0.463,0.423,0.360,0.370,0.331,0.388,0.501,0.501,0.411,0.385,0.366,0.449,0.597,0.479,0.346,0.501,0.508,0.407,0.535,0.504,0.481,0.373,0.391,0.417,0.680,0.385,0.508,0.402,0.487,0.535,0.384,0.471,0.377,0.495,0.465,0.473,0.382,0.406,0.502,0.553,0.427,0.531,0.393,0.389,0.296,0.453,0.663,0.376,0.409,0.414,0.406,0.511,0.575,0.396,0.440,0.548,0.444,0.668,0.512,0.394,0.382,0.436,0.376,0.442,0.509,0.479,0.453,0.574,0.503,0.522,0.413,0.497,0.383,0.602,0.501,0.399,0.539,0.387,0.309,0.454,0.355,0.354,0.420,0.461,0.455,0.381,0.370,0.436,0.404,0.335,0.398,0.352,0.352,0.459,0.554,0.364,0.372,0.579,0.445,0.437,0.430,0.551,0.365,0.551,0.321,0.457,0.450,0.545,0.424,0.621,0.422,0.628,0.377,0.531,0.551,0.515,0.498,0.399,0.384,0.397,0.474,0.662,0.474,0.469,0.441,0.742,0.477,0.394,0.505,0.582,0.443,0.438,0.393,0.342,0.382,0.437,0.465,0.421,0.477,0.580,0.381,0.420,0.616,0.480,0.430,0.491,0.372,0.359,0.533,0.543,0.503,0.681,0.555,0.624,0.442,0.517,0.340,0.538,0.396,0.439,0.429,0.446,0.611,0.488,0.421,0.436,0.796,0.438,0.340,0.686,0.481,0.456,0.485,0.451,0.424,0.363,0.403,0.444,0.596,0.515,0.350,0.533,0.487,0.646,0.417,0.473,0.428,0.383,0.450,0.415,0.415,0.483,0.453,0.445,0.505,0.440,0.427,0.415,0.456,0.622,0.554,0.369,0.481,0.400,0.487,0.379,0.509,0.426,0.387,0.383,0.551,0.404,0.558,0.372,0.575,0.451,0.422,0.395,0.378,0.457,0.408,0.365,0.464,0.326,0.444,0.507,0.318,0.567,0.477,0.389,0.438,0.459,0.473,0.499,0.482,0.507,0.514,0.591,0.494,0.430,0.599,0.469,0.342,0.509,0.332,0.523,0.412,0.447,0.504,0.440,0.380,0.404,0.468,0.426
+      ];
+      const sortedValues = [...rawValues].sort((a,b) => b-a);
+      const n = sortedValues.length;
+      const sign = -1;
+      let currentStep = 0;
+
+      function dist2d(point, start, end) {
+        const v1 = [start[0] - end[0], start[1] - end[1]];
+        const v2 = [point[0] - start[0], point[1] - start[1]];
+        const determinant = v1[0] * v2[1] - v2[0] * v1[1];
+        return determinant / Math.sqrt(v1[0] ** 2 + v1[1] ** 2);
+      }
+      const start = [1, sortedValues[0]];
+      const end = [n, sortedValues[n - 1]];
+      const distances = sortedValues.map((value,index) => dist2d([index + 1,value],start,end));
+      const scores = distances.map(distance => sign * -1 * distance);
+      const kneeZero = scores.indexOf(Math.max(...scores));
+      const kneePosition = kneeZero + 1;
+      const pct = kneePosition / n;
+
+      function quantileType7(values,q) {
+        const ascending = [...values].sort((a,b) => a-b);
+        const h = (ascending.length - 1) * q;
+        const lo = Math.floor(h); const hi = Math.ceil(h);
+        return ascending[lo] + (h-lo) * (ascending[hi]-ascending[lo]);
+      }
+      const cutoff = quantileType7(sortedValues,1-pct);
+      const flagged = sortedValues.filter(value => value >= cutoff).length;
+
+      const app = document.getElementById("app");
+      const stage = document.getElementById("stage");
+      const stepper = document.getElementById("stepper");
+      const visualContent = document.getElementById("visualContent");
+      const previousButton = document.getElementById("previousButton");
+      const nextButton = document.getElementById("nextButton");
+      const fmt = value => value.toLocaleString("en-US",{minimumFractionDigits:3,maximumFractionDigits:3});
+      const pctFmt = value => value.toLocaleString("en-US",{style:"percent",minimumFractionDigits:1,maximumFractionDigits:1});
+
+      const W=820,H=430,M={l:66,r:30,t:28,b:58};
+      const x = position => M.l + (position-1)/(n-1)*(W-M.l-M.r);
+      const y = value => M.t + (1-value)/(1-.2)*(H-M.t-M.b);
+      const lineY = position => start[1] + (position-1)/(n-1)*(end[1]-start[1]);
+      const pointRadius = n > 500 ? 1.45 : 3.8;
+      const miniPointRadius = n > 500 ? .90 : 3.2;
+
+      function axes() {
+        const yTicks=[.2,.4,.6,.8,1];
+        const xTicks=n>500?[1,250,500,750,1000,n]:[1,10,20,30,40,50,60];
+        return `${yTicks.map(t=>`<line class="grid" x1="${M.l}" y1="${y(t)}" x2="${W-M.r}" y2="${y(t)}"/><text x="${M.l-10}" y="${y(t)+4}" text-anchor="end">${t.toFixed(1)}</text>`).join('')}
+          ${xTicks.map(t=>`<text x="${x(t)}" y="${H-M.b+24}" text-anchor="middle">${t.toLocaleString('en-US')}</text>`).join('')}
+          <line class="axis" x1="${M.l}" y1="${M.t}" x2="${M.l}" y2="${H-M.b}"/>
+          <line class="axis" x1="${M.l}" y1="${H-M.b}" x2="${W-M.r}" y2="${H-M.b}"/>
+          <text class="axis-title" x="${(M.l+W-M.r)/2}" y="${H-9}" text-anchor="middle">Position in descending order</text>
+          <text class="axis-title" transform="translate(17 ${(M.t+H-M.b)/2}) rotate(-90)" text-anchor="middle">Indicator value</text>`;
+      }
+      function pathFor(values,offset=0) { return values.map((value,index)=>`${index===0?'M':'L'} ${x(index+1+offset).toFixed(2)} ${y(value).toFixed(2)}`).join(' '); }
+      function curvePaths() {
+        const tailValues=sortedValues.slice(0,flagged);
+        const regularValues=sortedValues.slice(flagged-1);
+        return `<path class="curve-tail" d="${pathFor(tailValues)}"/><path class="curve" d="${pathFor(regularValues,flagged-1)}"/>`;
+      }
+      const cutoffClass=(index,value)=>value>=cutoff?'point-tail':'point';
+      function points(values,classes) {
+        return values.map((value,index)=>`<circle class="${typeof classes==='function'?classes(index,value):classes}" cx="${x(index+1)}" cy="${y(value)}" r="${index===kneeZero?5.3:pointRadius}"/>`).join('');
+      }
+      function chord() { return `<line class="chord" x1="${x(1)}" y1="${y(start[1])}" x2="${x(n)}" y2="${y(end[1])}"/>`; }
+      function projection(position,value) {
+        const ax=x(1), ay=y(start[1]), bx=x(n), by=y(end[1]), px=x(position), py=y(value);
+        const dx=bx-ax,dy=by-ay;
+        const t=((px-ax)*dx+(py-ay)*dy)/(dx*dx+dy*dy);
+        return {x:ax+t*dx,y:ay+t*dy};
+      }
+      function svgFrame(content,label) {
+        return `<div class="chart-shell"><svg class="chart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${label}">${content}</svg></div>`;
+      }
+
+      function renderOrdering() {
+        const miniW=350,miniH=280,left=20,right=450,top=60,bottom=305;
+        const sx=(i,base)=>base+i/(n-1)*miniW;
+        const sy=v=>top+(1-v)/(1-.2)*(bottom-top);
+        const miniPath=(values,base,offset=0)=>values.map((v,i)=>`${i?'L':'M'} ${sx(i+offset,base)} ${sy(v)}`).join(' ');
+        const tailValues=sortedValues.slice(0,flagged);
+        const regularValues=sortedValues.slice(flagged-1);
+        visualContent.innerHTML=`<p class="chart-title">The same sample, before and after sorting</p><p class="chart-subtitle">1,295 observed values in the LazR column of whoqol_screened.csv.</p>
+          <svg class="chart" viewBox="0 0 820 370" role="img" aria-label="Observed values before and after descending sort">
+            <rect class="mini-frame" x="10" y="36" width="365" height="286" rx="16"/><rect class="mini-frame" x="445" y="36" width="365" height="286" rx="16"/>
+            <text class="annotation" x="25" y="24">Before: collection order</text><text class="annotation" x="460" y="24">After: highest → lowest</text>
+            <path class="raw-line" d="${rawValues.map((v,i)=>`${i?'L':'M'} ${sx(i,left)} ${sy(v)}`).join(' ')}"/>
+            ${rawValues.map((v,i)=>`<circle class="${v>=cutoff?'point-tail':'point-muted'}" cx="${sx(i,left)}" cy="${sy(v)}" r="${miniPointRadius}"/>`).join('')}
+            <text x="410" y="184" text-anchor="middle" class="annotation-orange" style="font-size:26px">→</text>
+            <path class="curve-tail" d="${miniPath(tailValues,right)}"/><path class="curve" d="${miniPath(regularValues,right,flagged-1)}"/>
+            ${sortedValues.map((v,i)=>`<circle class="${v>=cutoff?'point-tail':'point'}" cx="${sx(i,right)}" cy="${sy(v)}" r="${miniPointRadius}"/>`).join('')}
+            <text x="195" y="346" text-anchor="middle">Observations</text><text x="625" y="346" text-anchor="middle">Sorted positions</text>
+          </svg>`;
+      }
+      function renderPoints() {
+        const examplePosition=Math.round(n*.25);
+        visualContent.innerHTML=`<p class="chart-title">Sorted values curve</p><p class="chart-subtitle">Each point is identified by position and value.</p>${svgFrame(`${axes()}${curvePaths()}${points(sortedValues,cutoffClass)}<line class="distance" x1="${x(examplePosition)}" y1="${y(sortedValues[examplePosition-1])}" x2="${x(examplePosition)}" y2="${H-M.b}"/><text class="annotation" x="${x(examplePosition)+8}" y="${y(sortedValues[examplePosition-1])-10}">(${examplePosition}, ${fmt(sortedValues[examplePosition-1])})</text>`,`Sorted curve with example coordinates of a point`)}`;
+      }
+      function renderChord() {
+        visualContent.innerHTML=`<p class="chart-title">Reference line between endpoints</p><p class="chart-subtitle">It connects S = (1, ${fmt(start[1])}) to E = (${n}, ${fmt(end[1])}).</p>${svgFrame(`${axes()}${curvePaths()}${chord()}${points(sortedValues,cutoffClass)}<text class="annotation" x="${x(1)+10}" y="${y(start[1])+24}">S</text><text class="annotation" x="${x(n)-8}" y="${y(end[1])-13}">E</text>`,`Sorted curve and reference line connecting first and last points`)}`;
+      }
+      function renderDistances(all=false,side=false,knee=false) {
+        const visualLineCount=Math.min(n-2,160);
+        const selected=all?Array.from({length:visualLineCount},(_,i)=>Math.round(1+i*(n-3)/(visualLineCount-1))):[Math.round(n*.02),kneeZero,Math.round(n*.25),Math.round(n*.5),Math.round(n*.75)];
+        let fills='';
+        if(side){
+          const curvePts=sortedValues.map((v,i)=>`${x(i+1)},${y(v)}`).join(' ');
+          const chordPts=`${x(n)},${y(end[1])} ${x(1)},${y(start[1])}`;
+          fills=`<polygon class="side-zone" points="${curvePts} ${chordPts}"/>`;
+        }
+        const segments=selected.map(i=>{const p=projection(i+1,sortedValues[i]);return `<line class="${all?'distance-faint':'distance'}" x1="${x(i+1)}" y1="${y(sortedValues[i])}" x2="${p.x}" y2="${p.y}"/>`;}).join('');
+        const kneeP=projection(kneePosition,sortedValues[kneeZero]);
+        const kneeMark=knee?`<line class="distance" x1="${x(kneePosition)}" y1="${y(sortedValues[kneeZero])}" x2="${kneeP.x}" y2="${kneeP.y}"/><circle class="knee-ring" cx="${x(kneePosition)}" cy="${y(sortedValues[kneeZero])}" r="10"/><circle class="point-tail" cx="${x(kneePosition)}" cy="${y(sortedValues[kneeZero])}" r="4.6"/><text class="annotation-orange" x="${x(kneePosition)+16}" y="${y(sortedValues[kneeZero])+24}">Knee: position ${kneePosition}</text>`:'';
+        visualContent.innerHTML=`<p class="chart-title">${knee?'The maximum distance reveals the knee':side?'Selected side for the upper tail':'Perpendicular distances to the line'}</p><p class="chart-subtitle">${side?'With sign = −1, this curvature yields positive scores.':'The distance is measured by the determinant divided by the line length.'}</p>${svgFrame(`${axes()}${fills}${curvePaths()}${chord()}${segments}${points(sortedValues,cutoffClass)}${kneeMark}`,knee?`Knee of the curve highlighted at position ${kneePosition}`:'Distances between the curve and reference line')}${side?'<div class="formula"><code>score = sign × −1 × distance</code> &nbsp; with &nbsp; <strong>sign = −1</strong></div>':'<div class="distance-readout"><span>Point close to line → <strong>small distance</strong></span><span>Point at the bend → <strong>large distance</strong></span></div>'}`;
+      }
+      function renderPercent() {
+        const xK=x(kneePosition);
+        visualContent.innerHTML=`<p class="chart-title">The position becomes a cumulative proportion</p><p class="chart-subtitle">The first ${kneePosition} points account for ${pctFmt(pct)} of the sorted sample.</p>${svgFrame(`${axes()}<rect class="tail-zone" x="${M.l}" y="${M.t}" width="${xK-M.l+6}" height="${H-M.t-M.b}"/>${curvePaths()}${points(sortedValues,cutoffClass)}<path class="brace" d="M ${M.l} ${H-M.b+36} Q ${(M.l+xK)/2} ${H-M.b+50} ${xK} ${H-M.b+36}"/><text class="annotation-orange" x="${(M.l+xK)/2}" y="${H-1}" text-anchor="middle">${kneePosition} of ${n}</text>`,`First ${kneePosition} points correspond to ${pctFmt(pct)} of the ${n} observations`)}<div class="metric-row"><div class="metric"><span>Position</span><strong>${kneePosition}</strong></div><div class="metric"><span>Sample size</span><strong>${n}</strong></div><div class="metric orange"><span>Cumulative percentage</span><strong>${pctFmt(pct)}</strong></div></div>`;
+      }
+      function renderCutoff() {
+        const cutoffY=y(cutoff);
+        visualContent.innerHTML=`<p class="chart-title">The quantile transforms the position into a cutoff point</p><p class="chart-subtitle">Quantile 1 − ${pctFmt(pct)} = ${pctFmt(1-pct)}.</p>${svgFrame(`${axes()}<rect class="tail-zone" x="${M.l}" y="${M.t}" width="${W-M.l-M.r}" height="${cutoffY-M.t}"/>${curvePaths()}<line class="cutoff" x1="${M.l}" y1="${cutoffY}" x2="${W-M.r}" y2="${cutoffY}"/>${points(sortedValues,cutoffClass)}<text class="annotation-orange" x="${W-M.r-5}" y="${cutoffY-10}" text-anchor="end">Cutoff = ${fmt(cutoff)}</text><text class="annotation-orange" x="${x(3)}" y="${M.t+22}">${flagged} cases in the upper tail</text>`,`Cutoff point at ${fmt(cutoff)} with upper tail highlighted`)}<div class="metric-row"><div class="metric"><span>Quantile used</span><strong>${pctFmt(1-pct)}</strong></div><div class="metric orange"><span>Cutoff point</span><strong>${fmt(cutoff)}</strong></div><div class="metric"><span>Flagged</span><strong>${flagged} (${pctFmt(flagged/n)})</strong></div></div>`;
+      }
+
+      const renderers=[renderOrdering,renderPoints,renderChord,()=>renderDistances(false,false,false),()=>renderDistances(true,true,false),()=>renderDistances(true,false,true),renderPercent,renderCutoff];
+      function render(){
+        const step=steps[currentStep];
+        document.getElementById('eyebrow').textContent=`Step ${currentStep+1} of 8`;
+        document.getElementById('stepTitle').textContent=step.title;
+        document.getElementById('stepDescription').textContent=step.description;
+        document.getElementById('stepInsight').textContent=step.insight;
+        document.getElementById('progressCopy').textContent=`Step ${currentStep+1} of 8`;
+        stage.className=`stage step-${currentStep+1}`;
+        previousButton.disabled=currentStep===0;
+        previousButton.style.opacity=currentStep===0?'.4':'1';
+        nextButton.textContent=currentStep===steps.length-1?'Restart ↺':'Next →';
+        stepper.innerHTML=steps.map((item,index)=>`<button class="step-tab ${index<currentStep?'done':''} ${index===currentStep?'active':''}" type="button" data-step="${index}" aria-current="${index===currentStep?'step':'false'}" aria-label="Step ${index+1}: ${item.title}"><span class="number">${index+1}</span><span class="label">${item.tab}</span></button>`).join('');
+        stepper.querySelectorAll('[data-step]').forEach(button=>button.addEventListener('click',()=>{currentStep=Number(button.dataset.step);render();}));
+        renderers[currentStep]();
+      }
+      function move(delta){
+        if(delta>0&&currentStep===steps.length-1)currentStep=0;
+        else currentStep=Math.max(0,Math.min(steps.length-1,currentStep+delta));
+        render();
+      }
+      previousButton.addEventListener('click',()=>move(-1));
+      nextButton.addEventListener('click',()=>move(1));
+      document.getElementById('printButton').addEventListener('click',()=>window.print());
+      document.getElementById('fullscreenButton').addEventListener('click',async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();}catch(_){}});
+      document.addEventListener('keydown',event=>{if(event.key==='ArrowRight'||event.key===' '){event.preventDefault();move(1);}if(event.key==='ArrowLeft'){event.preventDefault();move(-1);}});
+      render();
+    })();
+  </script>
+</body>
+</html>

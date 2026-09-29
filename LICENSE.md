@@ -47,7 +47,7 @@ If you use, adapt, or build upon this work in your research, teaching, or method
 
 ### BibTeX
 ```bibtex
-@software{rogers2026_cier,
+@software{rogers2026cier,
   author       = {Rogers, Pablo},
   title        = {{Careless/Insufficient Effort Responding (C/IER) Detection}},
   year         = {2026},

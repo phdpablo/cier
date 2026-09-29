@@ -50,7 +50,8 @@ if (dir.exists(docs_dir)) {
 # ------------------------------------------------------------------------------
 docs_scripts_dirs <- c(
   file.path(docs_dir, "Scripts", "ProcessingScripts"),
-  file.path(docs_dir, "Scripts", "AnalysisScripts")
+  file.path(docs_dir, "Scripts", "AnalysisScripts"),
+  file.path(docs_dir, "Scripts", "DataAppendixScripts")
 )
 
 synced_preview_figs <- 0
@@ -106,7 +107,8 @@ if (synced_preview_figs > 0) {
 # ------------------------------------------------------------------------------
 src_scripts_dirs <- c(
   file.path(root_dir, "Scripts", "ProcessingScripts"),
-  file.path(root_dir, "Scripts", "AnalysisScripts")
+  file.path(root_dir, "Scripts", "AnalysisScripts"),
+  file.path(root_dir, "Scripts", "DataAppendixScripts")
 )
 
 for (s_dir in src_scripts_dirs) {
@@ -115,6 +117,34 @@ for (s_dir in src_scripts_dirs) {
   for (lft in leftovers) {
     unlink(lft, recursive = TRUE)
   }
+}
+
+# ------------------------------------------------------------------------------
+# 5. Mirror Resources/ to docs/Resources/ as post-render guarantee
+# ------------------------------------------------------------------------------
+res_dir <- file.path(root_dir, "Resources")
+docs_res_dir <- file.path(docs_dir, "Resources")
+
+if (dir.exists(res_dir) && dir.exists(docs_dir)) {
+  if (!dir.exists(docs_res_dir)) {
+    dir.create(docs_res_dir, recursive = TRUE, showWarnings = FALSE)
+  }
+  sub_items <- list.files(res_dir, full.names = TRUE, recursive = FALSE)
+  for (item in sub_items) {
+    target_item <- file.path(docs_res_dir, basename(item))
+    if (dir.exists(item)) {
+      dir.create(target_item, recursive = TRUE, showWarnings = FALSE)
+      files_in_dir <- list.files(item, recursive = TRUE, full.names = FALSE)
+      for (f in files_in_dir) {
+        dst_f <- file.path(target_item, f)
+        dir.create(dirname(dst_f), recursive = TRUE, showWarnings = FALSE)
+        file.copy(file.path(item, f), dst_f, overwrite = TRUE)
+      }
+    } else {
+      file.copy(item, target_item, overwrite = TRUE)
+    }
+  }
+  message("[post_render_figures] Synchronized pedagogical Resources/ to docs/Resources/.")
 }
 
 message("[post_render_figures] Post-render figure synchronization completed successfully.")

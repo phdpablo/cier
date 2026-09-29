@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Visual and interactive explanation of the Laz.R index.">
+  <title>Laz.R — visual interactive explanation</title>
+  <style>
+    :root {
+      --ink: #10252d;
+      --muted: #5b6c72;
+      --paper: #f7f4ec;
+      --surface: #fffdf7;
+      --line: #d7d2c5;
+      --teal: #16777a;
+      --teal-soft: #dcefee;
+      --orange: #e98226;
+      --orange-soft: #f9e5d2;
+      --navy: #153743;
+      --white: #ffffff;
+      --shadow: 0 18px 48px rgba(16, 37, 45, 0.13);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; min-height: 100%; }
+
+    body {
+      background:
+        radial-gradient(circle at 12% 15%, rgba(22,119,122,.09), transparent 28rem),
+        radial-gradient(circle at 88% 85%, rgba(233,130,38,.08), transparent 30rem),
+        var(--paper);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      padding: 22px clamp(18px, 4vw, 58px) 24px;
+      gap: 16px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .mark {
+      width: 42px; height: 42px; border-radius: 13px;
+      display: grid; place-items: center;
+      background: var(--navy); color: var(--white);
+      font-weight: 800; letter-spacing: -.04em;
+      box-shadow: 0 8px 24px rgba(21,55,67,.2);
+    }
+    .brand-text strong { display: block; font-size: 1.05rem; }
+    .brand-text span { color: var(--muted); font-size: .82rem; }
+
+    .top-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-button, .small-button, .nav-button, .preset-button {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.65);
+      color: var(--ink);
+      border-radius: 12px;
+      transition: transform .16s ease, background .16s ease, border-color .16s ease;
+    }
+    .icon-button:hover, .small-button:hover, .nav-button:hover, .preset-button:hover {
+      transform: translateY(-1px);
+      border-color: var(--teal);
+      background: var(--white);
+    }
+    .icon-button { width: 42px; height: 42px; display: grid; place-items: center; }
+    .icon-button svg { width: 20px; height: 20px; }
+
+    .stepper {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      position: relative;
+    }
+    .stepper::before {
+      content: "";
+      position: absolute;
+      left: 7%; right: 7%; top: 19px;
+      height: 2px; background: var(--line); z-index: 0;
+    }
+    .step-tab {
+      position: relative; z-index: 1;
+      border: 0; background: transparent; color: var(--muted);
+      display: grid; justify-items: center; gap: 6px;
+      min-width: 0; padding: 0 3px;
+    }
+    .step-tab .number {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--surface); border: 2px solid var(--line);
+      font-weight: 800; transition: .2s ease;
+    }
+    .step-tab .label {
+      max-width: 130px; font-size: .74rem; line-height: 1.15;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .step-tab.done .number { background: var(--teal-soft); border-color: var(--teal); color: var(--teal); }
+    .step-tab.active { color: var(--ink); }
+    .step-tab.active .number {
+      background: var(--orange); border-color: var(--orange); color: var(--white);
+      transform: scale(1.08); box-shadow: 0 7px 20px rgba(233,130,38,.28);
+    }
+
+    .stage {
+      position: relative;
+      min-height: 520px;
+      background: rgba(255,253,247,.86);
+      border: 1px solid rgba(215,210,197,.85);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: minmax(250px, .72fr) minmax(480px, 1.55fr);
+      overflow: hidden;
+    }
+
+    .explanation {
+      padding: clamp(28px, 4vw, 58px);
+      background: linear-gradient(145deg, rgba(220,239,238,.74), rgba(255,253,247,.4));
+      border-right: 1px solid var(--line);
+      display: flex; flex-direction: column; justify-content: center;
+    }
+    .eyebrow {
+      color: var(--teal); font-size: .78rem; font-weight: 800;
+      letter-spacing: .12em; text-transform: uppercase;
+    }
+    h1 { margin: 12px 0 16px; font-size: clamp(2rem, 4vw, 4.1rem); line-height: .98; letter-spacing: -.055em; }
+    .lead { margin: 0; color: var(--muted); font-size: clamp(1rem, 1.45vw, 1.25rem); line-height: 1.6; }
+    .insight {
+      margin-top: 28px; padding-left: 16px; border-left: 4px solid var(--orange);
+      font-weight: 700; line-height: 1.45;
+    }
+
+    .visual {
+      position: relative; min-width: 0;
+      padding: clamp(26px, 4vw, 54px);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .visual-content { width: 100%; max-width: 900px; }
+
+    .control-strip {
+      display: flex; flex-wrap: wrap; align-items: end; gap: 10px;
+      margin-bottom: 24px;
+    }
+    .field { flex: 1 1 300px; }
+    .field label { display: block; font-size: .76rem; font-weight: 800; color: var(--muted); margin-bottom: 6px; }
+    .field input {
+      width: 100%; border: 1px solid var(--line); border-radius: 12px;
+      background: var(--white); padding: 11px 13px; color: var(--ink);
+    }
+    .small-button, .preset-button { padding: 11px 14px; font-weight: 700; }
+    .small-button.primary { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .error { color: #a33b2c; min-height: 1.3em; font-size: .82rem; margin-top: 6px; }
+
+    .sequence {
+      display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+      justify-content: center; min-height: 128px;
+    }
+    .item-node { display: grid; justify-items: center; gap: 8px; animation: rise .35s both; }
+    .item-label { color: var(--muted); font-size: .72rem; font-weight: 700; }
+    .response {
+      width: 58px; height: 58px; border-radius: 17px;
+      display: grid; place-items: center;
+      background: var(--teal-soft); color: var(--teal); border: 2px solid rgba(22,119,122,.24);
+      font-size: 1.45rem; font-weight: 850;
+    }
+    .arrow { color: var(--orange); font-weight: 900; font-size: 1.35rem; transform: translateY(12px); }
+
+    .pairs {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 12px;
+    }
+    .pair {
+      min-height: 94px; border: 1px solid var(--line); border-radius: 16px;
+      display: grid; place-items: center; align-content: center; gap: 6px;
+      background: var(--white); animation: rise .35s both;
+    }
+    .pair strong { font-size: 1.35rem; }
+    .pair span { color: var(--muted); font-size: .74rem; }
+    .pair .pair-arrow { color: var(--orange); padding: 0 6px; }
+
+    .matrix-wrap { display: grid; grid-template-columns: minmax(280px, 1fr) minmax(190px, .55fr); gap: 28px; align-items: center; }
+    .matrix-title, .section-label { margin: 0 0 12px; color: var(--muted); font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    table { border-collapse: separate; border-spacing: 7px; width: 100%; }
+    th { color: var(--muted); font-size: .73rem; font-weight: 800; }
+    td {
+      text-align: center; height: 58px; min-width: 52px; border-radius: 13px;
+      background: var(--teal-soft); color: var(--teal); font-weight: 850; font-size: 1.15rem;
+    }
+    td.zero { background: #eeeae0; color: #998f80; }
+    td.total { background: var(--orange-soft); color: #9a5016; }
+    .matrix-note { color: var(--muted); line-height: 1.55; }
+    .matrix-note strong { color: var(--ink); }
+
+    .concentration-list { display: grid; gap: 20px; }
+    .concentration-row { display: grid; grid-template-columns: 96px 1fr 88px; gap: 16px; align-items: center; }
+    .state-chip { font-weight: 800; }
+    .state-chip span { display: block; color: var(--muted); font-size: .75rem; font-weight: 600; }
+    .prob-track { display: flex; height: 44px; border-radius: 13px; overflow: hidden; background: #eeeae0; }
+    .prob-segment {
+      min-width: 0; display: grid; place-items: center; color: var(--white);
+      font-size: .77rem; font-weight: 800; transition: width .45s ease;
+    }
+    .prob-segment:nth-child(odd) { background: var(--teal); }
+    .prob-segment:nth-child(even) { background: var(--orange); }
+    .h-value { text-align: right; font-weight: 850; color: var(--navy); }
+    .h-value span { display: block; font-size: .7rem; color: var(--muted); font-weight: 700; }
+    .formula-note { margin-top: 24px; color: var(--muted); text-align: center; }
+    .formula-note code { color: var(--ink); background: var(--orange-soft); padding: 4px 8px; border-radius: 8px; }
+
+    .final-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 34px; align-items: center; }
+    .calculation { display: grid; gap: 13px; }
+    .calc-line {
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+      padding: 13px 0; border-bottom: 1px solid var(--line);
+    }
+    .calc-line span { color: var(--muted); }
+    .calc-line strong { font-variant-numeric: tabular-nums; }
+    .calc-line.total-line { border-bottom: 0; font-size: 1.12rem; }
+    .gauge-wrap { display: grid; place-items: center; gap: 12px; }
+    .gauge { width: min(280px, 100%); aspect-ratio: 1; position: relative; }
+    .gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+    .gauge circle { fill: none; stroke-width: 13; }
+    .gauge .track { stroke: #e6e0d4; }
+    .gauge .value { stroke: var(--orange); stroke-linecap: round; transition: stroke-dashoffset .7s ease; }
+    .gauge-center { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+    .gauge-center strong { font-size: clamp(2.2rem, 5vw, 4rem); letter-spacing: -.06em; }
+    .gauge-center span { color: var(--muted); font-size: .78rem; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; }
+    .interpretation { color: var(--muted); text-align: center; line-height: 1.45; }
+
+    .footer {
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px;
+    }
+    .progress-copy { color: var(--muted); font-size: .8rem; }
+    .nav-actions { display: flex; gap: 10px; }
+    .nav-button { padding: 11px 18px; font-weight: 800; }
+    .nav-button.next { background: var(--navy); color: var(--white); border-color: var(--navy); }
+    .keyboard-tip { justify-self: end; color: var(--muted); font-size: .75rem; }
+
+    .final-quote {
+      position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%);
+      width: min(86%, 760px); text-align: center; color: var(--navy);
+      font-weight: 800; opacity: 0; transition: opacity .3s ease;
+    }
+    .step-5 .final-quote { opacity: 1; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(9px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 980px) {
+      .app { min-height: auto; }
+      .stage { grid-template-columns: 1fr; }
+      .explanation { border-right: 0; border-bottom: 1px solid var(--line); padding: 28px; }
+      h1 { font-size: 2.6rem; }
+      .visual { padding: 28px; }
+      .matrix-wrap, .final-grid { grid-template-columns: 1fr; }
+      .matrix-note { text-align: center; }
+      .final-quote { position: static; transform: none; width: auto; margin: 22px 28px 0; }
+    }
+
+    @media (max-width: 660px) {
+      .app { padding: 14px; gap: 12px; }
+      .brand-text span, .keyboard-tip, .step-tab .label { display: none; }
+      .stepper::before { left: 10%; right: 10%; }
+      .stage { min-height: 0; border-radius: 17px; }
+      .explanation, .visual { padding: 22px; }
+      h1 { font-size: 2.1rem; }
+      .lead { font-size: .96rem; }
+      .response { width: 46px; height: 46px; border-radius: 13px; }
+      .arrow { font-size: 1rem; }
+      .concentration-row { grid-template-columns: 78px 1fr; }
+      .h-value { grid-column: 2; text-align: left; }
+      .footer { grid-template-columns: 1fr auto; }
+      .progress-copy { display: none; }
+      .nav-actions { grid-column: 2; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+
+    @media print {
+      body { background: white; }
+      .app { padding: 0; display: block; }
+      .top-actions, .stepper, .footer, .control-strip { display: none !important; }
+      .topbar { margin-bottom: 16px; }
+      .stage { box-shadow: none; min-height: 90vh; border: 1px solid #bbb; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app" id="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true">L.R</div>
+        <div class="brand-text">
+          <strong>Laz.R in five steps</strong>
+          <span>A visual lab on response predictability</span>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="icon-button" id="printButton" type="button" aria-label="Print or save as PDF" title="Print or save as PDF">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        </button>
+        <button class="icon-button" id="fullscreenButton" type="button" aria-label="Toggle full screen" title="Full screen">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <nav class="stepper" aria-label="Explanation steps" id="stepper"></nav>
+
+    <section class="stage" id="stage" aria-live="polite">
+      <article class="explanation">
+        <div class="eyebrow" id="eyebrow">Step 1 of 5</div>
+        <h1 id="stepTitle">Organize responses</h1>
+        <p class="lead" id="stepDescription"></p>
+        <div class="insight" id="stepInsight"></div>
+      </article>
+      <div class="visual">
+        <div class="visual-content" id="visualContent"></div>
+      </div>
+      <div class="final-quote">Laz.R measures how closely the sequence follows simple and predictable transition rules.</div>
+    </section>
+
+    <footer class="footer">
+      <div class="progress-copy" id="progressCopy">Step 1 of 5</div>
+      <div class="nav-actions">
+        <button class="nav-button" id="previousButton" type="button">← Previous</button>
+        <button class="nav-button next" id="nextButton" type="button">Next →</button>
+      </div>
+      <div class="keyboard-tip">Use ← → or Spacebar</div>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const steps = [
+        {
+          title: "Organize responses",
+          tab: "Order",
+          description: "Each person becomes a sequence: one response per item, strictly preserving the questionnaire order.",
+          insight: "Order matters: rearranging items can change transitions and thus alter Laz.R."
+        },
+        {
+          title: "Form the pairs",
+          tab: "Pair",
+          description: "Each response is linked to the immediately following response. With N items, there are N − 1 transitions.",
+          insight: "The algorithm looks only one step back: this is the logic of a first-order Markov chain."
+        },
+        {
+          title: "Count transitions",
+          tab: "Count",
+          description: "Pairs are gathered into a matrix. Rows represent origin responses; columns represent target responses.",
+          insight: "The matrix compresses a long sequence into a compact map of response behavior."
+        },
+        {
+          title: "Measure concentration",
+          tab: "Concentrate",
+          description: "For each preceding response, we observe whether subsequent responses disperse or concentrate on a single alternative.",
+          insight: "The more concentrated the next response is, the more predictable the transition rule becomes."
+        },
+        {
+          title: "Calculate the weighted mean",
+          tab: "Combine",
+          description: "Each row's concentration is weighted by the number of times that response initiated a transition.",
+          insight: "The index ranges up to 1. High values indicate more regular sequences — through repetition, alternation, or cycles."
+        }
+      ];
+
+      const presets = {
+        didatico: [1, 1, 1, 2, 1, 2, 1],
+        repeticao: [3, 3, 3, 3, 3, 3, 3],
+        alternancia: [1, 2, 1, 2, 1, 2, 1],
+        irregular: [1, 4, 2, 5, 1, 3, 2, 4, 5, 2]
+      };
+
+      let values = [...presets.didatico];
+      let currentStep = 0;
+
+      const app = document.getElementById("app");
+      const stage = document.getElementById("stage");
+      const stepper = document.getElementById("stepper");
+      const visualContent = document.getElementById("visualContent");
+      const previousButton = document.getElementById("previousButton");
+      const nextButton = document.getElementById("nextButton");
+
+      const fmt = value => value.toLocaleString("en-US", { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+
+      function escapeHtml(text) {
+        return String(text).replace(/[&<>"]/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[char]);
+      }
+
+      function analyze(sequence) {
+        const states = [...new Set(sequence)].sort((a, b) => a - b);
+        const counts = Object.fromEntries(states.map(from => [from, Object.fromEntries(states.map(to => [to, 0]))]));
+        for (let i = 0; i < sequence.length - 1; i += 1) counts[sequence[i]][sequence[i + 1]] += 1;
+        const rows = states.map(from => {
+          const total = states.reduce((sum, to) => sum + counts[from][to], 0);
+          const probabilities = Object.fromEntries(states.map(to => [to, total ? counts[from][to] / total : 0]));
+          const concentration = states.reduce((sum, to) => sum + probabilities[to] ** 2, 0);
+          const contribution = total * concentration;
+          return { from, total, probabilities, concentration, contribution };
+        }).filter(row => row.total > 0);
+        const transitions = sequence.slice(0, -1).map((from, index) => ({ from, to: sequence[index + 1] }));
+        const lazr = rows.reduce((sum, row) => sum + row.contribution, 0) / transitions.length;
+        return { states, counts, rows, transitions, lazr };
+      }
+
+      function controlsHtml() {
+        return `
+          <div class="control-strip">
+            <div class="field">
+              <label for="sequenceInput">Response sequence (4 to 20 values, from 1 to 5)</label>
+              <input id="sequenceInput" value="${values.join(", ")}" inputmode="numeric" aria-describedby="sequenceError">
+              <div class="error" id="sequenceError" role="alert"></div>
+            </div>
+            <button class="small-button primary" id="applySequence" type="button">Apply</button>
+            <button class="preset-button" data-preset="repeticao" type="button">Repetition</button>
+            <button class="preset-button" data-preset="alternancia" type="button">Alternation</button>
+            <button class="preset-button" data-preset="irregular" type="button">Irregular</button>
+          </div>`;
+      }
+
+      function sequenceHtml(withArrows = true) {
+        return `<div class="sequence" aria-label="Response sequence">${values.map((value, index) => `
+          <div class="item-node" style="animation-delay:${index * 35}ms">
+            <span class="item-label">Item ${index + 1}</span>
+            <span class="response">${value}</span>
+          </div>${withArrows && index < values.length - 1 ? '<span class="arrow" aria-hidden="true">→</span>' : ""}`
+        ).join("")}</div>`;
+      }
+
+      function renderStepOne() {
+        visualContent.innerHTML = controlsHtml() + sequenceHtml(true);
+        bindSequenceControls();
+      }
+
+      function renderStepTwo(model) {
+        visualContent.innerHTML = `
+          <p class="section-label">${model.transitions.length} consecutive transitions</p>
+          <div class="pairs">${model.transitions.map((pair, index) => `
+            <div class="pair" style="animation-delay:${index * 45}ms" aria-label="Transition ${index + 1}: ${pair.from} to ${pair.to}">
+              <strong>${pair.from}<span class="pair-arrow">→</span>${pair.to}</strong>
+              <span>Item ${index + 1} → Item ${index + 2}</span>
+            </div>`).join("")}
+          </div>`;
+      }
+
+      function renderStepThree(model) {
+        const headers = model.states.map(state => `<th scope="col">Next ${state}</th>`).join("");
+        const rows = model.states.map(from => {
+          const total = model.states.reduce((sum, to) => sum + model.counts[from][to], 0);
+          return `<tr><th scope="row">Current ${from}</th>${model.states.map(to => {
+            const count = model.counts[from][to];
+            return `<td class="${count === 0 ? "zero" : ""}" title="${from} → ${to}: ${count} time(s)">${count}</td>`;
+          }).join("")}<td class="total">${total}</td></tr>`;
+        }).join("");
+        visualContent.innerHTML = `
+          <div class="matrix-wrap">
+            <div>
+              <p class="matrix-title">Transition matrix</p>
+              <table aria-label="Transition counts">
+                <thead><tr><th></th>${headers}<th>Total</th></tr></thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+            <div class="matrix-note">
+              <strong>Read by row.</strong><br>
+              Each cell counts how many times a preceding response was followed by another. Total cell count is <strong>${model.transitions.length}</strong>.
+            </div>
+          </div>`;
+      }
+
+      function renderStepFour(model) {
+        visualContent.innerHTML = `
+          <div class="concentration-list">${model.rows.map(row => `
+            <div class="concentration-row">
+              <div class="state-chip">After ${row.from}<span>${row.total} transition(s)</span></div>
+              <div class="prob-track" aria-label="Distribution of next responses after ${row.from}">
+                ${model.states.filter(to => row.probabilities[to] > 0).map(to => {
+                  const p = row.probabilities[to];
+                  return `<div class="prob-segment" style="width:${p * 100}%" title="${row.from} → ${to}: ${(p * 100).toFixed(0)}%">→ ${to}: ${(p * 100).toFixed(0)}%</div>`;
+                }).join("")}
+              </div>
+              <div class="h-value">${fmt(row.concentration)}<span>Σ p²</span></div>
+            </div>`).join("")}
+          </div>
+          <div class="formula-note"><code>concentration = p₁² + p₂² + …</code> — squaring rewards concentrated distributions.</div>`;
+      }
+
+      function interpretation(value) {
+        if (value >= .9) return "Almost deterministic transitions: the next response is highly predictable.";
+        if (value >= .65) return "Relatively concentrated and predictable transitions.";
+        if (value >= .4) return "Intermediate predictability in this sequence.";
+        return "More dispersed and less predictable transitions.";
+      }
+
+      function renderStepFive(model) {
+        const circumference = 2 * Math.PI * 72;
+        const offset = circumference * (1 - model.lazr);
+        visualContent.innerHTML = `
+          <div class="final-grid">
+            <div class="calculation">
+              <p class="section-label">Weighted contribution of each preceding response</p>
+              ${model.rows.map(row => `
+                <div class="calc-line">
+                  <span>After ${row.from}: ${row.total} × ${fmt(row.concentration)}</span>
+                  <strong>${fmt(row.contribution)}</strong>
+                </div>`).join("")}
+              <div class="calc-line total-line">
+                <span>Sum ÷ ${model.transitions.length} transitions</span>
+                <strong>${fmt(model.rows.reduce((sum, row) => sum + row.contribution, 0))} ÷ ${model.transitions.length}</strong>
+              </div>
+            </div>
+            <div class="gauge-wrap">
+              <div class="gauge" role="img" aria-label="Laz.R equals ${fmt(model.lazr)}">
+                <svg viewBox="0 0 180 180" aria-hidden="true">
+                  <circle class="track" cx="90" cy="90" r="72"></circle>
+                  <circle class="value" cx="90" cy="90" r="72" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"></circle>
+                </svg>
+                <div class="gauge-center"><strong>${fmt(model.lazr)}</strong><span>Laz.R</span></div>
+              </div>
+              <div class="interpretation">${interpretation(model.lazr)}</div>
+            </div>
+          </div>`;
+      }
+
+      function bindSequenceControls() {
+        const input = document.getElementById("sequenceInput");
+        const error = document.getElementById("sequenceError");
+        const apply = () => {
+          const tokens = input.value.split(/[;,\s]+/).filter(Boolean);
+          const parsed = tokens.map(Number);
+          if (parsed.length < 4 || parsed.length > 20 || parsed.some(value => !Number.isInteger(value) || value < 1 || value > 5)) {
+            error.textContent = "Please enter 4 to 20 integers between 1 and 5.";
+            return;
+          }
+          values = parsed;
+          error.textContent = "";
+          render();
+        };
+        document.getElementById("applySequence").addEventListener("click", apply);
+        input.addEventListener("keydown", event => { if (event.key === "Enter") apply(); });
+        document.querySelectorAll("[data-preset]").forEach(button => {
+          button.addEventListener("click", () => {
+            values = [...presets[button.dataset.preset]];
+            render();
+          });
+        });
+      }
+
+      function render() {
+        const step = steps[currentStep];
+        const model = analyze(values);
+        document.getElementById("eyebrow").textContent = `Step ${currentStep + 1} of 5`;
+        document.getElementById("stepTitle").textContent = step.title;
+        document.getElementById("stepDescription").textContent = step.description;
+        document.getElementById("stepInsight").textContent = step.insight;
+        document.getElementById("progressCopy").textContent = `Step ${currentStep + 1} of 5`;
+        stage.className = `stage step-${currentStep + 1}`;
+        previousButton.disabled = currentStep === 0;
+        previousButton.style.opacity = currentStep === 0 ? ".4" : "1";
+        nextButton.textContent = currentStep === steps.length - 1 ? "Restart ↺" : "Next →";
+
+        stepper.innerHTML = steps.map((item, index) => `
+          <button class="step-tab ${index < currentStep ? "done" : ""} ${index === currentStep ? "active" : ""}"
+            type="button" data-step="${index}" aria-current="${index === currentStep ? "step" : "false"}" aria-label="Step ${index + 1}: ${item.title}">
+            <span class="number">${index + 1}</span><span class="label">${item.tab}</span>
+          </button>`).join("");
+        stepper.querySelectorAll("[data-step]").forEach(button => button.addEventListener("click", () => {
+          currentStep = Number(button.dataset.step); render();
+        }));
+
+        [renderStepOne, renderStepTwo, renderStepThree, renderStepFour, renderStepFive][currentStep](model);
+      }
+
+      function move(delta) {
+        if (delta > 0 && currentStep === steps.length - 1) currentStep = 0;
+        else currentStep = Math.max(0, Math.min(steps.length - 1, currentStep + delta));
+        render();
+      }
+
+      previousButton.addEventListener("click", () => move(-1));
+      nextButton.addEventListener("click", () => move(1));
+      document.getElementById("printButton").addEventListener("click", () => window.print());
+      document.getElementById("fullscreenButton").addEventListener("click", async () => {
+        try {
+          if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+          else await document.exitFullscreen();
+        } catch (_) { /* Fullscreen can be blocked by browser policy. */ }
+      });
+      document.addEventListener("keydown", event => {
+        if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+        if (event.key === "ArrowRight" || event.key === " ") { event.preventDefault(); move(1); }
+        if (event.key === "ArrowLeft") { event.preventDefault(); move(-1); }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
